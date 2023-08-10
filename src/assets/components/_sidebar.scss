@@ -1,0 +1,78 @@
+
+$sidebar-width: 280px;
+
+//行動
+.sidebar {
+  width: $sidebar-width;
+  margin-left: -$sidebar-width;
+  transition: margin-left 0.25s;
+  font-weight: bold;
+  //下滾不消失
+  position: fixed;
+  top: 0;
+  .sidebar-link{
+    color: $dark;
+    display: block;
+    text-decoration: none;
+    padding: 13px 0px;
+    &:hover{
+        background-color: rgba($primary, 0.16);
+    } 
+  }
+  .sidebar-link.active{
+    position: relative;
+    color: $primary !important;
+    background-color: rgba($primary, 0.16);
+    &::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 2px;
+        height: 100%;
+        width: 3px;
+        background: $primary;
+    }
+  }
+}
+.main {
+  width: 100%;
+}
+//展開sidebar
+.sidebar-toggled {
+  .sidebar {
+    margin-left: 0;
+  }
+  .main{
+    margin-left: $sidebar-width;
+  }
+}
+
+//桌面
+@include media-breakpoint-up(lg) {
+  .sidebar {
+    //要改變原本負值
+    margin-left: 0;
+    width: $sidebar-width;
+  }
+  .main {
+    //使變數視為字串
+    //為何不也寫 寬100% 因為不會自動展開
+    width: calc(100vw - #{$sidebar-width});
+    margin-left: $sidebar-width;
+    transition: margin-left .25s;
+
+  }
+  //展開 (包在media)
+  .sidebar-toggled {
+    .sidebar {
+    //屬性無效 寬度沒有負值
+    // width: -$sidebar-width;
+    margin-left: -$sidebar-width;
+    }
+    .main {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+}
+

@@ -1,0 +1,8 @@
+    .cv-box {
+      width: 240px;
+      height: 240px;
+      /* 使用變數 用var */
+      background-color: $secondary;
+      /* color: var(--bs-secondary); */
+      /* scss中可以用$secondary */
+    }

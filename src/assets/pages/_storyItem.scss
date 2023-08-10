@@ -1,0 +1,50 @@
+@import '../helpers/mix';
+@import '../helpers/function';
+@import '../helpers/variables';
+
+.allstaritem_back {
+  border-radius: 2%;
+  height: 424px;
+}
+.small_card {
+  &:hover .card {
+    box-shadow: 0 20px 20px $shadow;
+  }
+  &:hover .btn-nbaBlue {
+    background-color: var(--bs-btn-active-bg);
+    border-color: var(--bs-btn-active-border-color);
+  }
+}
+
+.btnRwd {
+  width: 90%;
+}
+@include maxpc() {
+
+  .imgRwd {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .fsRwd {
+    font-size: 32px;
+  }
+  .btnRwd {
+    a {
+      font-size: 48px;
+    }
+  }
+}
+@include maxpad() {
+  .imgRwd {
+    display: none;
+  }
+  .maxpad_p {
+    // display: none;
+  }
+}
+@include minipc() {
+  .imgRwd {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

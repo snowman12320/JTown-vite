@@ -1,0 +1,16 @@
+
+//自訂元件
+//1.避免過多層級
+//2.盡量使用變數
+//https://courses.hexschool.com/courses/bootstrap-5/lectures/35745064
+
+.btn-hex{
+    @include button-variant(#69F0AE,#69F0AE);
+    &:hover{
+        font-size: 30px;
+    }
+}
+.btn-outline-hex{
+    @include button-outline-variant(#69F0AE)
+}
+

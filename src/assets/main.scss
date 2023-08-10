@@ -1,0 +1,83 @@
+////以下是BS官方的引入順序
+///
+// 先引入函式 再改的變動檔 (只有變數這樣 其他像按鈕那樣引入)
+@import '../../node_modules/bootstrap/scss/functions';
+// 變動檔跟原始檔 引入其一即可
+@import './helpers/variables'; //引入原始BS的覆蓋
+//再引入原始檔(這是總檔)
+// @import "node_modules/bootstrap/scss/bootstrap";
+// https://stackoverflow.com/questions/76378815/sasserror-undefined-variable-primary-primary-text-emphasis-dark-in-reactjs
+// site.scss
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/variables-dark";
+//bootstrap 5.2版本 新增了map.scss檔案，只要再匯入進去就可以解決問題 (map也需要使用到變數
+@import '../../node_modules/bootstrap/scss/maps';
+//以下就是原始檔全部細項 依照需求引入 不須全部
+@import '../../node_modules/bootstrap/scss/mixins';
+@import './helpers/utilities'; //引入原始BS的覆蓋
+// Layout & components
+@import '../../node_modules/bootstrap/scss/root';
+@import '../../node_modules/bootstrap/scss/reboot';
+@import '../../node_modules/bootstrap/scss/type';
+//內建常用
+//* icon 直接用cdn就好
+// @import "../../node_modules/bootstrap-icons/font/bootstrap-icons.css"; //內建icon
+// @import "./bootstrap-icons.css"; //內建icon
+@import '../../node_modules/bootstrap/scss/images';
+@import '../../node_modules/bootstrap/scss/containers';
+@import '../../node_modules/bootstrap/scss/grid';
+@import '../../node_modules/bootstrap/scss/tables';
+@import '../../node_modules/bootstrap/scss/forms';
+//舉例 關掉就沒有按鈕樣式 (相反 引入原始再變動
+@import '../../node_modules/bootstrap/scss/buttons';
+@import './components/buttons_custom';
+//內建選用
+@import '../../node_modules/bootstrap/scss/transitions'; //沒開沒下拉
+@import '../../node_modules/bootstrap/scss/dropdown';
+@import '../../node_modules/bootstrap/scss/button-group';
+@import '../../node_modules/bootstrap/scss/nav';
+@import '../../node_modules/bootstrap/scss/navbar';
+@import '../../node_modules/bootstrap/scss/card'; //曾關掉卡片 導致stretched-link延伸出錯
+@import '../../node_modules/bootstrap/scss/accordion';
+@import '../../node_modules/bootstrap/scss/breadcrumb';
+@import '../../node_modules/bootstrap/scss/pagination';
+@import '../../node_modules/bootstrap/scss/badge';
+@import '../../node_modules/bootstrap/scss/alert';
+@import '../../node_modules/bootstrap/scss/progress';
+@import '../../node_modules/bootstrap/scss/list-group';
+@import '../../node_modules/bootstrap/scss/close';
+@import '../../node_modules/bootstrap/scss/toasts';
+@import '../../node_modules/bootstrap/scss/modal';
+@import '../../node_modules/bootstrap/scss/tooltip';
+@import '../../node_modules/bootstrap/scss/popover';
+@import '../../node_modules/bootstrap/scss/carousel';
+@import '../../node_modules/bootstrap/scss/spinners';
+@import '../../node_modules/bootstrap/scss/offcanvas';
+@import '../../node_modules/bootstrap/scss/placeholders';
+//內建常用
+// Helpers
+@import '../../node_modules/bootstrap/scss/helpers';
+// Utilities
+@import '../../node_modules/bootstrap/scss/utilities/api';
+
+//老師自訂component (大型工具)
+
+//第三方CDN
+// @import url("https://fonts.googleapis.com/css?family=Rubik:700&display=swap"); //字型
+// @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"); //font-awesome文字格式icon 可連動
+
+//第三方CSS
+// @import "./lightbox.min.css"; //透過 npm 安裝 Lightbox 後，將 lightbox.min.js、lightbox.min.css 及 lightbox 圖片直接複製到其他資料夾，再引入使用
+
+//學生pages 、variables(自訂變數) 、mix(小型工具) 、function(需帶入參數的)
+@import './pages/rank';
+@import './pages/story';
+@import './pages/storyItem';
+@import './pages/product';
+@import './pages/customzied';
+@import './pages/index';
+
+// sweetalert2
+.swal2-popup {
+  top: 50px !important;
+}

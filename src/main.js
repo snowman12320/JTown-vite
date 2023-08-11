@@ -1,4 +1,5 @@
-import './assets/main.css' //* vite的示範檔 > 編譯main.scss後覆蓋
+import './assets/main.css' //*vite的示範檔 > 編譯main.scss後被覆蓋
+import './assets/all.scss'
 
 import { createApp } from 'vue'
 import axios from 'axios'

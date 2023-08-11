@@ -1,8 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  //*https://courses.hexschool.com/courses/vue-20211/lectures/43730454
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -65,11 +66,11 @@ const router = createRouter({
           component: () => import('../views/Products.vue')
         },
         {
-          path: 'orders',
+          path: 'orders', //*正常
           component: () => import('../views/Orders.vue')
         },
         {
-          path: 'coupons',
+          path: 'coupons', //*正常
           component: () => import('../views/Coupons.vue')
         },
         {
@@ -77,7 +78,7 @@ const router = createRouter({
           component: () => import('../views/Storys.vue')
         },
         {
-          path: 'members',
+          path: 'members', //*正常
           component: () => import('../views/members.vue')
         }
       ]

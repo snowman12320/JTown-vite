@@ -2,8 +2,6 @@
   <aside class="col-lg-2 lh-lg aside sticky-lg-top shadow align-self-start py-3" style="top:100px">
     <!--  -->
     <div class="my-3">
-      <!-- <input type="search" class="form-control rounded-0" name="" id="" aria-describedby="helpId"
-        v-model.lazy="cacheSearch" placeholder="Search Player..."> -->
       <multiselect @click="getProducts()" v-model="cacheSearch" :options="options" :custom-label="nameWithLang"
         placeholder="search" label="title" track-by="title"></multiselect>
     </div>

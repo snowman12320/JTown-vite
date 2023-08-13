@@ -245,47 +245,25 @@
   </div>
 </template>
 <script>
-// import modalMixin from '@/mixins/modalMixin';
-// export default {
-//   mixins: [modalMixin],
-//   data () {
-//     return {
-//       modal: {}
-//     };
-//   },
-//   methods: {
-//     handleScroll () {
-//       // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
-//       // console.log(this.$refs.element.scrollHeight);
-//       if (Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) > this.$refs.element.scrollHeight) {
-//         this.$emit('my-scroll');
-//       }
-//     }
-//   }
-// };
-</script>
-
-<script setup>
-import { ref } from 'vue'
 import modalMixin from '@/mixins/modalMixin'
-
-const { modal } = modalMixin
-const element = ref(null)
-//*[@vue/compiler-sfc] defineEmit，不再需要被引入。這是 Vue 3 的一個更新
-const emit = defineEmits(['my-scroll'])
-
-const handleScroll = () => {
-  if (
-    Math.ceil(element.value.scrollTop + element.value.clientHeight + 50) >
-    element.value.scrollHeight
-  ) {
-    emit('my-scroll')
+export default {
+  mixins: [modalMixin],
+  data() {
+    return {
+      modal: {}
+    }
+  },
+  methods: {
+    handleScroll() {
+      // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
+      // console.log(this.$refs.element.scrollHeight);
+      if (
+        Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
+        this.$refs.element.scrollHeight
+      ) {
+        this.$emit('my-scroll')
+      }
+    }
   }
 }
 </script>
-
-// emit
-// https://stackoverflow.com/questions/65844419/vue-composition-api-defining-emits
-// https://hackmd.io/@SkT7-27LSWWQi5G2DJBLkw/B1BsM44ki
-// mixin
-// https://ithelp.ithome.com.tw/articles/10259305

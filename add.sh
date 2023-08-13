@@ -3,11 +3,11 @@ sleep 2
 
 # git commit -m "create github repository    "
 
-# git commit -m "update to  composition  API "
+git commit -m "update to pinia ( login )"
 
 # git commit -m " fixed  "
 
-git commit -m " (no composition) vite enviroment done   "
+# git commit -m "    "
 
 sleep 2
 git push

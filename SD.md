@@ -27,9 +27,17 @@ npm run dev看缺什麼
 
 ## com化
 改寫成compositon API
-改homeview中
+改homeview中、producList、cartList
 > 先改成pinia 再說
 ## pinia化
+有用到eimtter，都要統一狀態：
+登入（每個視圖層
+購物車 （側邊、結帳頁
+收藏 （側邊、商品列表、商品內頁
+搜尋商品（商品列表、搜尋欄
+文章周邊商品（商品列表、搜尋欄
+
+
 
 ## 元件分類資料夾
 ## 修改router

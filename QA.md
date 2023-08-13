@@ -2,8 +2,11 @@
 
 https://codesandbox.io/s/converting-options-api-to-composition-api-forked-q5ows?file=/src/App.vue
 https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
+
 > option API 重構成 composiition API
+
 ## 選項式改成組合式的建議路徑
+
 如題去修改專案，有點不知道從何下手
 有從storyView簡單的部分開始
 
@@ -15,13 +18,19 @@ https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
 
 從最底層邏輯開始改 不要從view曾 因為包太多東西
 
+## 關於loginStore.js
+
+我嘗試將loginMixin改成pinia統一管理狀態
+但在homeView測試，會出現 isLoading 和 inLogin
+was accessed during render but is not defined on instance.
+猜測是created（）時，使用同步或寫法錯誤
 
 ## Q:關於loginMixin
-為何取不到這兩個變數
-    const isLoading = ref(false) 
-    const isLogin = ref(null)
-在首頁開啟都說not define，我有return
 
+為何取不到這兩個變數
+const isLoading = ref(false)
+const isLogin = ref(null)
+在首頁開啟都說not define，我有return
 
 ## 差別
 
@@ -33,7 +42,7 @@ Q：VUE CLI和VITE有哪些寫法比較大的差別
 >
 > 套件冷門的都會噴錯
 > prductModal 兩個套件引入內部檔案都有問題
-https://github.com/SortableJS/vue.draggable.next
+> https://github.com/SortableJS/vue.draggable.next
 
 # //////////////////解決///////////////////////
 

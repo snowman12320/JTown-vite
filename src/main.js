@@ -2,6 +2,7 @@ import './assets/main.css' //*vite的示範檔 > 編譯main.scss後被覆蓋
 import './assets/all.scss'
 
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Loading from 'vue3-loading-overlay'
@@ -65,6 +66,8 @@ app.use(VueSweetalert2)
 app.use(ElementPlus) // 全局注册element-plus
 app.use(CKEditor)
 app.use(VueClickAway)
+const pinia = createPinia()
+app.use(pinia)
 
 //! Mount the app to the DOM and initialize any additional functionality:
 app.mount('#app')

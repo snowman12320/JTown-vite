@@ -29,20 +29,27 @@
 //   }
 // };
 
+import axios from 'axios'
 import { ref, onMounted } from 'vue'
+
 export default {
   setup() {
     const isLoading = ref(false) //* 載入效果開關 const isLogin = ref(false); // * 判斷登入狀態
     const isLogin = ref(null)
+    const user = ref({
+      username: 'VIP-test@jtown.com.tw',
+      password: ''
+    })
 
-    console.log(isLoading);
+    // console.log(isLoading)
     onMounted(() => {
       isLoading.value = true
       //* 取出代幣
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
-      this.$http.defaults.headers.common.Authorization = token //* 存到header發送
+      let token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
+      console.log(token)
+      axios.defaults.headers.common.Authorization = token //* 存到header發送
       const api = `${import.meta.env.VITE_APP_API}api/user/check` //* 驗證登入狀態
-      this.$http.post(api, this.user).then((res) => {
+      axios.post(api, user).then((res) => {
         isLoading.value = false
         if (!res.data.success) {
           // this.$router.push('/login');

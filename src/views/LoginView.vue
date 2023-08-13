@@ -19,41 +19,74 @@
                 <div class="input-group-prepend">
                   <i class="fas fa-user"></i>
                 </div>
-                <Field type="text" name="email" class="form-control rounded-3 " placeholder="請輸入 Email"
+                <Field
+                  type="text"
+                  name="email"
+                  class="form-control rounded-3"
+                  placeholder="請輸入 Email"
                   rules="email|required"
-                  :class="{ 'is-invalid': errors['email'], 'is-valid': !errors['email'] && Boolean(user.username) }"
-                  autofocus v-model="user.username"></Field>
-                <error-message name="email" class="invalid-feedback ms-5"
-                  style="text-shadow:0 2px 5px #fff;"></error-message>
+                  :class="{
+                    'is-invalid': errors['email'],
+                    'is-valid': !errors['email'] && Boolean(user.username)
+                  }"
+                  autofocus
+                  v-model="user.username"
+                ></Field>
+                <error-message
+                  name="email"
+                  class="invalid-feedback ms-5"
+                  style="text-shadow: 0 2px 5px #fff"
+                ></error-message>
               </div>
 
               <div class="input-group form-group mt-4">
                 <div class="input-group-prepend">
                   <i class="fas fa-key"></i>
                 </div>
-                <Field type="password" name="密碼" id="password" class="form-control rounded-3" placeholder="password"
-                  required v-model="user.password" maxlength="20" :rules="validatePassword"
-                  :class="{ 'is-invalid': errors['密碼'], 'is-valid': !errors['密碼'] && Boolean(user.password) }"></Field>
-                <error-message name="密碼" class="invalid-feedback ms-5" style="text-shadow:0 2px 5px #fff"></error-message>
+                <Field
+                  type="password"
+                  name="密碼"
+                  id="password"
+                  class="form-control rounded-3"
+                  placeholder="password"
+                  required
+                  v-model="user.password"
+                  maxlength="20"
+                  :rules="validatePassword"
+                  :class="{
+                    'is-invalid': errors['密碼'],
+                    'is-valid': !errors['密碼'] && Boolean(user.password)
+                  }"
+                ></Field>
+                <error-message
+                  name="密碼"
+                  class="invalid-feedback ms-5"
+                  style="text-shadow: 0 2px 5px #fff"
+                ></error-message>
               </div>
               <!--  -->
-              <div class="mt-2 d-flex gap-1 align-items-center  justify-content-end me-2">
-                <input id="remember" type="checkbox" v-model="rememberMe">
-                <label for="remember" class=" text-white">Remember Me</label>
+              <div class="mt-2 d-flex gap-1 align-items-center justify-content-end me-2">
+                <input id="remember" type="checkbox" v-model="rememberMe" />
+                <label for="remember" class="text-white">Remember Me</label>
               </div>
               <div class="form-group text-center mt-5">
-                <input type="submit" value="Login" class="btn float-right login_btn">
+                <input type="submit" value="Login" class="btn float-right login_btn" />
               </div>
-            </form>
+            </Form>
           </div>
           <div class="card-footer d-flex justify-content-center align-items-center">
             <div class="d-flex justify-content-center align-items-center links">
               Don't have an account?
-              <el-popconfirm width="350" @confirm="confirmEvent" confirm-button-text="Yap!"
-                cancel-button-text="No, Thanks" icon-color="#626AEF"
-                title="Registration is not yet available... but would you like to use VIP to test it?">
+              <el-popconfirm
+                width="350"
+                @confirm="confirmEvent"
+                confirm-button-text="Yap!"
+                cancel-button-text="No, Thanks"
+                icon-color="#626AEF"
+                title="Registration is not yet available... but would you like to use VIP to test it?"
+              >
                 <template #reference>
-                  <el-button style="text-shadow:0 2px 5px black">Sign Up</el-button>
+                  <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
                 </template>
               </el-popconfirm>
             </div>
@@ -68,110 +101,210 @@
   </div>
 </template>
 <script>
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import loginMixin from '@/mixins/loginMixin';
-import emitter from '@/methods/emitter';
+// import Header from '@/components/Header.vue';
+// import Footer from '@/components/Footer.vue';
+// import loginMixin from '@/mixins/loginMixin';
+// import emitter from '@/methods/emitter';
+
+// export default {
+//   mixins: [loginMixin],
+//   components: {
+//     Header,
+//     Footer
+//   },
+//   provide () {
+//     return {
+//       emitter
+//     };
+//   },
+//   data () {
+//     return {
+//       user: {
+//         username: 'VIP-test@jtown.com.tw',
+//         password: ''
+//       },
+//       isLoading: false,
+//       rememberMe: false
+//     };
+//   },
+//   created () {
+//     this.checkRemember();
+//   },
+//   watch: {
+//     rememberMe () {
+//       if (this.rememberMe) {
+//         this.$swal.fire({
+//           title: 'Are you sure remember it?',
+//           text: ' Please verify and correct it if necessary!',
+//           icon: 'warning',
+//           showCancelButton: true,
+//           confirmButtonColor: '#3085d6',
+//           cancelButtonColor: '#d33',
+//           confirmButtonText: 'Yes, do it!'
+//         }).then((result) => {
+//           if (result.isConfirmed) {
+//             this.$swal.fire(
+//               'Remember!',
+//               'Your password has been saved.',
+//               'success'
+//             );
+//             // 保存用户名和密码到localStorage
+//             localStorage.setItem('username', this.user.username);
+//             localStorage.setItem('password', this.user.password);
+//             localStorage.setItem('rememberMe', true);
+//           }
+//         });
+//       } else {
+//         // 清除localStorage中的记住我选项
+//         localStorage.removeItem('username');
+//         localStorage.removeItem('password');
+//         localStorage.removeItem('rememberMe');
+//       }
+//     }
+//   },
+//   methods: {
+//     signIn () {
+//       const api = `${import.meta.env.VITE_APP_API}admin/signin`;
+//       this.$http.post(api, this.user).then((res) => {
+//         // const { token, expired } = res.data;
+//         // console.log(token, expired);
+//         // document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+//         this.isLoading = true;
+//         if (res.data.success) {
+//           this.isLoading = false;
+//           const { token, expired } = res.data;
+//           document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+//           // this.$router.push('/dashboard');
+//           this.$router.go(-1);
+//           localStorage.setItem('username', JSON.stringify(this.user.username));
+//         } else {
+//           this.$swal.fire('Incorrect', 'please check username or password.', 'warning');
+//         }
+//       });
+//     },
+//     validatePassword (value) {
+//       if (!value) return false;
+//       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
+//       return regex.test(value) ? true : '密碼需包含英文大小寫和數字，且超過十位數以上';
+//     },
+//     checkRemember () {
+//       // 检查localStorage中是否已保存了记住我选项
+//       if (localStorage.getItem('rememberMe') === 'true') {
+//         this.rememberMe = true;
+//         // 填充登录表单中的用户名和密码
+//         this.user.username = localStorage.getItem('username');
+//         this.user.password = localStorage.getItem('password');
+//       }else{
+//         localStorage.setItem('rememberMe', 'false')
+//       }
+//     },
+//     confirmEvent () {
+//       localStorage.setItem('VIP', JSON.stringify('testToken'));
+//       localStorage.setItem('username', JSON.stringify(this.user.username));
+//       this.$router.push('/dashboard/products');
+//     }
+//   }
+// };
+
+import { ref, onMounted, watch } from 'vue'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+import loginMixin from '@/mixins/loginMixin'
+import emitter from '@/methods/emitter'
+import axios from 'axios'
 
 export default {
-  mixins: [loginMixin],
   components: {
     Header,
     Footer
   },
-  provide () {
-    return {
-      emitter
-    };
-  },
-  data () {
-    return {
-      user: {
-        username: 'VIP-test@jtown.com.tw',
-        password: ''
-      },
-      isLoading: false,
-      rememberMe: false
-    };
-  },
-  created () {
-    this.checkRemember();
-  },
-  watch: {
-    rememberMe () {
-      if (this.rememberMe) {
-        this.$swal.fire({
-          title: 'Are you sure remember it?',
-          text: ' Please verify and correct it if necessary!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, do it!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.$swal.fire(
-              'Remember!',
-              'Your password has been saved.',
-              'success'
-            );
-            // 保存用户名和密码到localStorage
-            localStorage.setItem('username', this.user.username);
-            localStorage.setItem('password', this.user.password);
-            localStorage.setItem('rememberMe', true);
-          }
-        });
-      } else {
-        // 清除localStorage中的记住我选项
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-        localStorage.removeItem('rememberMe');
-      }
-    }
-  },
-  methods: {
-    signIn () {
-      const api = `${import.meta.env.VITE_APP_API}admin/signin`;
-      this.$http.post(api, this.user).then((res) => {
-        // const { token, expired } = res.data;
-        // console.log(token, expired);
-        // document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
-        this.isLoading = true;
-        if (res.data.success) {
-          this.isLoading = false;
-          const { token, expired } = res.data;
-          document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
-          // this.$router.push('/dashboard');
-          this.$router.go(-1);
-          localStorage.setItem('username', JSON.stringify(this.user.username));
-        } else {
-          this.$swal.fire('Incorrect', 'please check username or password.', 'warning');
-        }
-      });
-    },
-    validatePassword (value) {
-      if (!value) return false;
-      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
-      return regex.test(value) ? true : '密碼需包含英文大小寫和數字，且超過十位數以上';
-    },
-    checkRemember () {
-      // 检查localStorage中是否已保存了记住我选项
+  setup() {
+    const user = ref({
+      username: 'VIP-test@jtown.com.tw',
+      password: ''
+    })
+    const isLoading = ref(false)
+    const rememberMe = ref(false)
+
+    const checkRemember = () => {
       if (localStorage.getItem('rememberMe') === 'true') {
-        this.rememberMe = true;
-        // 填充登录表单中的用户名和密码
-        this.user.username = localStorage.getItem('username');
-        this.user.password = localStorage.getItem('password');
-      }else{
+        rememberMe.value = true
+        user.value.username = localStorage.getItem('username')
+        user.value.password = localStorage.getItem('password')
+      } else {
         localStorage.setItem('rememberMe', 'false')
       }
-    },
-    confirmEvent () {
-      localStorage.setItem('VIP', JSON.stringify('testToken'));
-      localStorage.setItem('username', JSON.stringify(this.user.username));
-      this.$router.push('/dashboard/products');
+    }
+
+    const signIn = () => {
+      const api = `${import.meta.env.VITE_APP_API}admin/signin`
+      axios.post(api, user.value).then((res) => {
+        isLoading.value = true
+        if (res.data.success) {
+          isLoading.value = false
+          const { token, expired } = res.data
+          document.cookie = `hexToken=${token}; expires=${new Date(expired)}`
+          this.$router.go(-1)
+          localStorage.setItem('username', JSON.stringify(user.value.username))
+        } else {
+          this.$swal.fire('Incorrect', 'please check username or password.', 'warning')
+        }
+      })
+    }
+
+    const validatePassword = (value) => {
+      if (!value) return false
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/
+      return regex.test(value) ? true : '密碼需包含英文大小寫和數字，且超過十位數以上'
+    }
+
+    const confirmEvent = () => {
+      localStorage.setItem('VIP', JSON.stringify('testToken'))
+      localStorage.setItem('username', JSON.stringify(user.value.username))
+      this.$router.push('/dashboard/products')
+    }
+
+    watch(rememberMe, (value) => {
+      if (value) {
+        this.$swal
+          .fire({
+            title: 'Are you sure remember it?',
+            text: ' Please verify and correct it if necessary!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, do it!'
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$swal.fire('Remember!', 'Your password has been saved.', 'success')
+              localStorage.setItem('username', user.value.username)
+              localStorage.setItem('password', user.value.password)
+              localStorage.setItem('rememberMe', true)
+            }
+          })
+      } else {
+        localStorage.removeItem('username')
+        localStorage.removeItem('password')
+        localStorage.removeItem('rememberMe')
+      }
+    })
+
+    onMounted(() => {
+      checkRemember()
+    })
+
+    return {
+      user,
+      isLoading,
+      rememberMe,
+      signIn,
+      validatePassword,
+      confirmEvent
     }
   }
-};
+}
 </script>
 <style scoped>
 .login_bg {
@@ -223,7 +356,6 @@ export default {
   border: 0 !important;
   padding: 15px;
   border-radius: 50%;
-
 }
 
 input:focus {

@@ -492,7 +492,7 @@ const sumFinalQty = ref(0)
 const sumTotal = ref(0)
 const isLoading = ref(true)
 const feeDeliver = 120
-const product = reactive({})
+const product = ref({})
 const couponPercent = ref('')
 const couponCode = ref('default')
 const options = ref([
@@ -610,7 +610,7 @@ function getProduct(id) {
   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${id}`
   http.get(api).then((res) => {
     if (res.data.success) {
-      product = res.data.product
+      product.value = res.data.product
       emitter.emit('customEvent_getProduct', product)
     }
   })

@@ -27,12 +27,11 @@ npm run dev看缺什麼
 
 ## com化
 改寫成compositon API
-
 改homeview中
-
+> 先改成pinia 再說
 ## pinia化
 
-## 元件分類 
+## 元件分類資料夾
 ## 修改router
 用import
 簡單路徑

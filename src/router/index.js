@@ -10,14 +10,14 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
+    // {
+    //   path: '/about',
+    //   name: 'about',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (About.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import('../views/AboutView.vue')
+    // },
     {
       path: '/products-view',
       // name: 'ProductsView',
@@ -33,74 +33,74 @@ const router = createRouter({
         }
       ]
     },
-    {
-      path: '/cart-view',
-      // name: 'cart-view',
-      component: () => import(/* webpackChunkName: 'about' */ '../views/CartView.vue'),
-      children: [
-        {
-          path: 'cart-list',
-          component: () => import('../views/CartList.vue')
-        },
-        {
-          path: 'cart-done',
-          component: () => import('../views/CartDone.vue')
-        },
-        {
-          path: 'checkout/:orderId',
-          component: () => import('../views/UserCheckout.vue')
-        }
-      ]
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue')
-    },
-    {
-      path: '/dashboard',
-      component: () => import('../views/Dashboard.vue'),
-      children: [
-        {
-          path: 'products',
-          component: () => import('../views/Products.vue')
-        },
-        {
-          path: 'orders', //*正常
-          component: () => import('../views/Orders.vue')
-        },
-        {
-          path: 'coupons', //*正常
-          component: () => import('../views/Coupons.vue')
-        },
-        {
-          path: 'storys',
-          component: () => import('../views/Storys.vue')
-        },
-        {
-          path: 'members', //*正常
-          component: () => import('../views/members.vue')
-        }
-      ]
-    },
-    {
-      path: '/story',
-      component: () => import('../views/StoryView.vue'),
-      children: [
-        {
-          path: 'list',
-          component: () => import('../views/StoryList.vue')
-        },
-        {
-          path: 'item/:storyId',
-          component: () => import('../views/StoryItem.vue')
-        }
-      ]
-    },
-    {
-      path: '/rank',
-      component: () => import('../views/RankView.vue')
-    }
+    // {
+    //   path: '/cart-view',
+    //   // name: 'cart-view',
+    //   component: () => import(/* webpackChunkName: 'about' */ '../views/CartView.vue'),
+    //   children: [
+    //     {
+    //       path: 'cart-list',
+    //       component: () => import('../views/CartList.vue')
+    //     },
+    //     {
+    //       path: 'cart-done',
+    //       component: () => import('../views/CartDone.vue')
+    //     },
+    //     {
+    //       path: 'checkout/:orderId',
+    //       component: () => import('../views/UserCheckout.vue')
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   component: () => import('../views/LoginView.vue')
+    // },
+    // {
+    //   path: '/dashboard',
+    //   component: () => import('../views/Dashboard.vue'),
+    //   children: [
+    //     {
+    //       path: 'products',
+    //       component: () => import('../views/Products.vue')
+    //     },
+    //     {
+    //       path: 'orders', //*正常
+    //       component: () => import('../views/Orders.vue')
+    //     },
+    //     {
+    //       path: 'coupons', //*正常
+    //       component: () => import('../views/Coupons.vue')
+    //     },
+    //     {
+    //       path: 'storys',
+    //       component: () => import('../views/Storys.vue')
+    //     },
+    //     {
+    //       path: 'members', //*正常
+    //       component: () => import('../views/members.vue')
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/story',
+    //   component: () => import('../views/StoryView.vue'),
+    //   children: [
+    //     {
+    //       path: 'list',
+    //       component: () => import('../views/StoryList.vue')
+    //     },
+    //     {
+    //       path: 'item/:storyId',
+    //       component: () => import('../views/StoryItem.vue')
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/rank',
+    //   component: () => import('../views/RankView.vue')
+    // }
   ]
 })
 

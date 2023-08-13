@@ -67,7 +67,7 @@ import Footer from '@/components/Footer.vue'
 // import loginMixin from '../mixins/loginMixin'
 import emitter from '@/methods/emitter'
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/useLoginStore.js'
 // const { mapActions } = Pinia
 
 export default {

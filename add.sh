@@ -3,7 +3,7 @@ sleep 2
 
 # git commit -m "create github repository    "
 
-git commit -m "update to pinia ( login )"
+git commit -m "update to pinia ( login / addToCart )"
 
 # git commit -m " fixed  "
 

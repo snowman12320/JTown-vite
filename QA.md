@@ -18,13 +18,20 @@ https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
 
 從最底層邏輯開始改 不要從view曾 因為包太多東西
 
-## 關於loginStore.js
+## 關於 useLoginStore.js
 
 我嘗試將loginMixin改成pinia統一管理狀態
 但在homeView測試，會出現 isLoading 和 inLogin
 was accessed during render but is not defined on instance.
-猜測是created（）時，使用同步或寫法錯誤
+猜測是created（）時，同步載入和使用導致錯誤，使用非同步還是無法
 
+## 關於 useCartStores.js
+
+將addTocart.js轉成pinia發現
+ $swal、$route、$http都會失效
+ 請問是都要如組合式寫法，都只能另外引入嗎，
+ 但我嘗試引入都失敗
+ 
 ## Q:關於loginMixin
 
 為何取不到這兩個變數

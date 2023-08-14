@@ -1,3 +1,95 @@
+<script>
+// @ is an alias to /src
+import Header from '@/components/Header.vue'
+import HomeCarousel from '@/components/HomeCarousel.vue'
+import HomeProduct from '@/components/HomeProduct.vue'
+import HomeStory from '@/components/HomeStory.vue'
+import Footer from '@/components/Footer.vue'
+// import loginMixin from '../mixins/loginMixin'
+import emitter from '@/methods/emitter'
+
+import { useLoginStore } from '@/stores/useLoginStore.js'
+import { mapActions, mapState } from 'pinia'
+
+export default {
+  // name: 'HomeView', //*过设置name属性，可以为组件指定一个唯一的名称。这对于在组件之间进行通信
+  // mixins: [loginMixin],
+  provide() {
+    return {
+      emitter
+    }
+  },
+  components: {
+    Header,
+    HomeCarousel,
+    HomeProduct,
+    HomeStory,
+    Footer
+  },
+  data() {
+    return {
+      isCouponAlert: true,
+      duration: 0,
+      timerElement: '00 D 00 H 00 M 00.0 S',
+      value: Date.now() + 1000 * 60 * 60 * 7, //* 實際開發時用API取到期日
+      centerDialogVisible: true
+    }
+  },
+  mounted() {
+    this.countdownTimer()
+    // 監聽scroll事件 > 可能要改watch 比較前後值
+    window.addEventListener('scroll', () => {
+      // 如果畫面捲軸停止捲動，將centerDialogVisible設置為true
+      if (window.scrollY === 0) {
+        // 在畫面停留3秒後將centerDialogVisible設置為true
+        setTimeout(() => {
+          this.centerDialogVisible = !this.centerDialogVisible
+        }, 10000)
+      }
+    }),
+      this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
+  },
+  computed: {
+    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+  },
+  methods: {
+    ...mapActions(useLoginStore, ['checkLoginStatus']),
+    pad(n, s) {
+      s = s || 2
+      return ('00000' + n).slice(-s)
+    },
+    setTimerElement() {
+      const now = new Date()
+      //* 實際開發可用優惠券到期日
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 0, 0, 0)
+      this.duration = midnight.getTime() - now.getTime()
+
+      if (this.duration > 0) {
+        const e = this.duration
+        const ms = e % 1000
+        const s = Math.floor((e / 1000) % 60)
+        const m = Math.floor((e / (1000 * 60)) % 60)
+        const h = Math.floor((e / (1000 * 60 * 60)) % 24)
+        const d = Math.floor(e / (1000 * 60 * 60 * 24))
+
+        this.timerElement = `Last chance to get 10% UP OFF  - \n EXTENDED UNTIL： ${this.pad(
+          d
+        )} Day ${this.pad(h)} h ${this.pad(m)} m ${this.pad(s)}.${Math.floor(ms / 100)} s`
+      } else {
+        this.timerElement = 'SORRY TIME UP!NEXT TIME BE QUICKLY' + '00 Day 00 h 00 m 00.0 s'
+      }
+    },
+    countdownTimer() {
+      this.setTimerElement() // 初始化倒计时
+
+      setInterval(() => {
+        this.setTimerElement()
+      }, 100) // 每0.1秒更新一次倒计时
+    }
+  }
+}
+</script>
+
 <template>
   <div class="position-relative">
     <Loading :active="isLoading"></Loading>
@@ -57,101 +149,7 @@
     </el-dialog>
   </div>
 </template>
-<script>
-// @ is an alias to /src
-import Header from '@/components/Header.vue'
-import HomeCarousel from '@/components/HomeCarousel.vue'
-import HomeProduct from '@/components/HomeProduct.vue'
-import HomeStory from '@/components/HomeStory.vue'
-import Footer from '@/components/Footer.vue'
-// import loginMixin from '../mixins/loginMixin'
-import emitter from '@/methods/emitter'
 
-import { useLoginStore } from '@/stores/useLoginStore.js'
-// const { mapActions } = Pinia
-
-export default {
-  // name: 'HomeView', //*过设置name属性，可以为组件指定一个唯一的名称。这对于在组件之间进行通信
-  // mixins: [loginMixin],
-  provide() {
-    return {
-      emitter
-    }
-  },
-  components: {
-    Header,
-    HomeCarousel,
-    HomeProduct,
-    HomeStory,
-    Footer
-  },
-  data() {
-    return {
-      isCouponAlert: true,
-      duration: 0,
-      timerElement: '00 D 00 H 00 M 00.0 S',
-      value: Date.now() + 1000 * 60 * 60 * 7, //* 實際開發時用API取到期日
-      centerDialogVisible: true
-    }
-  },
-  async created() {
-    const loginStore = useLoginStore()
-    await loginStore.checkLoginStatus()
-  },
-  // created() {
-  //   const loginStore = useLoginStore()
-  //   loginStore.checkLoginStatus()
-  //   // ...mapActions(loginStore, ['useLoginStore'])
-  // },
-  mounted() {
-    this.countdownTimer()
-    // 監聽scroll事件 > 可能要改watch 比較前後值
-    window.addEventListener('scroll', () => {
-      // 如果畫面捲軸停止捲動，將centerDialogVisible設置為true
-      if (window.scrollY === 0) {
-        // 在畫面停留3秒後將centerDialogVisible設置為true
-        setTimeout(() => {
-          this.centerDialogVisible = !this.centerDialogVisible
-        }, 10000)
-      }
-    })
-  },
-  methods: {
-    pad(n, s) {
-      s = s || 2
-      return ('00000' + n).slice(-s)
-    },
-    setTimerElement() {
-      const now = new Date()
-      //* 實際開發可用優惠券到期日
-      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 0, 0, 0)
-      this.duration = midnight.getTime() - now.getTime()
-
-      if (this.duration > 0) {
-        const e = this.duration
-        const ms = e % 1000
-        const s = Math.floor((e / 1000) % 60)
-        const m = Math.floor((e / (1000 * 60)) % 60)
-        const h = Math.floor((e / (1000 * 60 * 60)) % 24)
-        const d = Math.floor(e / (1000 * 60 * 60 * 24))
-
-        this.timerElement = `Last chance to get 10% UP OFF  - \n EXTENDED UNTIL： ${this.pad(
-          d
-        )} Day ${this.pad(h)} h ${this.pad(m)} m ${this.pad(s)}.${Math.floor(ms / 100)} s`
-      } else {
-        this.timerElement = 'SORRY TIME UP!NEXT TIME BE QUICKLY' + '00 Day 00 h 00 m 00.0 s'
-      }
-    },
-    countdownTimer() {
-      this.setTimerElement() // 初始化倒计时
-
-      setInterval(() => {
-        this.setTimerElement()
-      }, 100) // 每0.1秒更新一次倒计时
-    }
-  }
-}
-</script>
 // ! scoped 會讓子元件吃不到
 <style lang="scss">
 @import '../assets/helpers/function.scss';

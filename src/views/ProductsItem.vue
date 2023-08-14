@@ -5,55 +5,104 @@
     <div class="container-xl">
       <nav aria-label="breadcrumb" class="mt-10">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item  text-nbaBlue"><router-link style="text-decoration:none !important"
-              to="/">Home</router-link>
+          <li class="breadcrumb-item text-nbaBlue">
+            <router-link style="text-decoration: none !important" to="/">Home</router-link>
           </li>
-          <li class="breadcrumb-item  text-nbaBlue"><router-link style="text-decoration:none !important"
-              to="/products-view/products-content/title">Product</router-link>
+          <li class="breadcrumb-item text-nbaBlue">
+            <router-link
+              style="text-decoration: none !important"
+              to="/products-view/products-content/title"
+              >Product</router-link
+            >
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ product.title }} </li>
+          <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
         </ol>
       </nav>
       <!--  -->
       <div class="row row-cols-md-2 g-5 mt-md-5">
-        <div id="carouselExampleIndicators" class="carousel  slide col-md-8" data-bs-ride="carouse">
+        <div id="carouselExampleIndicators" class="carousel slide col-md-8" data-bs-ride="carouse">
           <div class="carousel-indicators">
             <!-- 第一個主圖的指標不用程式化，其餘其他圖片的指標用迴圈帶資料 -->
-            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-              aria-current="true" aria-label="Slide 1"></button>
-            <button v-for="(item, index) in product.imagesUrl" :key="index + 1" type="button"
-              data-bs-target="#carouselExampleIndicators" :data-bs-slide-to="index + 1" class="" aria-current="true"
-              :aria-label="'Slide ' + index + 1"></button>
+            <button
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              v-for="(item, index) in product.imagesUrl"
+              :key="index + 1"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              :data-bs-slide-to="index + 1"
+              class=""
+              aria-current="true"
+              :aria-label="'Slide ' + index + 1"
+            ></button>
           </div>
-          <div class="carousel-inner ">
+          <div class="carousel-inner">
             <div class="carousel-item active text-center h-100 w-100 mx-auto">
               <!-- <img :src="product.imageUrl" class=" w-auto  h-100" alt="..." /> -->
               <div class="f-panzoom h-100 w-100 mx-auto" ref="myPanzoom">
                 <div data-panzoom-pin data-x="56%" data-y="60%">
-                  <div title="My dream house"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                      monica-exclude-el="m">
+                  <div title="My dream house">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      monica-exclude-el="m"
+                    >
                       <path
-                        d="M12 0a7.2 7.2 0 0 0-7.27 7.14C4.73 11.08 12 24 12 24s7.27-12.92 7.27-16.86A7.2 7.2 0 0 0 12 0Z">
-                      </path>
-                    </svg></div>
-                  <p class="text-white" style="text-shadow: 2px 2px 4px #000, -2px -2px 4px #000;">feature</p>
+                        d="M12 0a7.2 7.2 0 0 0-7.27 7.14C4.73 11.08 12 24 12 24s7.27-12.92 7.27-16.86A7.2 7.2 0 0 0 12 0Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <p
+                    class="text-white"
+                    style="
+                      text-shadow:
+                        2px 2px 4px #000,
+                        -2px -2px 4px #000;
+                    "
+                  >
+                    feature
+                  </p>
                 </div>
                 <img class="f-panzoom__content w-100 h-100 mx-auto" :src="product.imageUrl" />
               </div>
             </div>
             <!--  -->
-            <div class="carousel-item text-center h-100 w-100" v-for="(item, index) in product.imagesUrl" :key="index">
-              <img :src="item.url" class=" w-auto  h-100" alt="..." />
+            <div
+              class="carousel-item text-center h-100 w-100"
+              v-for="(item, index) in product.imagesUrl"
+              :key="index"
+            >
+              <img :src="item.url" class="w-auto h-100" alt="..." />
             </div>
           </div>
-          <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev">
-            <span class="carousel-control-prev-icon bg-info p-2 rounded-circle" aria-hidden="true"></span>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev"
+          >
+            <span
+              class="carousel-control-prev-icon bg-info p-2 rounded-circle"
+              aria-hidden="true"
+            ></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next " type="button" data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next">
-            <span class="carousel-control-next-icon bg-info p-2 rounded-circle" aria-hidden="true"></span>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next"
+          >
+            <span
+              class="carousel-control-next-icon bg-info p-2 rounded-circle"
+              aria-hidden="true"
+            ></span>
             <span class="visually-hidden">Next</span>
           </button>
         </div>
@@ -62,36 +111,74 @@
           <h1 class="mb-5">{{ product.title }}</h1>
           <!--  -->
           <div class="my-5">
-            <div class="d-flex justify-content-center w-50 mx-auto ">
+            <div class="d-flex justify-content-center w-50 mx-auto">
               <div class="form-check">
-                <input value="S" v-model="productSize_item" class="form-check-input d-none" type="radio" name="size"
-                  id="S">
-                <label style="cursor: pointer" class="form-check-label border border-secondary text-secondary px-3 py-2"
-                  for="S">
+                <input
+                  value="S"
+                  v-model="productSize_item"
+                  class="form-check-input d-none"
+                  type="radio"
+                  name="size"
+                  id="S"
+                />
+                <label
+                  style="cursor: pointer"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  for="S"
+                >
                   S
                 </label>
               </div>
               <div class="form-check">
-                <input value="M" v-model="productSize_item" class="form-check-input d-none" type="radio" name="size"
-                  id="M">
-                <label style="cursor: pointer" class="form-check-label border border-secondary text-secondary px-3 py-2"
-                  for="M">
+                <input
+                  value="M"
+                  v-model="productSize_item"
+                  class="form-check-input d-none"
+                  type="radio"
+                  name="size"
+                  id="M"
+                />
+                <label
+                  style="cursor: pointer"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  for="M"
+                >
                   M
                 </label>
               </div>
               <div class="form-check">
-                <input value="L" v-model="productSize_item" class="form-check-input d-none" type="radio" name="size"
-                  id="L">
-                <label style="cursor: pointer" class="form-check-label border border-secondary text-secondary px-3 py-2"
-                  for="L">
+                <input
+                  value="L"
+                  v-model="productSize_item"
+                  class="form-check-input d-none"
+                  type="radio"
+                  name="size"
+                  id="L"
+                />
+                <label
+                  style="cursor: pointer"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  for="L"
+                >
                   L
                 </label>
               </div>
               <div class="form-check slanted-div">
-                <input disabled value="XL" v-model="productSize_item" class="form-check-input d-none" type="radio"
-                  name="size" id="XL">
-                <label style="  cursor: not-allowed;" disabled
-                  class="form-check-label border border-secondary text-secondary px-3 py-2" for="XL">
+                <input
+                  disabled
+                  value="XL"
+                  v-model="productSize_item"
+                  class="form-check-input d-none"
+                  type="radio"
+                  name="size"
+                  id="XL"
+                />
+                <label
+                  style="cursor: not-allowed"
+                  disabled
+                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  for="XL"
+                >
                   XL
                 </label>
               </div>
@@ -99,56 +186,95 @@
           </div>
           <!--  -->
           <div class="d-flex align-items-center justify-content-center gap-3">
-            <small class="text-secondary fs-6 text-decoration-line-through fw-lighter">$ {{
-              $filters.currency(product.origin_price) }}</small>
+            <small class="text-secondary fs-6 text-decoration-line-through fw-lighter"
+              >$ {{ $filters.currency(product.origin_price) }}</small
+            >
             <h2 class="text-center">$ {{ $filters.currency(product.price) }}</h2>
           </div>
           <div class="justify-content-center d-flex align-items-center my-3 gap-5">
             <div class="fs-1 d-flex justify-content-center gap-3 align-items-center">
-              <button style="height:40px" :disabled="qty === 1" @click="qty--"
-                class="btn btn-outline-secondary py-0">-</button>
+              <button
+                style="height: 40px"
+                :disabled="qty === 1"
+                @click="qty--"
+                class="btn btn-outline-secondary py-0"
+              >
+                -
+              </button>
               <span class="">{{ qty }}</span>
-              <button style="height:40px" @click="qty++" class="btn btn-outline-secondary py-0">+</button>
+              <button style="height: 40px" @click="qty++" class="btn btn-outline-secondary py-0">
+                +
+              </button>
             </div>
             <!--  -->
-            <i v-if="isFavorite" @click="updateFavo(product.id)"
-              class="fa-solid fa-heart fa-beat-fade text-danger fs-3"></i>
-            <i v-else @click="updateFavo(product.id)" class="fa-solid fa-heart-crack fa-shake text-secondary fs-3"></i>
+            <i
+              v-if="isFavorite"
+              @click="updateFavo(product.id)"
+              class="fa-solid fa-heart fa-beat-fade text-danger fs-3"
+            ></i>
+            <i
+              v-else
+              @click="updateFavo(product.id)"
+              class="fa-solid fa-heart-crack fa-shake text-secondary fs-3"
+            ></i>
           </div>
           <!--  -->
           <div class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1">
-            <button class="btn-outline-primary btn" @click="addToCart(product.id, qty, isBuy = false)"
+            <button
+              class="btn-outline-primary btn"
+              @click="addToCart(product.id, qty, (isBuy = false))"
               :class="{ 'btn btn-outline-primary': product.id === status.loadingItem }"
-              :disabled="product.id === status.loadingItem">ADD TO CART</button>
-            <button class="btn btn-danger" @click="addToCart(product.id, qty, isBuy = true)">BUY NOW</button>
+              :disabled="product.id === status.loadingItem"
+            >
+              ADD TO CART
+            </button>
+            <button class="btn btn-danger" @click="addToCart(product.id, qty, (isBuy = true))">
+              BUY NOW
+            </button>
           </div>
           <!--  -->
-          <hr class="w-100 mx-auto">
+          <hr class="w-100 mx-auto" />
           <div class="my-3 d-flex gap-3 w-100 flex-wrap mx-auto">
             <!-- round="" = true -->
-            <el-tag class="fs-6" type="warning" size="" effect="plain" round="">Free shipping</el-tag>
+            <el-tag class="fs-6" type="warning" size="" effect="plain" round=""
+              >Free shipping</el-tag
+            >
             <el-tag class="fs-6" type="info" size="" effect="plain" round="">Store pickup</el-tag>
-            <el-tag class="fs-6" type="danger" size="" effect="plain" round="">Fast delivery</el-tag>
+            <el-tag class="fs-6" type="danger" size="" effect="plain" round=""
+              >Fast delivery</el-tag
+            >
           </div>
-
         </div>
       </div>
       <!--  -->
       <div class="row row-cols-md-2 flex-column-reverse flex-md-row">
         <div class="col-md-8">
           <h3 class="mt-7">DESCRIPTION</h3>
-          <hr>
+          <hr />
           <p class="" v-html="product.content"></p>
           <!--  -->
           <h3 class="mt-7">COMMENT</h3>
-          <hr>
-          <div class="d-flex justify-content-start mb-4 " v-for="(item, index) in rateData" :key="index">
+          <hr />
+          <div
+            class="d-flex justify-content-start mb-4"
+            v-for="(item, index) in rateData"
+            :key="index"
+          >
             <div class="img_cont_msg">
-              <img :src="`https://i.pravatar.cc/150?img=${index}`" class="rounded-circle user_img_msg">
+              <img
+                :src="`https://i.pravatar.cc/150?img=${index}`"
+                class="rounded-circle user_img_msg"
+              />
             </div>
             <div class="d-flex flex-column">
-              <el-rate class="ms-3" v-model="item.rateValue" disabled show-score text-color="#ff9900"
-                score-template="{value}">
+              <el-rate
+                class="ms-3"
+                v-model="item.rateValue"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value}"
+              >
               </el-rate>
               <div class="position-relative">
                 <div class="msg_cotainer">
@@ -161,28 +287,46 @@
           </div>
           <!--  -->
           <div class="card-footer mt-10">
-            <el-rate v-model="rateValue" show-text>
-            </el-rate>
+            <el-rate v-model="rateValue" show-text> </el-rate>
             <div class="input-group d-flex align-items-end">
-              <textarea @keydown.enter="sendComment()" v-model="rateComment" name="" rows="3"
-                class="form-control type_msg" placeholder="Type your comment ..."></textarea>
-              <span @click="sendComment()" class="input-group-text send_btn "><i class="fas fa-location-arrow"></i></span>
+              <textarea
+                @keydown.enter="sendComment()"
+                v-model="rateComment"
+                name=""
+                rows="3"
+                class="form-control type_msg"
+                placeholder="Type your comment ..."
+              ></textarea>
+              <span @click="sendComment()" class="input-group-text send_btn"
+                ><i class="fas fa-location-arrow"></i
+              ></span>
             </div>
           </div>
         </div>
         <!--  -->
-        <div class="col-md-4 sticky-md-top align-self-start " style="top:10%;z-index:1">
-          <div class="accordion d-flex justify-content-center  mt-5" id="accordionPanelsStayOpenExample">
+        <div class="col-md-4 sticky-md-top align-self-start" style="top: 10%; z-index: 1">
+          <div
+            class="accordion d-flex justify-content-center mt-5"
+            id="accordionPanelsStayOpenExample"
+          >
             <div class="accordion-item w-100">
               <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                  aria-controls="panelsStayOpen-collapseOne">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#panelsStayOpen-collapseOne"
+                  aria-expanded="true"
+                  aria-controls="panelsStayOpen-collapseOne"
+                >
                   DETAILS
                 </button>
               </h2>
-              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse "
-                aria-labelledby="panelsStayOpen-headingOne">
+              <div
+                id="panelsStayOpen-collapseOne"
+                class="accordion-collapse collapse"
+                aria-labelledby="panelsStayOpen-headingOne"
+              >
                 <div class="accordion-body text-start">
                   <p class="" v-html="product.description"></p>
                 </div>
@@ -201,21 +345,25 @@
   </div>
 </template>
 <script>
-import ProductsList from '@/components/ProductsList.vue';
-import loginMixin from '../mixins/loginMixin';
-import addToCart from '../mixins/addToCart';
-import getFavoriteData from '../mixins/getFavoriteData';
+import ProductsList from '@/components/ProductsList.vue'
+// import loginMixin from '../mixins/loginMixin';
+import addToCart from '../mixins/addToCart'
+import getFavoriteData from '../mixins/getFavoriteData'
 //
-import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm';
-import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm';
+import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm'
+import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
 
 export default {
-  mixins: [loginMixin, addToCart, getFavoriteData],
+  mixins: [
+    // loginMixin,
+    addToCart,
+    getFavoriteData
+  ],
   inject: ['emitter'],
   components: {
     ProductsList
   },
-  data () {
+  data() {
     return {
       product: {},
       id: '',
@@ -231,83 +379,89 @@ export default {
       container: null,
       options: {},
       panzoom: null
-    };
+    }
   },
   //! mitt
-  mounted () {
+  mounted() {
     this.emitter.on('customEvent_isLoading_big', (data) => {
-      this.isLoading_big = data;
-    });
+      this.isLoading_big = data
+    })
     this.emitter.on('customEvent_getProduct', (data) => {
-      this.product = data;
-    });
+      this.product = data
+    })
     this.emitter.on('customEvent_isFavorite', (data) => {
-      this.isFavorite = data;
-    });
+      this.isFavorite = data
+    })
     this.emitter.on('customEvent_updateFavorite', () => {
-      this.getFavoriteData();
-    });
+      this.getFavoriteData()
+    })
     //* 只能放一個圖
-    this.container = this.$refs.myPanzoom;
-    this.panzoom = new Panzoom(this.container, this.options, { Pins });
+    this.container = this.$refs.myPanzoom
+    this.panzoom = new Panzoom(this.container, this.options, { Pins })
   },
-  created () {
-    this.id = this.$route.params.productId;//! 統一商品唯一的ID(item.id)
-    this.getProduct();
-    this.getFavoriteData(); //! 用其他電腦，先新增本地陣列
-    this.sendComment();
-    this.changeClass();
+  created() {
+    this.id = this.$route.params.productId //! 統一商品唯一的ID(item.id)
+    this.getProduct()
+    this.getFavoriteData() //! 用其他電腦，先新增本地陣列
+    this.sendComment()
+    this.changeClass()
   },
   methods: {
-    getProduct () {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${this.id}`;
-      this.isLoading = true;
-      this.isLoading_big = true;
+    getProduct() {
+      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
+        this.id
+      }`
+      this.isLoading = true
+      this.isLoading_big = true
       this.$http.get(api).then((response) => {
-        this.isLoading = false;
-        this.isLoading_big = false;
+        this.isLoading = false
+        this.isLoading_big = false
         if (response.data.success) {
-          this.product = response.data.product;
-          this.emitter.emit('customEvent_category', this.product.category);
+          this.product = response.data.product
+          this.emitter.emit('customEvent_category', this.product.category)
         }
-      });
+      })
     },
-    sendComment () {
+    sendComment() {
       if (!this.rateValue || !this.rateComment) {
-        this.$toast('error', 'star and comment required.');
-        return;
+        this.$toast('error', 'star and comment required.')
+        return
       }
-      const data = { rateValue: this.rateValue, rateComment: this.rateComment, rateTime: this.rateTime };
-      localStorage.setItem('rateData', JSON.stringify(data));
-      this.updateComment();
+      const data = {
+        rateValue: this.rateValue,
+        rateComment: this.rateComment,
+        rateTime: this.rateTime
+      }
+      localStorage.setItem('rateData', JSON.stringify(data))
+      this.updateComment()
       //
-      const currentDate = new Date();
-      const currentHour = currentDate.getHours();
-      const currentMinute = currentDate.getMinutes();
-      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM';
-      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12;
-      const formattedMinute = currentMinute.toString().padStart(2, '0');
-      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`;
-      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-      this.rateTime = `${formattedTime}, ${formattedDate}`;
-      this.rateValue = null;
-      this.rateComment = '';
+      const currentDate = new Date()
+      const currentHour = currentDate.getHours()
+      const currentMinute = currentDate.getMinutes()
+      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM'
+      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12
+      const formattedMinute = currentMinute.toString().padStart(2, '0')
+      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`
+      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' })
+      this.rateTime = `${formattedTime}, ${formattedDate}`
+      this.rateValue = null
+      this.rateComment = ''
     },
-    updateComment () {
-      this.isLoading_big = true;
-      this.rateData.push(JSON.parse(localStorage.getItem('rateData')));
+    updateComment() {
+      this.isLoading_big = true
+      this.rateData.push(JSON.parse(localStorage.getItem('rateData')))
       //* 使用箭头函数，回调函数将继承包含它的函数的上下文，这样就可以正确地访问和更新"this.isLoading_big"属性
       setTimeout(() => {
-        this.isLoading_big = false;
+        this.isLoading_big = false
         // this.emitter.emit('push-message', {
         //   style: 'success',
         //   title: 'SUCCESS！ADD COMMENT'
         // });
-        this.$toast('success', 'add comment');
-      }, 1000);
+        this.$toast('success', 'add comment')
+      }, 1000)
     },
-    changeClass () {
-      this.childClass = 'products_sort';
+    changeClass() {
+      this.childClass = 'products_sort'
     }
     // getProducts () { //* 取得全部資料的分類，並更新相關商品列表，無法用props覆蓋，故作罷
     //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`;
@@ -319,12 +473,12 @@ export default {
     //   });
     // }
   }
-};
+}
 </script>
 <style scoped lang="scss">
-@import "@fancyapps/ui/dist/fancybox/fancybox.css";
-@import "@fancyapps/ui/dist/panzoom/panzoom.css";
-@import "@fancyapps/ui/dist/panzoom/panzoom.pins.css";
+@import '@fancyapps/ui/dist/fancybox/fancybox.css';
+@import '@fancyapps/ui/dist/panzoom/panzoom.css';
+@import '@fancyapps/ui/dist/panzoom/panzoom.pins.css';
 
 * {
   // background-color: #78e08f;
@@ -344,7 +498,6 @@ export default {
     justify-content: center;
     gap: 15px;
   }
-
 }
 
 .f-panzoom {
@@ -405,7 +558,7 @@ export default {
   --bs-accordion-btn-active-icon: var(--bs-accordion-btn-icon);
 }
 
-.form-check input:checked+label {
+.form-check input:checked + label {
   border: 2px solid black !important;
   color: black !important;
 }
@@ -415,7 +568,7 @@ export default {
 }
 
 .slanted-div::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   right: 32%;
@@ -441,14 +594,12 @@ export default {
   height: 70px;
   width: 70px;
   border: 1.5px solid #f5f6fa;
-
 }
 
 .user_img_msg {
   height: 40px;
   width: 40px;
   border: 1.5px solid #f5f6fa;
-
 }
 
 .msg_cotainer_send {

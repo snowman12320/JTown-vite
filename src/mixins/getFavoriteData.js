@@ -1,7 +1,7 @@
-import loginMixin from './loginMixin';
+// import loginMixin from './loginMixin';
 export default {
   inject: ['emitter'],
-  mixins: [loginMixin],
+  // mixins: [loginMixin],
   data () {
     return {
       isFavorite: false,

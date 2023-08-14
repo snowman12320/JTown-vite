@@ -1,9 +1,49 @@
 # //////////////////提問//////////////////////////
 
-https://codesandbox.io/s/converting-options-api-to-composition-api-forked-q5ows?file=/src/App.vue
-https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
+https://github.com/snowman12320/jtown-vite/tree/pinia
+助教好，我遇到問題~
 
-> option API 重構成 composiition API
+https://github.com/snowman12320/jtown-vite/tree/pinia
+
+助教好，我遇到問題~
+
+
+
+Q : 關於 useLoginStore.js
+
+我嘗試將loginMixin改成pinia統一管理"登入狀態" ( 取代mixin混用方法 )
+
+在homeView測試，會出現 isLoading 和 inLogin ，was accessed during render but is not defined on instance.
+
+猜測是created(）時，同步載入和使用導致錯誤，使用非同步還是無法
+
+也有試過此寫法
+
+...mapActions(useLoginStore, ['checkLoginStatus']),
+
+
+<!-- Q : 關於 useCartStores.js
+
+將addTocart.js轉成pinia統一管理"加入購物車方法" ( 取代emitter跨元件溝通 )
+
+在productList測試， $swal、$route、$http都會失效
+
+請問pinia也是，如同組合式寫法，都只能另外引入嗎，但我嘗試引入都失敗 -->
+
+
+## 關於 useLoginStore.js
+
+我嘗試將loginMixin改成pinia統一管理狀態
+但在homeView測試，會出現 isLoading 和 inLogin
+was accessed during render but is not defined on instance.
+猜測是created（）時，同步載入和使用導致錯誤，使用非同步還是無法
+
+## 關於 useCartStores.js
+
+將addTocart.js轉成pinia發現
+$swal、$route、$http都會失效
+請問是都要如組合式寫法，都只能另外引入嗎，
+但我嘗試引入都失敗
 
 ## 選項式改成組合式的建議路徑
 
@@ -18,20 +58,11 @@ https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
 
 從最底層邏輯開始改 不要從view曾 因為包太多東西
 
-## 關於 useLoginStore.js
+## option API 重構成 composiition API
 
-我嘗試將loginMixin改成pinia統一管理狀態
-但在homeView測試，會出現 isLoading 和 inLogin
-was accessed during render but is not defined on instance.
-猜測是created（）時，同步載入和使用導致錯誤，使用非同步還是無法
+https://codesandbox.io/s/converting-options-api-to-composition-api-forked-q5ows?file=/src/App.vue
+https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
 
-## 關於 useCartStores.js
-
-將addTocart.js轉成pinia發現
- $swal、$route、$http都會失效
- 請問是都要如組合式寫法，都只能另外引入嗎，
- 但我嘗試引入都失敗
- 
 ## Q:關於loginMixin
 
 為何取不到這兩個變數

@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 
-// const $swal = 'vue-sweetalert2'
-// import route from 'vue-router'
+import VueSweetalert2 from 'vue-sweetalert2'
+
+import router from '../router/index.js'
 import axios from 'axios'
 
 export const useCartStore = defineStore({
@@ -18,10 +19,11 @@ export const useCartStore = defineStore({
   actions: {
     addToCart(id, qty = 1, isBuy) {
       if (!this.isLogin) {
-        // this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
-        // $swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        // VueSweetalert2.fire('Please', ' Sign in or Sign up first.', 'warning')
+        //
         // this.$router.push('/login')
-        // route.push('/login')
+        router.push('/login')
       } else {
         if (!this.productSize_list && !this.productSize_item) {
           this.$swal.fire('Please', 'Size must be selected.', 'warning')

@@ -1,3 +1,247 @@
+<script>
+import CartModal from '@/components/CartModal.vue'
+// import loginMixin from '../mixins/loginMixin';
+
+import useCartStore from '../stores/useCartStore.js'
+import { mapActions, mapState } from 'pinia'
+
+export default {
+  // mixins: [loginMixin],
+  inject: ['emitter'],
+  components: {
+    CartModal
+  },
+  data() {
+    return {
+      // carts: [],
+      // sumFinalTotal: 0,
+      // sumFinalQty: 0,
+      // sumTotal: 0,
+      // isLoading: true,
+      //
+      feeDeliver: 120,
+      // statusBtn: {
+      //   loadingItem: '' //! 可能沒用到的參數也要先定義，不然整個函式會掛
+      // },
+      product: {},
+      couponPercent: '',
+      couponCode: 'default',
+      options: [
+        {
+          code: 'gooaya',
+          title: 'gooaya / 每件商品打9折'
+        },
+        {
+          code: 'howhowhasfriend',
+          title: 'howhow / 每件商品打8折'
+        }
+      ],
+      form: {
+        user: {
+          email: '',
+          name: '',
+          tel: '',
+          address: ''
+        }
+      },
+      message: '這是留言',
+      isBuyPerson: false, //* 是否同購買人
+      tempForm: {
+        //* 已登入會員的資料
+        user: {
+          email: 'snowman12320@gmail.com',
+          name: '陳威良',
+          tel: '0912346768',
+          address: '台灣省'
+        }
+      },
+      isLookOver: false //* 是否閱讀條款
+    }
+  },
+  created() {
+    console.clear()
+    // ? 登入後 this.isLogin 還是false
+    if (!this.isLogin) {
+      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))
+      // this.emitter.emit('customEvent_getCart', this.getCart) //! 每頁導覽列都要更新購物車
+      // this.getCart() //* 本頁的購物車
+      this.getCoupons()
+    }
+    this.getCart() //* 本頁的購物車
+    //
+    this.couponCode = localStorage.getItem('local-couponCode')
+  },
+  mounted() {
+    // this.emitter.on('customEvent_getCart', () => {
+    //   this.getCart()
+    // })
+  },
+  watch: {
+    couponCode() {
+      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+      this.$http.get(api).then((res) => {
+        this.couponPercent = res.data.data.carts[0].coupon.percent
+      })
+    }
+  },
+  computed: {
+    ...mapState(useCartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal', 'couponPercent'])
+  },
+  methods: {
+    ...mapActions(useCartStore, ['getCart', 'updateCart', 'setCouponPercent']),
+    //
+    // getCart() {
+    //   this.isLoading = true
+    //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+
+    //   this.$http.get(api).then((res) => {
+    //     this.isLoading = false
+    //     this.carts = res.data.data.carts
+    //     //* 需先歸零，必需在這計算
+    //     this.sumTotal = 0
+    //     this.sumFinalTotal = 0
+    //     this.sumFinalQty = 0
+    //     this.carts.forEach((item) => {
+    //       this.sumTotal += item.total
+    //       this.sumFinalTotal += item.final_total
+    //       this.sumFinalQty += item.qty
+    //     })
+    //     //! 有新增優惠券時 或 重新整理判斷有無優惠券，避免沒有變數錯誤或下拉選單重整
+    //     //!  加這段剛開始沒有值會錯 || res.data.data.carts[0].coupon.code
+    //     localStorage.setItem('local-couponCode', this.couponCode)
+    //     this.couponCode = localStorage.getItem('local-couponCode')
+    //     if (this.couponCode !== 'default') {
+    //       if (this.$route.path.includes('cart-list')) {
+    //         this.couponPercent = res.data.data.carts[0].coupon.percent
+    //       }
+    //     }
+    //   })
+    // },
+    delCart(item) {
+      this.isLoading = true
+      // !塞入要刪除的ＩＤ
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
+        item.id
+      }`
+      this.$http.delete(url).then(() => {
+        this.isLoading = false
+        this.$toast('success', 'delete ' + `"${item.product.title}"`)
+        this.updateCart(item)
+      })
+      if (this.carts.length === 0) {
+        this.getCart()
+      }
+    },
+    //
+    getProduct(id) {
+      //! 只取一個商品，product.id才能取得商品內頁，不是id
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/product/${id}`
+      this.$http.get(api).then((res) => {
+        if (res.data.success) {
+          this.product = res.data.product
+          this.emitter.emit('customEvent_getProduct', this.product)
+        }
+      })
+      this.$router.push(`/products-view/products-item/${id}`)
+    },
+    //
+    getCoupons() {
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/coupons`
+      this.$http.get(url).then((res) => {
+        if (res.data.success) {
+          this.options = res.data.coupons.filter((coupon) => coupon.is_enabled === 1)
+        }
+      })
+    },
+    addCouponCode() {
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`
+      const coupon = {
+        code: this.couponCode
+      }
+      this.$http.post(url, { data: coupon }).then((res) => {
+        if (res.data.success) {
+          localStorage.setItem('local-couponCode', this.couponCode)
+          this.$toast('success', '加入優惠券')
+          this.getCart()
+          localStorage.setItem('local-couponCode', this.couponCode)
+        } else {
+          localStorage.removeItem('local-couponCode', this.couponCode)
+          this.$toast('success', '取消優惠券')
+          this.couponCode = 'default'
+          this.couponPercent = ''
+          this.getCart()
+          localStorage.setItem('local-couponCode', this.couponCode)
+        }
+      })
+    },
+    //
+    isName(value) {
+      if (!value) {
+        return '此欄為必填'
+      }
+      return true
+    },
+    isPhone(value) {
+      const phoneNumber = /^(09)[0-9]{8}$/
+      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
+    },
+    isAddress(value) {
+      if (!value) {
+        return '地址為必填'
+      }
+      return true
+    },
+    termCheck(value) {
+      if (!value) {
+        return '請閱讀"規範與聲明"文件，並將卷軸拉至底部，決定是否勾選同意'
+      }
+      return true
+    },
+    buyCheck(value) {
+      if (!value) {
+        return '請勾選同意'
+      }
+      return true
+    },
+    funcBuyPerson() {
+      this.isBuyPerson = !this.isBuyPerson
+      if (this.isBuyPerson) {
+        this.form = { ...this.tempForm }
+      } else {
+        this.form = {
+          user: {
+            email: '',
+            name: '',
+            tel: '',
+            address: ''
+          }
+        }
+      }
+    },
+    createOrder() {
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`
+      const order = this.form
+      this.$http.post(url, { data: order }).then((res) => {
+        this.emitter.emit('customEvent_getCart', this.getCart) //! 每頁導覽列都要更新購物車
+        this.$router.push(`checkout/${res.data.orderId}`)
+      })
+    },
+    //
+    openModal() {
+      const CartCp = this.$refs.CartModal
+      CartCp.showModal()
+    },
+    handleMyScroll() {
+      this.isLookOver = true
+    }
+  }
+}
+</script>
+
 <template>
   <div class="">
     <Loading :active="isLoading"></Loading>
@@ -43,7 +287,7 @@
                   <!-- -$ {{ $filters.currency(Math.round((sumFinalTotal / (couponPercent / 100)) - sumFinalTotal)) }} -->
                   <!-- 可以在表达式中使用条件语句、三元表达式 -->
                   -$
-                  {{ couponPercent ? $filters.currency(sumFinalTotal / (100 - couponPercent)) : 0 }}
+                  {{ couponPercent ? $filters.currency(sumTotal / (100 - couponPercent)) : 0 }}
                 </p>
               </li>
               <li class="list-group-item d-flex justify-content-between pb-0">
@@ -55,7 +299,7 @@
                 <p>
                   $
                   <span class="text-qopink fs-1 fw-bold">{{
-                    $filters.currency(sumFinalTotal + feeDeliver)
+                    $filters.currency(sumTotal + feeDeliver - sumTotal / (100 - couponPercent))
                   }}</span>
                 </p>
               </li>
@@ -458,10 +702,13 @@
                   </div>
                 </div>
               </li>
-              <div class="w-100 my-2">
+              <div class="w-100 my-2 text-center">
                 <button type="submit" class="btn btn-primary w-100" id="_cartCheckout">
                   立即結帳
                 </button>
+                <router-link to="/products-view/products-content/title" class="text-black"
+                  >繼續購物</router-link
+                >
               </div>
             </ul>
           </section>
@@ -469,243 +716,10 @@
       </div>
     </div>
     <!-- Modal -->
-    <!-- <CartModal ref="CartModal" @my-scroll="handleMyScroll"></CartModal> -->
+    <CartModal ref="CartModal" @my-scroll="handleMyScroll"></CartModal>
   </div>
   <!--  -->
 </template>
-<script>
-import CartModal from '@/components/CartModal.vue';
-import loginMixin from '../mixins/loginMixin';
-
-export default {
-  mixins: [loginMixin],
-  inject: ['emitter'],
-  components: {
-    CartModal
-  },
-  data () {
-    return {
-      carts: [],
-      sumFinalTotal: 0,
-      sumFinalQty: 0,
-      sumTotal: 0,
-      isLoading: true,
-      feeDeliver: 120,
-      status: {
-        loadingItem: '' //! 可能沒用到的參數也要先定義，不然整個函式會掛
-      },
-      product: {},
-      couponPercent: '',
-      couponCode: 'default',
-      options: [
-        {
-          code: 'gooaya',
-          title: 'gooaya / 每件商品打9折'
-        }, {
-          code: 'howhowhasfriend',
-          title: 'howhow / 每件商品打8折'
-        }],
-      form: {
-        user: {
-          email: '',
-          name: '',
-          tel: '',
-          address: ''
-        }
-      },
-      message: '這是留言',
-      isBuyPerson: false, //* 是否同購買人
-      tempForm: { //* 已登入會員的資料
-        user: {
-          email: 'snowman12320@gmail.com',
-          name: '陳威良',
-          tel: '0912346768',
-          address: '台灣省'
-        }
-      },
-      isLookOver: false //* 是否閱讀條款
-    };
-  },
-  created () {
-    // ? 登入後 this.isLogin 還是false
-    if (this.isLogin) {
-      this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning');
-      this.$router.push('/login');
-    } else {
-      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'));
-      this.emitter.emit('customEvent_getCart', this.getCart); //! 每頁導覽列都要更新購物車
-      this.getCart();//* 本頁的購物車
-      this.getCoupons();
-    }
-  },
-  mounted () {
-    this.emitter.on('customEvent_getCart', () => {
-      this.getCart();
-    });
-  },
-  methods: {
-    getCart () {
-      this.isLoading = true;
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`;
-
-      this.$http.get(api).then((res) => {
-        this.isLoading = false;
-        this.carts = res.data.data.carts;
-        //* 需先歸零，必需在這計算
-        this.sumTotal = 0;
-        this.sumFinalTotal = 0;
-        this.sumFinalQty = 0;
-        this.carts.forEach(item => {
-          this.sumTotal += item.total;
-          this.sumFinalTotal += item.final_total;
-          this.sumFinalQty += item.qty;
-        });
-        //! 有新增優惠券時 或 重新整理判斷有無優惠券，避免沒有變數錯誤或下拉選單重整
-        //!  加這段剛開始沒有值會錯 || res.data.data.carts[0].coupon.code
-        localStorage.setItem('local-couponCode', this.couponCode);
-        this.couponCode = localStorage.getItem('local-couponCode');
-        if (this.couponCode !== 'default') {
-          if (this.$route.path.includes('cart-list')) {
-            this.couponPercent = res.data.data.carts[0].coupon.percent;
-          }
-        }
-      });
-    },
-    delCart (item) {
-      this.isLoading = true;
-      // !塞入要刪除的ＩＤ
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${item.id}`;
-      this.$http.delete(url).then((res) => {
-        this.isLoading = false;
-        this.$httpMessageState(res, '移除購物車品項');
-        this.updateCart(item);
-      });
-      if (this.carts.length === 0) {
-        this.getCart();
-      }
-    },
-    updateCart (item) {
-      this.status.loadingItem = item.id;
-      this.isLoading = true;
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${item.id}`;
-      const cart = {
-        product_id: item.product_id,
-        qty: item.qty
-      };
-      this.$http.put(url, { data: cart }).then(() => {
-        this.status.loadingItem = '';
-        this.isLoading = false;
-        this.getCart();
-      });
-    },
-    getProduct (id) { //! 只取一個商品，product.id才能取得商品內頁，不是id
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${id}`;
-      this.$http.get(api).then((res) => {
-        if (res.data.success) {
-          this.product = res.data.product;
-          this.emitter.emit('customEvent_getProduct', this.product);
-        }
-      });
-      this.$router.push(`/products-view/products-item/${id}`);
-    },
-    getCoupons () {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/coupons`;
-      this.$http.get(url).then((res) => {
-        if (res.data.success) {
-          this.options = res.data.coupons.filter((coupon) => coupon.is_enabled === 1);
-        }
-      });
-    },
-    addCouponCode () {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`;
-      const coupon = {
-        code: this.couponCode
-      };
-      this.isLoading = true;
-      this.$http.post(url, { data: coupon }).then((res) => {
-        if (res.data.success) {
-          localStorage.setItem('local-couponCode', this.couponCode);
-          this.$httpMessageState(res, '加入優惠券');
-          this.getCart();
-          this.isLoading = false;
-        } else {
-          //! 實際狀況：透過取消優惠券api，去接收成功取消訊息
-          localStorage.removeItem('local-couponCode', this.couponCode);
-          this.emitter.emit('push-message', {
-            style: 'danger',
-            title: '取消優惠券'
-          });
-          this.couponCode = 'default';
-          this.couponPercent = '';
-          this.getCart();
-          this.isLoading = false;
-        }
-      });
-    },
-    isName (value) {
-      if (!value) {
-        return '此欄為必填';
-      }
-      return true;
-    },
-    isPhone (value) {
-      const phoneNumber = /^(09)[0-9]{8}$/;
-      return phoneNumber.test(value) ? true : '需要正確的電話號碼';
-    },
-    isAddress (value) {
-      if (!value) {
-        return '地址為必填';
-      }
-      return true;
-    },
-    termCheck (value) {
-      if (!value) {
-        return '請閱讀"規範與聲明"文件，並將卷軸拉至底部，決定是否勾選同意';
-      }
-      return true;
-    },
-    buyCheck (value) {
-      if (!value) {
-        return '請勾選同意';
-      }
-      return true;
-    },
-    funcBuyPerson () {
-      this.isBuyPerson = !this.isBuyPerson;
-      if (this.isBuyPerson) {
-        this.form = { ...this.tempForm };
-      } else {
-        this.form = {
-          user: {
-            email: '',
-            name: '',
-            tel: '',
-            address: ''
-          }
-        };
-      }
-    },
-    createOrder () {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`;
-      const order = this.form;
-      this.$http.post(url, { data: order })
-        .then((res) => {
-          this.emitter.emit('customEvent_getCart', this.getCart); //! 每頁導覽列都要更新購物車
-          this.$router.push(`checkout/${res.data.orderId}`);
-        });
-    },
-    openModal () {
-      const CartCp = this.$refs.CartModal;
-      CartCp.showModal();
-    },
-    handleMyScroll () {
-      this.isLookOver = true;
-    }
-
-  }
-};
-</script>
-
 
 <style scoped>
 h1,

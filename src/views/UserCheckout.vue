@@ -3,13 +3,22 @@
     <Loading :active="isLoading"></Loading>
     <div class="row content container mx-auto mt-3">
       <section class="mx-auto header">
-        <div class="d-flex justify-content-center my-5"><img height="130"
-            src="@/assets/nbaWeb/1588928235basketball-fire-logo-silhouette-freesvg.org.svg" alt="" />
+        <div class="d-flex justify-content-center my-5">
+          <img
+            height="130"
+            src="@/assets/nbaWeb/1588928235basketball-fire-logo-silhouette-freesvg.org.svg"
+            alt=""
+          />
           <img class="" height="130" src="@/assets/nbaWeb/1506074059.svg" alt="" />
-          <img class="" height="130" src="@/assets/nbaWeb/05284b30a1fda6bcdc09420b5c1e7127.svg" alt="" />
+          <img
+            class=""
+            height="130"
+            src="@/assets/nbaWeb/05284b30a1fda6bcdc09420b5c1e7127.svg"
+            alt=""
+          />
         </div>
-        <p class=" text-center">訂單已完成！</p>
-        <p class="text-center"> 付款完成後，會盡快為您安排出貨！</p>
+        <p class="text-center">訂單已完成！</p>
+        <p class="text-center">付款完成後，會盡快為您安排出貨！</p>
       </section>
     </div>
     <div class="my-5 row justify-content-center container-xl mx-auto">
@@ -37,7 +46,7 @@
           </table>
         </div>
         <!--  -->
-        <table class="table ">
+        <table class="table">
           <tbody>
             <tr>
               <th width="100">訂單時間</th>
@@ -76,56 +85,67 @@
           <button class="btn btn-danger">pay now</button>
         </div>
         <div class="text-end" v-else>
-          <router-link to="/"><button class="btn btn-outline-primary">get other thing!</button></router-link>
+          <router-link to="/"
+            ><button class="btn btn-outline-primary">get other thing!</button></router-link
+          >
         </div>
       </form>
     </div>
   </div>
 </template>
 <script>
-import loginMixin from '../mixins/loginMixin';
+// import loginMixin from '../mixins/loginMixin';
+
+import useLoginStore from '@/stores/useLoginStore.js'
+import { mapActions, mapState } from 'pinia'
 export default {
-  mixins: [loginMixin],
+  // mixins: [loginMixin],
   inject: ['emitter'],
-  data () {
+  data() {
     return {
       order: {
         user: {}
       },
       orderId: '',
-      isLoading: false,
+      // isLoading: false,
       paid_date: '',
       create_at: ''
-    };
-  },
-  methods: {
-    getOrder () {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${this.orderId}`;
-      this.$http.get(url)
-        .then((res) => {
-          if (res.data.success) {
-            this.order = res.data.order;
-            this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString();
-            this.create_at = new Date(this.order.create_at * 1000).toLocaleString();
-          }
-        });
-    },
-    payOrder () {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${this.orderId}`;
-      this.$http.post(url)
-        .then((res) => {
-          // console.log(res);
-          if (res.data.success) {
-            this.getOrder();
-          }
-        });
     }
   },
-  created () {
-    this.orderId = this.$route.params.orderId;
-    this.getOrder();
+  computed: {
+    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+  },
+  methods: {
+    ...mapActions(useLoginStore, ['checkLoginStatus']),
+    getOrder() {
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${
+        this.orderId
+      }`
+      this.$http.get(url).then((res) => {
+        if (res.data.success) {
+          this.order = res.data.order
+          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString()
+          this.create_at = new Date(this.order.create_at * 1000).toLocaleString()
+        }
+      })
+    },
+    payOrder() {
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${
+        this.orderId
+      }`
+      this.$http.post(url).then((res) => {
+        // console.log(res);
+        if (res.data.success) {
+          this.getOrder()
+        }
+      })
+    }
+  },
+  created() {
+    this.orderId = this.$route.params.orderId
+    this.getOrder()
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .user_check {
@@ -145,6 +165,5 @@ export default {
       white-space: nowrap;
     }
   }
-
 }
 </style>

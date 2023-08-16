@@ -7,9 +7,7 @@ https://github.com/snowman12320/jtown-vite/tree/pinia
 
 助教好，我遇到問題~
 
-
-
-Q : 關於 useLoginStore.js
+## x Q : 關於 useLoginStore.js
 
 我嘗試將loginMixin改成pinia統一管理"登入狀態" ( 取代mixin混用方法 )
 
@@ -17,33 +15,19 @@ Q : 關於 useLoginStore.js
 
 猜測是created(）時，同步載入和使用導致錯誤，使用非同步還是無法
 
-也有試過此寫法
+也有試過此寫法...mapActions(useLoginStore, ['checkLoginStatus']),
+> 要 mapState
 
-...mapActions(useLoginStore, ['checkLoginStatus']),
 
-
-<!-- Q : 關於 useCartStores.js
+## Q : 關於 useCartStores.js
 
 將addTocart.js轉成pinia統一管理"加入購物車方法" ( 取代emitter跨元件溝通 )
 
-在productList測試， $swal、$route、$http都會失效
-
-請問pinia也是，如同組合式寫法，都只能另外引入嗎，但我嘗試引入都失敗 -->
-
-
-## 關於 useLoginStore.js
-
-我嘗試將loginMixin改成pinia統一管理狀態
-但在homeView測試，會出現 isLoading 和 inLogin
-was accessed during render but is not defined on instance.
-猜測是created（）時，同步載入和使用導致錯誤，使用非同步還是無法
-
-## 關於 useCartStores.js
-
-將addTocart.js轉成pinia發現
-$swal、$route、$http都會失效
-請問是都要如組合式寫法，都只能另外引入嗎，
-但我嘗試引入都失敗
+在productList測試，觸發useCartStores中addToCart，$swal和$toast會失效，
+猜測是不支援較新的vite? 還是寫法哪邊要調整呢?
+// ? 兩種方式都無法
+// this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+// VueSweetalert2.fire('Please', 'Sign in or Sign up first.', 'warning')
 
 ## 選項式改成組合式的建議路徑
 

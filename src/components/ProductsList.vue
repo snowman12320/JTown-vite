@@ -3,13 +3,13 @@ import getFavoriteData from '../mixins/getFavoriteData'
 // import loginMixin from '../mixins/loginMixin'
 // import addToCart from '../mixins/addToCart'
 
-import { useCartStore } from '@/stores/useCartStore.js'
+import useCartStore from '../stores/useCartStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
   mixins: [
     // addToCart,
-    getFavoriteData,
+    getFavoriteData
     // loginMixin
   ],
   inject: ['emitter'],
@@ -20,7 +20,6 @@ export default {
       page: 1,
       pagination: {},
       products_list: 0,
-      isLoading: false,
       id: '',
       product: {},
       cacheSearch: '',
@@ -28,7 +27,9 @@ export default {
       filterCheck: '',
       isFavorite: false,
       selectSort: '0',
-      setClass: false
+      setClass: false,
+      //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
+      productSize_list: ''
     }
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
@@ -54,8 +55,14 @@ export default {
     this.getProducts()
     this.getFiltered() //! 取得全域搜尋資料
   },
+  watch: {
+    productSize_list(newValue) {
+      // 调用 useCartStore.js 中的方法来更新 productSize_list
+      this.setSize(newValue)
+    }
+  },
   computed: {
-    ...mapState(useCartStore, ['productSize_list', 'productSize_item']),
+    ...mapState(useCartStore, ['isLoading']),
     filtersData() {
       let filteredData = []
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -111,11 +118,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(useCartStore, ['addToCart']),
-    // addToCart(id, qty, isBuy) {
-    //   const cartStore = useCartStore()
-    //   cartStore.addToCart(id, qty, isBuy)
-    // },
+    ...mapActions(useCartStore, ['addToCart', 'setSize']),
     handleScroll() {
       // this.products_list = this.$refs.products_list.offsetHeight; //! 這邊定義會在切換router時，取不到dom（生命週期沒有重整吧）
       if (window.scrollY > this.products_list - 300) {
@@ -135,11 +138,11 @@ export default {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/products/?page=${page}`
-      this.isLoading = true
+      // this.isLoading = true
       this.isLoading_big = true
       this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
       this.$http.get(api).then((res) => {
-        this.isLoading = false
+        // this.isLoading = false
         this.isLoading_big = false
         this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {
@@ -153,7 +156,7 @@ export default {
     pushProducts() {
       //! 要用this.isLoading阻擋，避免讀取api間隔，持續捲動導致重複讀取資料
       if (!this.isLoading && this.pagination.has_next) {
-        this.isLoading = true
+        // this.isLoading = true
         // if (this.pagination.has_next) {
         // console.log(this.pagination);
         this.page++
@@ -167,7 +170,7 @@ export default {
             this.products = this.products.concat(res.data.products)
             // console.log(this.products);
             //! 成功讀取分頁數後，才能關閉載入，進行下次資料儲存，否則會重複儲存
-            this.isLoading = false
+            // this.isLoading = false
           }
         })
         // }
@@ -176,14 +179,14 @@ export default {
     getProduct(id) {
       //! 只取一個商品
       this.$router.push(`/products-view/products-item/${id}`)
-      this.isLoading = true
+      // this.isLoading = true
       this.isLoading_big = true
       this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/product/${id}`
       this.$http.get(api).then((res) => {
-        this.isLoading = false
+        // this.isLoading = false
         this.isLoading_big = false
         this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {

@@ -1,3 +1,103 @@
+
+<script>
+import offcanvasMixin from '@/mixins/offcanvasMixin'
+import DelModal from '@/components/DelModal.vue'
+
+import useCartStore from '../stores/useCartStore.js'
+import { mapActions, mapState } from 'pinia'
+export default {
+  inject: ['emitter'],
+  mixins: [offcanvasMixin], //* 混用獨立的功能
+  components: {
+    DelModal
+  },
+  data() {
+    return {
+      offcanvas: {},
+      tempCart: {},
+      tempCartTitle: {}
+    }
+  },
+  props: {
+    product: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  mounted() {
+    // this.emitter.on('customEvent_getCart', () => {
+    //   this.getCart()
+    // })
+  },
+  created() {
+    console.clear()
+    // this.getCart()
+  },
+  computed: {
+    ...mapState(useCartStore, ['isLoading', 'carts', 'statusBtn', 'sumFinalTotal', 'sumFinalQty'])
+  },
+  methods: {
+    ...mapActions(useCartStore, ['getCart', 'updateCart']),
+    //
+    openDelCartModel(item) {
+      this.tempCart = { ...item }
+      this.tempCartTitle = { ...item.product }
+      const delCp = this.$refs.delModal
+      delCp.showModal()
+    },
+    delCart() {
+      // !塞入要刪除的ＩＤ
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
+        this.tempCart.id
+      }`
+      this.$http.delete(url).then(() => {
+        const delCp = this.$refs.delModal
+        delCp.hideModal()
+        this.updateCart(this.tempCart)
+      })
+    },
+    delCarts() {
+      if (this.carts.length > 0) {
+        this.$swal
+          .fire({
+            title: 'Do you want to delete the all carts?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'O.K'
+            // denyButtonText: 'Don\'t save'
+          })
+          .then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              const url = `${import.meta.env.VITE_APP_API}api/${
+                import.meta.env.VITE_APP_PATH
+              }/carts`
+              this.$http.delete(url).then(() => {
+                this.getCart()
+                this.$swal.fire('Done delete all!', '', 'success')
+              })
+            } else if (result.isDenied) {
+              this.$swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+      } else {
+        this.$swal.fire('Cart was empty.', '', 'warning')
+      }
+    },
+    plusQty(item) {
+      item.qty++
+      this.$nextTick(this.updateCart(item))
+    },
+    minusQty(item) {
+      item.qty--
+      this.$nextTick(this.updateCart(item))
+    }
+  }
+}
+</script>
+
 <template>
   <div class="">
     <div
@@ -20,8 +120,8 @@
             href="#"
             role="button"
           >
-            <i class="bi bi-cart-x-fill"></i>ALL</a
-          >
+            <i class="bi bi-cart-x-fill"></i>ALL
+          </a>
         </h5>
         <button
           type="button"
@@ -56,7 +156,7 @@
                 style="height: 30px"
                 @click="minusQty(item)"
                 class="btn btn-outline-secondary py-0"
-                :disabled="item.qty === 1 || item.id === status.loadingItem"
+                :disabled="item.qty === 1 || item.id === statusBtn.loadingItem"
               >
                 -
               </button>
@@ -72,7 +172,7 @@
                 style="height: 30px"
                 @click="plusQty(item)"
                 class="btn btn-outline-secondary py-0"
-                :disabled="item.id === status.loadingItem"
+                :disabled="item.id === statusBtn.loadingItem"
               >
                 +
               </button>
@@ -108,134 +208,7 @@
     <DelModal :item="tempCartTitle" ref="delModal" @del-item="delCart" />
   </div>
 </template>
-<script>
-import offcanvasMixin from '@/mixins/offcanvasMixin'
-import DelModal from '@/components/DelModal.vue'
-import addToCart from '../mixins/addToCart'
-export default {
-  inject: ['emitter'],
-  mixins: [offcanvasMixin, addToCart], //* 混用獨立的功能
-  components: {
-    DelModal
-  },
-  data() {
-    return {
-      offcanvas: {},
-      carts: [],
-      sumFinalTotal: 0,
-      sumFinalQty: 0,
-      status: {
-        loadingItem: ''
-      },
-      isLoading: false,
-      tempCart: {},
-      tempCartTitle: {}
-    }
-  },
-  props: {
-    product: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
-  },
-  mounted() {
-    this.emitter.on('customEvent_getCart', () => {
-      this.getCart()
-    })
-  },
-  created() {
-    this.getCart()
-  },
-  methods: {
-    updateCart(item) {
-      this.status.loadingItem = item.id
-      this.isLoading = true
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
-        item.id
-      }`
-      const cart = {
-        product_id: item.product_id,
-        qty: item.qty
-      }
-      this.$http.put(url, { data: cart }).then((response) => {
-        this.status.loadingItem = ''
-        this.isLoading = false
-        this.getCart()
-      })
-    },
-    getCart() {
-      this.isLoading = true
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.carts = res.data.data.carts
-        //* 需先歸零，必需在這計算
-        this.sumFinalTotal = 0
-        this.sumFinalQty = 0
-        this.carts.forEach((item) => {
-          this.sumFinalTotal += item.total
-          this.sumFinalQty += item.qty
-        })
-      })
-    },
-    openDelCartModel(item) {
-      this.tempCart = { ...item }
-      this.tempCartTitle = { ...item.product }
-      const delCp = this.$refs.delModal
-      delCp.showModal()
-    },
-    delCart() {
-      // !塞入要刪除的ＩＤ
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
-        this.tempCart.id
-      }`
-      this.$http.delete(url).then((response) => {
-        const delCp = this.$refs.delModal
-        delCp.hideModal()
-        this.updateCart(this.tempCart)
-      })
-    },
-    delCarts() {
-      if (this.carts.length > 0) {
-        this.$swal
-          .fire({
-            title: 'Do you want to delete the all carts?',
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: 'O.K'
-            // denyButtonText: 'Don\'t save'
-          })
-          .then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-              const url = `${import.meta.env.VITE_APP_API}api/${
-                import.meta.env.VITE_APP_PATH
-              }/carts`
-              this.$http.delete(url).then((res) => {
-                this.getCart()
-                this.$swal.fire('Done delete all!', '', 'success')
-              })
-            } else if (result.isDenied) {
-              // this.$swal.fire('Changes are not saved', '', 'info');
-            }
-          })
-      } else {
-        this.$swal.fire('Cart was empty.', '', 'warning')
-      }
-    },
-    plusQty(item) {
-      item.qty++
-      this.$nextTick(this.updateCart(item))
-    },
-    minusQty(item) {
-      item.qty--
-      this.$nextTick(this.updateCart(item))
-    }
-  }
-}
-</script>
+
 <style scoped>
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {

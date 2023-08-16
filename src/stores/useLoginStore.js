@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-export const useLoginStore = defineStore({
-  id: 'login',
+export default defineStore('useLoginStore', {
   state: () => ({
     isLoading: false,
     isLogin: false,

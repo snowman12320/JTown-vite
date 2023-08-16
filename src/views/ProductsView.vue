@@ -14,7 +14,7 @@ import Footer from '@/components/Footer.vue'
 import emitter from '@/methods/emitter'
 import ToastMessages from '@/components/ToastMessages.vue'
 
-import { useLoginStore } from '@/stores/useLoginStore.js'
+import useLoginStore from '@/stores/useLoginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {

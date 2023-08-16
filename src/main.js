@@ -1,8 +1,9 @@
+console.clear()
+
 import './assets/main.css' //*vite的示範檔 > 編譯main.scss後被覆蓋
 import './assets/all.scss'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Loading from 'vue3-loading-overlay'
@@ -13,6 +14,7 @@ import { required, email, min } from '@vee-validate/rules' // 匯入 vee-validat
 import { localize, setLocale } from '@vee-validate/i18n' // 匯入多國語系的功能
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json' // 匯入繁體中文語系檔案
 import App from './App.vue'
+import { createPinia } from 'pinia'
 import router from './router'
 import { currency, date, dateAndTime } from './methods/filters'
 import $httpMessageState from './methods/pushMessageState' //* 全域函式

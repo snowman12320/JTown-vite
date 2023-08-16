@@ -9,23 +9,32 @@
   </div>
 </template>
 <script>
-import Header from '@/components/Header.vue';
-import Footer from '@/components/Footer.vue';
-import loginMixin from '../mixins/loginMixin';
-import emitter from '@/methods/emitter';
-import ToastMessages from '@/components/ToastMessages.vue';
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+// import loginMixin from '../mixins/loginMixin';
+import emitter from '@/methods/emitter'
+import ToastMessages from '@/components/ToastMessages.vue'
+
+import useLoginStore from '@/stores/useLoginStore.js'
+import { mapActions, mapState } from 'pinia'
 
 export default {
-  mixins: [loginMixin],
+  // mixins: [loginMixin],
   components: {
     Header,
     Footer,
     ToastMessages
   },
-  provide () {
+  provide() {
     return {
       emitter
-    };
+    }
+  },
+  computed: {
+    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+  },
+  methods: {
+    ...mapActions(useLoginStore, ['checkLoginStatus'])
   }
-};
+}
 </script>

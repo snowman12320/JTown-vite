@@ -37,9 +37,11 @@ export default {
       this.collapse_none = false
       this.collapse.hide()
     },
+    // 
     handleScroll() {
       this.atTop = !(window.scrollY > this.nav + 10) //* 使用this.nav進行操作
     },
+    // 
     //* 透過名稱取操作元件的函式
     openOffcanvas() {
       //! 避免開啟畫布，會一直重新判斷登入

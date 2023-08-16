@@ -3,7 +3,7 @@ sleep 2
 
 # git commit -m "create github repository    "
 
-git commit -m "update to pinia ( useCartStore.js )"
+git commit -m "update to pinia ( useFavoriteStore.js )"
 
 # git commit -m " fixed  "
 

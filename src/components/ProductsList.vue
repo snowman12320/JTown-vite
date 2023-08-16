@@ -4,6 +4,7 @@ import getFavoriteData from '../mixins/getFavoriteData'
 // import addToCart from '../mixins/addToCart'
 
 import useCartStore from '../stores/useCartStore.js'
+import useFavoriteStore from '../stores/useFavoriteStore'
 import { mapActions, mapState } from 'pinia'
 
 export default {
@@ -63,6 +64,7 @@ export default {
   },
   computed: {
     ...mapState(useCartStore, ['isLoading']),
+    ...mapState(useFavoriteStore, ['isLoading', 'filteredProducts']),
     filtersData() {
       let filteredData = []
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -119,6 +121,14 @@ export default {
 
   methods: {
     ...mapActions(useCartStore, ['addToCart', 'setSize']),
+    ...mapActions(useFavoriteStore, [
+      'getFavorite',
+      'getFavoriteId',
+      //
+      'updateFavo',
+      'getFavoriteData'
+    ]),
+    //
     handleScroll() {
       // this.products_list = this.$refs.products_list.offsetHeight; //! 這邊定義會在切換router時，取不到dom（生命週期沒有重整吧）
       if (window.scrollY > this.products_list - 300) {
@@ -126,6 +136,7 @@ export default {
         this.pushProducts()
       }
     },
+    //
     getFiltered() {
       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
       this.$http.get(api).then((res) => {

@@ -60,15 +60,13 @@ export default {
   },
   created() {
     console.clear()
-    // ? 登入後 this.isLogin 還是false
+    // 
     if (!this.isLogin) {
       this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))
-      // this.emitter.emit('customEvent_getCart', this.getCart) //! 每頁導覽列都要更新購物車
-      // this.getCart() //* 本頁的購物車
       this.getCoupons()
     }
-    this.getCart() //* 本頁的購物車
     //
+    this.getCart() //* 本頁的購物車
     this.couponCode = localStorage.getItem('local-couponCode')
   },
   mounted() {
@@ -164,16 +162,15 @@ export default {
       }
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
-          localStorage.setItem('local-couponCode', this.couponCode)
-          this.$toast('success', '加入優惠券')
           this.getCart()
+          this.$toast('success', '加入優惠券')
           localStorage.setItem('local-couponCode', this.couponCode)
         } else {
           localStorage.removeItem('local-couponCode', this.couponCode)
+          this.getCart()
           this.$toast('success', '取消優惠券')
           this.couponCode = 'default'
           this.couponPercent = ''
-          this.getCart()
           localStorage.setItem('local-couponCode', this.couponCode)
         }
       })

@@ -1,3 +1,167 @@
+<script>
+import offcanvasMixin from '@/mixins/offcanvasMixin'
+import DelModal from '@/components/DelModal.vue'
+
+import useFavoriteStore from '../stores/useFavoriteStore.js'
+import { mapActions, mapState } from 'pinia'
+export default {
+  inject: ['emitter'],
+  mixins: [offcanvasMixin], //* 混用獨立的功能
+  components: {
+    DelModal
+  },
+  data() {
+    return {
+      offcanvas: {},
+      // isLoading: false,
+      // products: [],
+      //
+      tempFavorite: ''
+      //
+      // filteredProducts: [],
+      // favoriteIds: []
+    }
+  },
+  mounted() {
+    // this.emitter.on('customEvent_updateFavorite', () => {
+    //   this.getFavorite()
+    //   this.getFavoriteId()
+    // })
+  },
+  created() {
+    console.clear()
+    this.getFavoriteId()
+    this.getFavorite()
+  },
+  computed: {
+    ...mapState(useFavoriteStore, [
+      'isLoading',
+      'products',
+      'filteredProducts',
+      'favoriteIds',
+      //
+      'isFavorite',
+      'favoriteData',
+      'checkFavorite'
+    ])
+  },
+  methods: {
+    ...mapActions(useFavoriteStore, [
+      'getFavorite',
+      'getFavoriteId',
+      //
+      'updateFavo',
+      'getFavoriteData'
+    ]),
+    //
+    // getFavorite() {
+    //   this.isLoading = true
+    //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
+    //   this.$http.get(api).then((res) => {
+    //     if (res.data.success) {
+    //       this.isLoading = false
+    //       this.products = res.data.products
+    //       this.filteredProducts = this.products.filter((item) => this.favoriteIds.includes(item.id))
+    //     }
+    //   })
+    // },
+    // getFavoriteId() {
+    //   //! 當新用戶本地沒有資料時會報錯，需事先新增
+    //   if (!localStorage.getItem('favorite')) localStorage.setItem('favorite', JSON.stringify([]))
+    //   this.favoriteIds = JSON.parse(localStorage.getItem('favorite'))
+    // },
+    //
+    openDelModel(item) {
+      this.tempFavorite = { ...item }
+      const delCp = this.$refs.delModal
+      delCp.showModal()
+    },
+    delFavorite() {
+      const checkFavorite = Boolean(
+        localStorage.getItem('favorite').indexOf(this.tempFavorite.id) !== -1
+      ) //* 搜尋目標
+      if (checkFavorite) {
+        //* 存在就刪除
+        const favoriteData = JSON.parse(localStorage.getItem('favorite'))
+        const index = favoriteData.indexOf(this.tempFavorite.id)
+        favoriteData.splice(index, 1)
+        localStorage.setItem('favorite', JSON.stringify(favoriteData))
+        this.getFavoriteId()
+        this.getFavorite()
+      }
+      this.emitter.emit('customEvent_updateFavorite') //! 觸發商品內頁的收藏更新
+      const delCp = this.$refs.delModal
+      delCp.hideModal()
+    },
+    delFavorites() {
+      if (JSON.parse(localStorage.getItem('favorite')).length > 0) {
+        this.$swal
+          .fire({
+            title: 'Do you want to delete the all Favorite?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'O.K'
+          })
+          .then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              localStorage.setItem('favorite', JSON.stringify([]))
+              this.delFavorite()
+              setTimeout(() => {
+                this.$swal.fire('Done delete all!', '', 'success')
+              }, 1000)
+            }
+          })
+      } else {
+        this.$swal.fire('Favorites was empty.', '', 'warning')
+      }
+    },
+    //
+    getProduct(id) {
+      //! 只取一個商品
+      this.$router.push(`/products-view/products-item/${id}`)
+      this.isLoading = true
+      this.isLoading_big = true
+      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/product/${id}`
+      this.$http.get(api).then((res) => {
+        this.isLoading = false
+        this.isLoading_big = false
+        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
+        if (res.data.success) {
+          this.product = res.data.product
+          this.emitter.emit('customEvent_getProduct', this.product)
+          // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
+          const carouselItems = document.querySelectorAll('.carousel-item')
+          carouselItems.forEach(function (item) {
+            item.classList.remove('active')
+          })
+          carouselItems[0].classList.add('active')
+          window.scrollTo(0, 0)
+        }
+      })
+      // 確認收藏狀態
+      //! 要用this.id ，用product.id會錯 ，需分清楚差別
+      //! 在其他電腦，若先判斷會錯誤
+      if (JSON.parse(localStorage.getItem('favorite'))) {
+        const checkFavorite = Boolean(
+          JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
+        ) //* 搜尋目標
+        if (checkFavorite) {
+          this.isFavorite = true
+          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
+        } else {
+          this.isFavorite = false
+          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
+        }
+      }
+    }
+  }
+}
+</script>
+
 <template>
   <div class="">
     <div
@@ -71,142 +235,6 @@
   </div>
 </template>
 
-<script>
-import offcanvasMixin from '@/mixins/offcanvasMixin'
-import DelModal from '@/components/DelModal.vue'
-export default {
-  inject: ['emitter'],
-  mixins: [offcanvasMixin], //* 混用獨立的功能
-  components: {
-    DelModal
-  },
-  data() {
-    return {
-      offcanvas: {},
-      isLoading: false,
-      products: [],
-      filteredProducts: [],
-      favoriteIds: [],
-      tempFavorite: ''
-    }
-  },
-  mounted() {
-    this.emitter.on('customEvent_updateFavorite', () => {
-      this.getFavorite()
-      this.getFavoriteId()
-    })
-  },
-  created() {
-    this.getFavoriteId()
-    this.getFavorite()
-  },
-  computed: {},
-  methods: {
-    getFavorite() {
-      this.isLoading = true
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-      this.$http.get(api).then((res) => {
-        if (res.data.success) {
-          this.isLoading = false
-          this.products = res.data.products
-          this.filteredProducts = this.products.filter((item) => this.favoriteIds.includes(item.id))
-        }
-      })
-    },
-    getFavoriteId() {
-      //! 當新用戶本地沒有資料時會報錯，需事先新增
-      if (!localStorage.getItem('favorite')) localStorage.setItem('favorite', JSON.stringify([]))
-      this.favoriteIds = JSON.parse(localStorage.getItem('favorite'))
-    },
-    openDelModel(item) {
-      this.tempFavorite = { ...item }
-      const delCp = this.$refs.delModal
-      delCp.showModal()
-    },
-    delFavorite() {
-      const checkFavorite = Boolean(
-        localStorage.getItem('favorite').indexOf(this.tempFavorite.id) !== -1
-      ) //* 搜尋目標
-      if (checkFavorite) {
-        //* 存在就刪除
-        const favoriteData = JSON.parse(localStorage.getItem('favorite'))
-        const index = favoriteData.indexOf(this.tempFavorite.id)
-        favoriteData.splice(index, 1)
-        localStorage.setItem('favorite', JSON.stringify(favoriteData))
-        this.getFavoriteId()
-        this.getFavorite()
-      }
-      this.emitter.emit('customEvent_updateFavorite') //! 觸發商品內頁的收藏更新
-      const delCp = this.$refs.delModal
-      delCp.hideModal()
-    },
-    getProduct(id) {
-      //! 只取一個商品
-      this.$router.push(`/products-view/products-item/${id}`)
-      this.isLoading = true
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/product/${id}`
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-        if (res.data.success) {
-          this.product = res.data.product
-          this.emitter.emit('customEvent_getProduct', this.product)
-          // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-          const carouselItems = document.querySelectorAll('.carousel-item')
-          carouselItems.forEach(function (item) {
-            item.classList.remove('active')
-          })
-          carouselItems[0].classList.add('active')
-          window.scrollTo(0, 0)
-        }
-      })
-      // 確認收藏狀態
-      //! 要用this.id ，用product.id會錯 ，需分清楚差別
-      //! 在其他電腦，若先判斷會錯誤
-      if (JSON.parse(localStorage.getItem('favorite'))) {
-        const checkFavorite = Boolean(
-          JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
-        ) //* 搜尋目標
-        if (checkFavorite) {
-          this.isFavorite = true
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        } else {
-          this.isFavorite = false
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        }
-      }
-    },
-    delFavorites() {
-      if (JSON.parse(localStorage.getItem('favorite')).length > 0) {
-        this.$swal
-          .fire({
-            title: 'Do you want to delete the all Favorite?',
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: 'O.K'
-          })
-          .then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-              localStorage.setItem('favorite', JSON.stringify([]))
-              this.delFavorite()
-              setTimeout(() => {
-                this.$swal.fire('Done delete all!', '', 'success')
-              }, 1000)
-            }
-          })
-      } else {
-        this.$swal.fire('Favorites was empty.', '', 'warning')
-      }
-    }
-  }
-}
-</script>
 <style scoped>
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {

@@ -12,85 +12,37 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
+      //
       offcanvas: {},
-      // isLoading: false,
-      // products: [],
       //
       tempFavorite: ''
-      //
-      // filteredProducts: [],
-      // favoriteIds: []
     }
-  },
-  mounted() {
-    // this.emitter.on('customEvent_updateFavorite', () => {
-    //   this.getFavorite()
-    //   this.getFavoriteId()
-    // })
   },
   created() {
     console.clear()
-    this.getFavoriteId()
     this.getFavorite()
   },
   computed: {
-    ...mapState(useFavoriteStore, [
-      'isLoading',
-      'products',
-      'filteredProducts',
-      'favoriteIds',
-      //
-      'isFavorite',
-      'favoriteData',
-      'checkFavorite'
-    ])
+    ...mapState(useFavoriteStore, ['filteredProducts', 'favoriteIds'])
   },
   methods: {
-    ...mapActions(useFavoriteStore, [
-      'getFavorite',
-      'getFavoriteId',
-      //
-      'updateFavo',
-      'getFavoriteData'
-    ]),
+    ...mapActions(useFavoriteStore, ['getFavorite', 'getFavoriteId']),
     //
-    // getFavorite() {
-    //   this.isLoading = true
-    //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-    //   this.$http.get(api).then((res) => {
-    //     if (res.data.success) {
-    //       this.isLoading = false
-    //       this.products = res.data.products
-    //       this.filteredProducts = this.products.filter((item) => this.favoriteIds.includes(item.id))
-    //     }
-    //   })
-    // },
-    // getFavoriteId() {
-    //   //! 當新用戶本地沒有資料時會報錯，需事先新增
-    //   if (!localStorage.getItem('favorite')) localStorage.setItem('favorite', JSON.stringify([]))
-    //   this.favoriteIds = JSON.parse(localStorage.getItem('favorite'))
-    // },
-    //
-    openDelModel(item) {
-      this.tempFavorite = { ...item }
-      const delCp = this.$refs.delModal
-      delCp.showModal()
-    },
-    delFavorite() {
-      const checkFavorite = Boolean(
-        localStorage.getItem('favorite').indexOf(this.tempFavorite.id) !== -1
-      ) //* 搜尋目標
-      if (checkFavorite) {
+    delFavorite(id) {
+      this.isLoading = true
+      //* 搜尋目標
+      if (this.favoriteIds.indexOf(id) !== -1) {
         //* 存在就刪除
-        const favoriteData = JSON.parse(localStorage.getItem('favorite'))
-        const index = favoriteData.indexOf(this.tempFavorite.id)
-        favoriteData.splice(index, 1)
-        localStorage.setItem('favorite', JSON.stringify(favoriteData))
-        this.getFavoriteId()
+        this.favoriteIds.splice(this.favoriteIds.indexOf(id), 1)
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
         this.getFavorite()
+        this.isLoading = false
       }
-      this.emitter.emit('customEvent_updateFavorite') //! 觸發商品內頁的收藏更新
       const delCp = this.$refs.delModal
+      // 通过属性选择器获取具有 data-ref="delModal" 属性的 DOM 元素
+      // let delCp = document.querySelector('[data-ref="delModal"]')
+      console.log(delCp);
       delCp.hideModal()
     },
     delFavorites() {
@@ -103,12 +55,13 @@ export default {
             confirmButtonText: 'O.K'
           })
           .then((result) => {
-            /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
+              this.isLoading = true
               localStorage.setItem('favorite', JSON.stringify([]))
-              this.delFavorite()
+              this.getFavorite() //* 刷新側邊頁面
               setTimeout(() => {
                 this.$swal.fire('Done delete all!', '', 'success')
+                this.isLoading = false
               }, 1000)
             }
           })
@@ -157,6 +110,12 @@ export default {
           this.emitter.emit('customEvent_isFavorite', this.isFavorite)
         }
       }
+    },
+    //
+    openDelModel(item) {
+      this.tempFavorite = { ...item }
+      const delCp = this.$refs.delModal
+      delCp.showModal()
     }
   }
 }
@@ -197,14 +156,13 @@ export default {
       <div class="offcanvas-body">
         <div
           class="d-flex p-2 border border-2 border-light rounded-3 product_item my-2 gap-2"
-          @click="getProduct(item.id)"
           v-for="(item, id) in filteredProducts"
           :key="id"
         >
           <div class="" style="width: 100px !important; height: 70px !important">
             <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" alt="" />
           </div>
-          <div class="w-100 p-1">
+          <div class="w-100 p-1" @click="getProduct(item.id)">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
             <p class="text-center pt-2 fs-5 mb-0">
               <small
@@ -231,7 +189,12 @@ export default {
         </p>
       </div>
     </div>
-    <DelModal :item="tempFavorite" ref="delModal" @del-item="delFavorite" />
+    <DelModal
+      :item="tempFavorite"
+      ref="delModal"
+      data-ref="delModal"
+      @del-item="delFavorite(tempFavorite.id)"
+    />
   </div>
 </template>
 

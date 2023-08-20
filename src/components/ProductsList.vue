@@ -1,46 +1,45 @@
 <script>
-import getFavoriteData from '../mixins/getFavoriteData'
-// import loginMixin from '../mixins/loginMixin'
-// import addToCart from '../mixins/addToCart'
-
 import useCartStore from '../stores/useCartStore.js'
 import useFavoriteStore from '../stores/useFavoriteStore'
+import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  mixins: [
-    // addToCart,
-    getFavoriteData
-    // loginMixin
-  ],
   inject: ['emitter'],
   data() {
     return {
-      products: [], //* 原始資料
-      Filtered: [], //! 搜尋全域的資料
+      isLoading_small: false, //列表載入
+      //
+      products: [], // 原始資料
+      Filtered: [], //! 搜尋全部商品用
+      //
       page: 1,
       pagination: {},
-      products_list: 0,
-      id: '',
-      product: {},
-      cacheSearch: '',
-      cacheCategory: '',
-      filterCheck: '',
-      isFavorite: false,
-      selectSort: '0',
+      //
+      productsList_hight: 0,
+      //
+      // id: '',
+      // product: {},
+      //
+      cacheSearch: '', //名稱搜尋
+      cacheCategory: '', //分類搜尋
+      //
+      filterCheck: '', //價格篩選
+      selectSort: '0', //名稱價格排序
+      //
       setClass: false,
       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
       productSize_list: ''
     }
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
-  props: ['customClass'],
+  props: ['customClass'], //* 傳入用一串class包起來的變數，來改變子元件樣式
   mounted() {
-    this.products_list = this.$refs.products_list.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
+    this.productsList_hight = this.$refs.productsList_hight.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
     window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
+    //
     this.emitter.on('customEvent_search', (data) => {
       this.cacheSearch = data
-      // console.log(this.cacheSearch);
     })
     this.emitter.on('customEvent_category', (data) => {
       this.cacheCategory = data
@@ -52,6 +51,7 @@ export default {
     })
   },
   created() {
+    console.clear()
     this.cacheSearch = this.$route.params.search
     this.getProducts()
     this.getFiltered() //! 取得全域搜尋資料
@@ -59,80 +59,67 @@ export default {
   watch: {
     productSize_list(newValue) {
       // 调用 useCartStore.js 中的方法来更新 productSize_list
-      this.setSize(newValue)
+      this.setSize(newValue, '')
     }
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading']),
-    ...mapState(useFavoriteStore, ['isLoading', 'filteredProducts']),
-    filtersData() {
+    ...mapState(useCartStore, ['isLoading', 'statusBtn_car']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
+    ...mapState(useFavoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds']),
+    //
+    filteredData() {
       let filteredData = []
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.isLoading_big = true
+      if (
+        !this.$route.path.includes('products-content') &&
+        !this.$route.path.includes('products-item')
+      ) {
+        filteredData = this.products
+      } else {
+        filteredData = this.Filtered.filter(
+          (item) =>
+            (!this.cacheSearch ||
+              item.title.toLowerCase().includes(this.cacheSearch.trim().toLowerCase())) &&
+            (!this.cacheCategory ||
+              item.category.toLowerCase().includes(this.cacheCategory.trim().toLowerCase()))
+        )
 
-      try {
-        if (
-          !this.$route.path.includes('products-content') &&
-          !this.$route.path.includes('products-item')
-        ) {
+        if (filteredData.length === 0) {
           filteredData = this.products
-        } else {
-          filteredData = this.Filtered.filter(
-            (item) =>
-              (!this.cacheSearch ||
-                item.title.toLowerCase().includes(this.cacheSearch.trim().toLowerCase())) &&
-              (!this.cacheCategory ||
-                item.category.toLowerCase().includes(this.cacheCategory.trim().toLowerCase()))
-          )
-
-          if (filteredData.length === 0) {
-            filteredData = this.products
-          }
-          // !當無搜尋時就使用第一頁資料，在有搜尋時就使用全部資料，才不會一開始就渲染全部
-          if (!this.cacheCategory && !this.cacheSearch) {
-            filteredData = this.products
-          }
-
-          const filterFunc = {
-            2999: (item) => item.price <= 2999,
-            5000: (item) => item.price >= 5000,
-            default: () => true
-          }[this.filterCheck || 'default']
-
-          const sortFunc = {
-            Low: (a, b) => a.price - b.price,
-            Height: (a, b) => b.price - a.price,
-            AZ: (a, b) => a.title.localeCompare(b.title),
-            ZA: (a, b) => b.title.localeCompare(a.title),
-            default: () => 0
-          }[this.selectSort || 'default']
-
-          filteredData = filteredData.filter(filterFunc).sort(sortFunc)
         }
-      } finally {
-        //! 無法在 computed 屬性中使用了副作用 (想嘗試改變 isLoading_big 時機)
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.isLoading_big = false
+        // !當無搜尋時就使用第一頁資料，在有搜尋時就使用全部資料，才不會一開始就渲染全部
+        if (!this.cacheCategory && !this.cacheSearch) {
+          filteredData = this.products
+        }
+
+        const filterFunc = {
+          2999: (item) => item.price <= 2999,
+          5000: (item) => item.price >= 5000,
+          default: () => true
+        }[this.filterCheck || 'default']
+
+        const sortFunc = {
+          Low: (a, b) => a.price - b.price,
+          Height: (a, b) => b.price - a.price,
+          AZ: (a, b) => a.title.localeCompare(b.title),
+          ZA: (a, b) => b.title.localeCompare(a.title),
+          default: () => 0
+        }[this.selectSort || 'default']
+
+        filteredData = filteredData.filter(filterFunc).sort(sortFunc)
       }
 
       return filteredData
     }
   },
-
   methods: {
     ...mapActions(useCartStore, ['addToCart', 'setSize']),
-    ...mapActions(useFavoriteStore, [
-      'getFavorite',
-      'getFavoriteId',
-      //
-      'updateFavo',
-      'getFavoriteData'
-    ]),
+    ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
+    ...mapActions(productStore, ['getProduct_item']),
+
     //
     handleScroll() {
-      // this.products_list = this.$refs.products_list.offsetHeight; //! 這邊定義會在切換router時，取不到dom（生命週期沒有重整吧）
-      if (window.scrollY > this.products_list - 300) {
-        //!
+      //! 這邊定義會在切換router時，取不到dom（可生命週期沒有重整吧）
+      // this.productsList_hight = this.$refs.productsList_hight.offsetHeight;
+      if (window.scrollY > this.productsList_hight - 300) {
         this.pushProducts()
       }
     },
@@ -145,6 +132,7 @@ export default {
         }
       })
     },
+    //
     getProducts(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -166,8 +154,8 @@ export default {
     // 將新數據合併到舊數據時，可以使用 concat 方法代替 new Set，避免重複儲存，也不用push推新的陣列物件進去，這樣會有兩個陣列物件，會無法迴圈
     pushProducts() {
       //! 要用this.isLoading阻擋，避免讀取api間隔，持續捲動導致重複讀取資料
-      if (!this.isLoading && this.pagination.has_next) {
-        // this.isLoading = true
+      if (!this.isLoading_small && this.pagination.has_next) {
+        this.isLoading_small = true
         // if (this.pagination.has_next) {
         // console.log(this.pagination);
         this.page++
@@ -181,29 +169,32 @@ export default {
             this.products = this.products.concat(res.data.products)
             // console.log(this.products);
             //! 成功讀取分頁數後，才能關閉載入，進行下次資料儲存，否則會重複儲存
-            // this.isLoading = false
+            this.isLoading_small = false
           }
         })
         // }
       }
     },
+    //goToProduct
+    goToProduct(id) {
+      this.getProduct_item(id)
+    },
     getProduct(id) {
-      //! 只取一個商品
+      //! 只取一個商品，傳入該商品id到內頁使用
       this.$router.push(`/products-view/products-item/${id}`)
-      // this.isLoading = true
       this.isLoading_big = true
       this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/product/${id}`
       this.$http.get(api).then((res) => {
-        // this.isLoading = false
         this.isLoading_big = false
         this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {
+          // 更新內頁商品資料
           this.product = res.data.product
           this.emitter.emit('customEvent_getProduct', this.product)
-          // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
+          // 輪播回到第一張，取得所有的carousel-item元素，移除所有carousel-item元素的active類別
           const carouselItems = document.querySelectorAll('.carousel-item')
           carouselItems.forEach(function (item) {
             item.classList.remove('active')
@@ -212,21 +203,6 @@ export default {
           window.scrollTo(0, 0)
         }
       })
-      // 確認收藏狀態
-      //! 要用this.id ，用product.id會錯 ，需分清楚差別
-      //! 在其他電腦，若先判斷會錯誤
-      if (JSON.parse(localStorage.getItem('favorite'))) {
-        const checkFavorite = Boolean(
-          JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
-        ) //* 搜尋目標
-        if (checkFavorite) {
-          this.isFavorite = true
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        } else {
-          this.isFavorite = false
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        }
-      }
     }
   }
 }
@@ -252,8 +228,8 @@ export default {
       </select>
     </div>
     <hr class="py-3" />
-    <div class="row row-cols-2 row-cols-lg-5 g-4 mb-7" ref="products_list">
-      <div class="" v-for="(item, index) in filtersData" :key="item.id">
+    <div class="row row-cols-2 row-cols-lg-5 g-4 mb-7" ref="productsList_hight">
+      <div class="" v-for="(item, index) in filteredData" :key="item.id">
         <div class="col overflow-hidden">
           <div
             class="card w-100 position-relation newproduct_img"
@@ -266,7 +242,7 @@ export default {
               :class="{ newproduct_cloth_set: setClass === index }"
             >
               <h6 class="fw-light" style="font-size: 10px">{{ item.category }}</h6>
-              <h5 class="fs-5 text-center" @click="getProduct(item.id)">
+              <h5 class="fs-5 text-center" @click="goToProduct(item.id)">
                 {{ item.title }}
               </h5>
               <h6 class="text-white text-center">$ {{ $filters.currency(item.price) }}</h6>
@@ -275,8 +251,8 @@ export default {
                 class="position-relative border border-white rounded-1 px-2 py-3 bg-transparent d-flex justify-content-around m-2"
               >
                 <i
-                  @click="updateFavo(item.id)"
-                  :class="{ 'text-danger': favoriteData.indexOf(item.id) !== -1 }"
+                  @click="updateFavorite(item.id)"
+                  :class="{ 'text-danger': favoriteIds.indexOf(item.id) !== -1 }"
                   class="fa fa-heart fs-4"
                 ></i>
                 <!--  -->
@@ -373,7 +349,7 @@ export default {
                 </el-popover>
                 <!--  -->
                 <div
-                  v-if="isLoading"
+                  v-if="statusBtn.loadingItem === item.id || statusBtn_car.loadingItem === item.id"
                   class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
                 >
                   <div class="spinner-border text-primary" role="status">
@@ -396,7 +372,7 @@ export default {
     </div>
     <!--  -->
     <div class="text-center">
-      <div v-show="isLoading" class="spinner-grow text-warning" role="status">
+      <div v-show="isLoading_small" class="spinner-grow text-warning" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>

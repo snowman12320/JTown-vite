@@ -1,28 +1,24 @@
 <script>
 import CartModal from '@/components/CartModal.vue'
-// import loginMixin from '../mixins/loginMixin';
+import validatorMixin from '../mixins/validatorMixin'
 
 import useCartStore from '../stores/useCartStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  // mixins: [loginMixin],
+  mixins: [validatorMixin],
   inject: ['emitter'],
   components: {
     CartModal
   },
   data() {
     return {
-      // carts: [],
-      // sumFinalTotal: 0,
-      // sumFinalQty: 0,
-      // sumTotal: 0,
       // isLoading: true,
-      //
-      feeDeliver: 120,
       // statusBtn: {
       //   loadingItem: '' //! 可能沒用到的參數也要先定義，不然整個函式會掛
       // },
+      //
+      feeDeliver: 120,
       product: {},
       couponPercent: '',
       couponCode: 'default',
@@ -60,7 +56,7 @@ export default {
   },
   created() {
     console.clear()
-    // 
+    //
     if (!this.isLogin) {
       this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))
       this.getCoupons()
@@ -76,17 +72,19 @@ export default {
   },
   watch: {
     couponCode() {
+      // if (this.couponCode !== 'default') {
       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
       this.$http.get(api).then((res) => {
         this.couponPercent = res.data.data.carts[0].coupon.percent
       })
+      // }
     }
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal', 'couponPercent'])
+    ...mapState(useCartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
   },
   methods: {
-    ...mapActions(useCartStore, ['getCart', 'updateCart', 'setCouponPercent']),
+    ...mapActions(useCartStore, ['getCart', 'updateCart']),
     //
     // getCart() {
     //   this.isLoading = true
@@ -176,34 +174,6 @@ export default {
       })
     },
     //
-    isName(value) {
-      if (!value) {
-        return '此欄為必填'
-      }
-      return true
-    },
-    isPhone(value) {
-      const phoneNumber = /^(09)[0-9]{8}$/
-      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
-    },
-    isAddress(value) {
-      if (!value) {
-        return '地址為必填'
-      }
-      return true
-    },
-    termCheck(value) {
-      if (!value) {
-        return '請閱讀"規範與聲明"文件，並將卷軸拉至底部，決定是否勾選同意'
-      }
-      return true
-    },
-    buyCheck(value) {
-      if (!value) {
-        return '請勾選同意'
-      }
-      return true
-    },
     funcBuyPerson() {
       this.isBuyPerson = !this.isBuyPerson
       if (this.isBuyPerson) {

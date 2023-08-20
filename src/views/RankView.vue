@@ -31,7 +31,7 @@ import emitter from '@/methods/emitter'
 import ToastMessages from '@/components/ToastMessages.vue'
 import RankList from '@/components/RankList.vue'
 
-import { useLoginStore } from '@/stores/useLoginStore.js'
+import useLoginStore from '@/stores/useLoginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {

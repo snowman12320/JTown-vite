@@ -3,6 +3,11 @@ import CartOffcanvas from '@/components/CartOffcanvas.vue'
 import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue'
 import Collapse from 'bootstrap/js/dist/collapse'
 
+import useFavoriteStore from '../stores/useFavoriteStore'
+import useCartStore from '../stores/useCartStore'
+import useLoginStore from '../stores/useLoginStore'
+import { mapState } from 'pinia'
+
 export default {
   components: {
     CartOffcanvas,
@@ -28,6 +33,11 @@ export default {
       this.collapse_hide() //* 在 mounted 后触发 collapse_hide 方法
     }, 500)
   },
+  computed: {
+    ...mapState(useFavoriteStore, ['favoriteIds']),
+    ...mapState(useCartStore, ['carts']),
+    ...mapState(useLoginStore, ['isLogin'])
+  },
   methods: {
     collapse_toggle() {
       this.collapse_none = false
@@ -37,11 +47,11 @@ export default {
       this.collapse_none = false
       this.collapse.hide()
     },
-    // 
+    //
     handleScroll() {
       this.atTop = !(window.scrollY > this.nav + 10) //* 使用this.nav進行操作
     },
-    // 
+    //
     //* 透過名稱取操作元件的函式
     openOffcanvas() {
       //! 避免開啟畫布，會一直重新判斷登入
@@ -142,13 +152,28 @@ export default {
               </router-link>
             </li>
             <li>
-              <button @click="openFavoriteOffcanvas()" class="bg-transparent border-0">
+              <button
+                @click="openFavoriteOffcanvas()"
+                class="bg-transparent border-0 position-relative"
+              >
                 <i class="fa-regular fa-heart text-nbaRed fs-3 mt-2 px-1 ms-md-2"></i>
+                <span
+                  v-if="favoriteIds.length && isLogin"
+                  class="position-absolute text-nbaRed"
+                  style="top: 35%; left: 49%; font-size: 10px"
+                  >{{ favoriteIds.length }}</span
+                >
               </button>
             </li>
             <li>
-              <button @click="openOffcanvas()" class="bg-transparent border-0">
+              <button @click="openOffcanvas()" class="bg-transparent border-0 position-relative">
                 <i class="fa-sharp fa-solid fa-cart-shopping text-nbaRed fs-3 mt-2 px-1"></i>
+                <span
+                  v-if="carts.length && isLogin"
+                  class="position-absolute text-white"
+                  style="top: 26%; left: 41%; font-size: 5px; padding: 0px 3px; border-radius: 50px"
+                  >{{ carts.length }}</span
+                >
               </button>
             </li>
           </ul>

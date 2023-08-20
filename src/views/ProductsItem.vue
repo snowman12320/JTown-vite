@@ -1,6 +1,149 @@
+<script>
+import ProductsList from '@/components/ProductsList.vue'
+//
+import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm'
+import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
+//
+import useFavoriteStore from '../stores/useFavoriteStore'
+import useCartStore from '../stores/useCartStore'
+import productStore from '../stores/productStore'
+import { mapState, mapActions } from 'pinia'
+
+export default {
+  inject: ['emitter'],
+  components: {
+    ProductsList
+  },
+  data() {
+    return {
+      isLoading_big: false,
+      //
+      product: {},
+      productId: '',
+      //
+      qty: 1,
+      isBuy: false,
+      //
+      productSize_item: '',
+      //
+      rateValue: 5,
+      rateComment: 'The product is the best ,I have ever seen !',
+      rateTime: '8: 40 AM, Today',
+      rateData: [],
+      //
+      childClass: '',
+      //
+      container: null,
+      options: {},
+      panzoom: null
+    }
+  },
+  //! mitt
+  mounted() {
+    this.emitter.on('customEvent_isLoading_big', (data) => {
+      this.isLoading_big = data
+    })
+    this.emitter.on('customEvent_getProduct', (data) => {
+      this.product = data
+    })
+    //* 只能放一個圖
+    this.container = this.$refs.myPanzoom
+    this.panzoom = new Panzoom(this.container, this.options, { Pins })
+  },
+  created() {
+    console.clear()
+    this.productId = this.$route.params.productId //! 統一商品唯一的ID(item.id)
+    this.getProduct()
+    //
+    this.getFavorite() //! 用其他電腦，先新增本地陣列
+    //
+    this.sendComment()
+    this.changeClass()
+    //
+    this.getProduct_item(this.productId)
+  },
+  watch: {
+    productSize_item(newValue) {
+      // 调用 useCartStore.js 中的方法来更新 productSize_item
+      this.setSize('', newValue)
+    }
+  },
+  computed: {
+    ...mapState(useFavoriteStore, ['statusBtn']),
+    ...mapState(useFavoriteStore, ['isFavorite', 'favoriteIds']),
+    ...mapState(productStore, ['isLoading_productStore', 'product_item'])
+  },
+  methods: {
+    ...mapActions(useCartStore, ['addToCart', 'setSize']),
+    ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
+    ...mapActions(productStore, ['getProduct_item']),
+
+    //
+    getProduct() {
+      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
+        this.productId
+      }`
+      this.isLoading = true
+      this.isLoading_big = true
+      //
+      this.$http.get(api).then((response) => {
+        this.isLoading = false
+        this.isLoading_big = false
+        if (response.data.success) {
+          this.product = response.data.product
+          this.emitter.emit('customEvent_category', this.product.category)
+        }
+      })
+    },
+    sendComment() {
+      if (!this.rateValue || !this.rateComment) {
+        this.$toast('error', 'star and comment required.')
+        return
+      }
+      const data = {
+        rateValue: this.rateValue,
+        rateComment: this.rateComment,
+        rateTime: this.rateTime
+      }
+      localStorage.setItem('rateData', JSON.stringify(data))
+      this.updateComment()
+      //
+      const currentDate = new Date()
+      const currentHour = currentDate.getHours()
+      const currentMinute = currentDate.getMinutes()
+      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM'
+      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12
+      const formattedMinute = currentMinute.toString().padStart(2, '0')
+      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`
+      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' })
+      this.rateTime = `${formattedTime}, ${formattedDate}`
+      this.rateValue = null
+      this.rateComment = ''
+    },
+    updateComment() {
+      this.isLoading_big = true
+      this.rateData.push(JSON.parse(localStorage.getItem('rateData')))
+      //* 使用箭头函数，回调函数将继承包含它的函数的上下文，这样就可以正确地访问和更新"this.isLoading_big"属性
+      setTimeout(() => {
+        this.isLoading_big = false
+        // this.emitter.emit('push-message', {
+        //   style: 'success',
+        //   title: 'SUCCESS！ADD COMMENT'
+        // });
+        this.$toast('success', 'add comment')
+      }, 1000)
+    },
+    changeClass() {
+      this.childClass = 'products_sort'
+    }
+  }
+}
+</script>
+
 <template>
   <div class="">
     <Loading :active="isLoading_big"></Loading>
+    <Loading :active="isLoading_productStore"></Loading>
     <!--  -->
     <div class="container-xl">
       <nav aria-label="breadcrumb" class="mt-10">
@@ -15,7 +158,7 @@
               >Product</router-link
             >
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+          <li class="breadcrumb-item active" aria-current="page">{{ product_item.title }}</li>
         </ol>
       </nav>
       <!--  -->
@@ -32,7 +175,7 @@
               aria-label="Slide 1"
             ></button>
             <button
-              v-for="(item, index) in product.imagesUrl"
+              v-for="(item, index) in product_item.imagesUrl"
               :key="index + 1"
               type="button"
               data-bs-target="#carouselExampleIndicators"
@@ -44,7 +187,7 @@
           </div>
           <div class="carousel-inner">
             <div class="carousel-item active text-center h-100 w-100 mx-auto">
-              <!-- <img :src="product.imageUrl" class=" w-auto  h-100" alt="..." /> -->
+              <!-- <img :src="product_item.imageUrl" class=" w-auto  h-100" alt="..." /> -->
               <div class="f-panzoom h-100 w-100 mx-auto" ref="myPanzoom">
                 <div data-panzoom-pin data-x="56%" data-y="60%">
                   <div title="My dream house">
@@ -69,13 +212,13 @@
                     feature
                   </p>
                 </div>
-                <img class="f-panzoom__content w-100 h-100 mx-auto" :src="product.imageUrl" />
+                <img class="f-panzoom__content w-100 h-100 mx-auto" :src="product_item.imageUrl" />
               </div>
             </div>
             <!--  -->
             <div
               class="carousel-item text-center h-100 w-100"
-              v-for="(item, index) in product.imagesUrl"
+              v-for="(item, index) in product_item.imagesUrl"
               :key="index"
             >
               <img :src="item.url" class="w-auto h-100" alt="..." />
@@ -108,7 +251,7 @@
         </div>
         <!--  -->
         <div class="col-md-4 d-flex flex-column justify-content-around text-center">
-          <h1 class="mb-5">{{ product.title }}</h1>
+          <h1 class="mb-5">{{ product_item.title }}</h1>
           <!--  -->
           <div class="my-5">
             <div class="d-flex justify-content-center w-50 mx-auto">
@@ -187,9 +330,9 @@
           <!--  -->
           <div class="d-flex align-items-center justify-content-center gap-3">
             <small class="text-secondary fs-6 text-decoration-line-through fw-lighter"
-              >$ {{ $filters.currency(product.origin_price) }}</small
+              >$ {{ $filters.currency(product_item.origin_price) }}</small
             >
-            <h2 class="text-center">$ {{ $filters.currency(product.price) }}</h2>
+            <h2 class="text-center">$ {{ $filters.currency(product_item.price) }}</h2>
           </div>
           <div class="justify-content-center d-flex align-items-center my-3 gap-5">
             <div class="fs-1 d-flex justify-content-center gap-3 align-items-center">
@@ -208,13 +351,13 @@
             </div>
             <!--  -->
             <i
-              v-if="isFavorite"
-              @click="updateFavo(product.id)"
+              v-if="favoriteIds.indexOf(product_item.id) !== -1"
+              @click="updateFavorite(product_item.id)"
               class="fa-solid fa-heart fa-beat-fade text-danger fs-3"
             ></i>
             <i
               v-else
-              @click="updateFavo(product.id)"
+              @click="updateFavorite(product_item.id)"
               class="fa-solid fa-heart-crack fa-shake text-secondary fs-3"
             ></i>
           </div>
@@ -222,13 +365,13 @@
           <div class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1">
             <button
               class="btn-outline-primary btn"
-              @click="addToCart(product.id, qty, (isBuy = false))"
-              :class="{ 'btn btn-outline-primary': product.id === status.loadingItem }"
-              :disabled="product.id === status.loadingItem"
+              @click="addToCart(product_item.id, qty, (isBuy = false))"
+              :class="{ 'btn btn-outline-primary': product_item.id === statusBtn.loadingItem }"
+              :disabled="product_item.id === statusBtn.loadingItem"
             >
               ADD TO CART
             </button>
-            <button class="btn btn-danger" @click="addToCart(product.id, qty, (isBuy = true))">
+            <button class="btn btn-danger" @click="addToCart(product_item.id, qty, (isBuy = true))">
               BUY NOW
             </button>
           </div>
@@ -251,7 +394,7 @@
         <div class="col-md-8">
           <h3 class="mt-7">DESCRIPTION</h3>
           <hr />
-          <p class="" v-html="product.content"></p>
+          <p class="" v-html="product_item.content"></p>
           <!--  -->
           <h3 class="mt-7">COMMENT</h3>
           <hr />
@@ -278,7 +421,7 @@
               </el-rate>
               <div class="position-relative">
                 <div class="msg_cotainer">
-                  <!-- The product is the best ,I have ever seen ! -->
+                  <!-- The product_item is the best ,I have ever seen ! -->
                   {{ item.rateComment }}
                 </div>
                 <span class="msg_time">{{ item.rateTime }}</span>
@@ -328,7 +471,7 @@
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body text-start">
-                  <p class="" v-html="product.description"></p>
+                  <p class="" v-html="product_item.description"></p>
                 </div>
               </div>
             </div>
@@ -344,137 +487,7 @@
     </div>
   </div>
 </template>
-<script>
-import ProductsList from '@/components/ProductsList.vue'
-// import loginMixin from '../mixins/loginMixin';
-import addToCart from '../mixins/addToCart'
-import getFavoriteData from '../mixins/getFavoriteData'
-//
-import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm'
-import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
 
-export default {
-  mixins: [
-    // loginMixin,
-    addToCart,
-    getFavoriteData
-  ],
-  inject: ['emitter'],
-  components: {
-    ProductsList
-  },
-  data() {
-    return {
-      product: {},
-      id: '',
-      isLoading_big: false,
-      //
-      rateValue: 5,
-      rateComment: 'The product is the best ,I have ever seen !',
-      rateTime: '8: 40 AM, Today',
-      rateData: [],
-      //
-      childClass: '',
-      //
-      container: null,
-      options: {},
-      panzoom: null
-    }
-  },
-  //! mitt
-  mounted() {
-    this.emitter.on('customEvent_isLoading_big', (data) => {
-      this.isLoading_big = data
-    })
-    this.emitter.on('customEvent_getProduct', (data) => {
-      this.product = data
-    })
-    this.emitter.on('customEvent_isFavorite', (data) => {
-      this.isFavorite = data
-    })
-    this.emitter.on('customEvent_updateFavorite', () => {
-      this.getFavoriteData()
-    })
-    //* 只能放一個圖
-    this.container = this.$refs.myPanzoom
-    this.panzoom = new Panzoom(this.container, this.options, { Pins })
-  },
-  created() {
-    this.id = this.$route.params.productId //! 統一商品唯一的ID(item.id)
-    this.getProduct()
-    this.getFavoriteData() //! 用其他電腦，先新增本地陣列
-    this.sendComment()
-    this.changeClass()
-  },
-  methods: {
-    getProduct() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
-        this.id
-      }`
-      this.isLoading = true
-      this.isLoading_big = true
-      this.$http.get(api).then((response) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        if (response.data.success) {
-          this.product = response.data.product
-          this.emitter.emit('customEvent_category', this.product.category)
-        }
-      })
-    },
-    sendComment() {
-      if (!this.rateValue || !this.rateComment) {
-        this.$toast('error', 'star and comment required.')
-        return
-      }
-      const data = {
-        rateValue: this.rateValue,
-        rateComment: this.rateComment,
-        rateTime: this.rateTime
-      }
-      localStorage.setItem('rateData', JSON.stringify(data))
-      this.updateComment()
-      //
-      const currentDate = new Date()
-      const currentHour = currentDate.getHours()
-      const currentMinute = currentDate.getMinutes()
-      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM'
-      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12
-      const formattedMinute = currentMinute.toString().padStart(2, '0')
-      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`
-      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' })
-      this.rateTime = `${formattedTime}, ${formattedDate}`
-      this.rateValue = null
-      this.rateComment = ''
-    },
-    updateComment() {
-      this.isLoading_big = true
-      this.rateData.push(JSON.parse(localStorage.getItem('rateData')))
-      //* 使用箭头函数，回调函数将继承包含它的函数的上下文，这样就可以正确地访问和更新"this.isLoading_big"属性
-      setTimeout(() => {
-        this.isLoading_big = false
-        // this.emitter.emit('push-message', {
-        //   style: 'success',
-        //   title: 'SUCCESS！ADD COMMENT'
-        // });
-        this.$toast('success', 'add comment')
-      }, 1000)
-    },
-    changeClass() {
-      this.childClass = 'products_sort'
-    }
-    // getProducts () { //* 取得全部資料的分類，並更新相關商品列表，無法用props覆蓋，故作罷
-    //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`;
-    //   this.$http.get(api).then((res) => {
-    //     if (res.data.success) {
-    //       this.filteredData = res.data.products.filter((i) => i.category === this.product.category);
-    //       console.log(this.filteredData);
-    //     }
-    //   });
-    // }
-  }
-}
-</script>
 <style scoped lang="scss">
 @import '@fancyapps/ui/dist/fancybox/fancybox.css';
 @import '@fancyapps/ui/dist/panzoom/panzoom.css';

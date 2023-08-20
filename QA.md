@@ -1,33 +1,60 @@
 # //////////////////提問//////////////////////////
 
+---
+
 https://github.com/snowman12320/jtown-vite/tree/pinia
 助教好，我遇到問題~
 
-https://github.com/snowman12320/jtown-vite/tree/pinia
+## 這是什麼？
 
-助教好，我遇到問題~
+client.ts:115 ReferenceError: Cannot access 'CartOffcanvas' before initialization
+at Header.vue:8:5
 
-## x Q : 關於 useLoginStore.js
+[hmr] Failed to reload /src/components/CartOffcanvas.vue. This could be due to syntax errors or importing non-existent modules. (see errors above)
 
-我嘗試將loginMixin改成pinia統一管理"登入狀態" ( 取代mixin混用方法 )
+出现了一个关于热模块重载（HMR）的错误，可能是由于语法错误或导入不存在的模块引起的。这通常是在开发Vue.js应用程序时遇到的问题。以下是您可以尝试的一些解决方法：
+检查语法错误：首先，确保您的Vue文件（如CartOffcanvas.vue和FavoriteOffcanvas.vue）中没有语法错误。您可以检查控制台输出或开发者工具中的错误消息，以获取有关具体错误的更多信息。
+检查模块路径：确保您在导入模块时使用正确的路径。检查导入语句是否正确，路径是否正确。
+清除缓存：有时候，开发服务器可能会因为缓存问题而导致错误。尝试清除浏览器缓存，或者重启开发服务器，看看是否有所改善。
 
-在homeView測試，會出現 isLoading 和 inLogin ，was accessed during render but is not defined on instance.
+## Q： 關於 useFavoriteStore.js
 
-猜測是created(）時，同步載入和使用導致錯誤，使用非同步還是無法
+無法使用this.$refs.delModal 這段語法，去操作dom元素，只好改到FavoriteOffcanvas.vue中
 
-也有試過此寫法...mapActions(useLoginStore, ['checkLoginStatus']),
-> 要 mapState
-
+```
+    delFavorite(id) {
+      //* 搜尋目標
+      if (this.favoriteIds.indexOf(id) !== -1) {
+        //* 存在就刪除
+        this.favoriteIds.splice(this.favoriteIds.indexOf(id), 1)
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
+        this.getFavorite()
+      }
+      const delCp = this.$refs.delModal
+      delCp.hideModal()
+    },
+```
 
 ## Q : 關於 useCartStores.js
 
 將addTocart.js轉成pinia統一管理"加入購物車方法" ( 取代emitter跨元件溝通 )
-
 在productList測試，觸發useCartStores中addToCart，$swal和$toast會失效，
 猜測是不支援較新的vite? 還是寫法哪邊要調整呢?
 // ? 兩種方式都無法
 // this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
 // VueSweetalert2.fire('Please', 'Sign in or Sign up first.', 'warning')
+// this.$toast('success', 'delete favorite.')
+
+## Q：VUE CLI和VITE有哪些寫法比較大的差別
+
+比如：
+引入路經少了@的寫法，變成直接寫最外層資料夾名稱的樣子 ?
+
+> 感覺用create vue 安裝後就沒有了，沒有噴@引入元件的錯誤
+>
+> 套件冷門的都會噴錯
+> prductModal 兩個套件引入內部檔案都有問題
+> https://github.com/SortableJS/vue.draggable.next
 
 ## 選項式改成組合式的建議路徑
 
@@ -42,31 +69,20 @@ https://github.com/snowman12320/jtown-vite/tree/pinia
 
 從最底層邏輯開始改 不要從view曾 因為包太多東西
 
-## option API 重構成 composiition API
-
+option API 重構成 composiition API
 https://codesandbox.io/s/converting-options-api-to-composition-api-forked-q5ows?file=/src/App.vue
 https://ithelp.ithome.com.tw/users/20125854/ironman/4112?page=1
 
-## Q:關於loginMixin
-
-為何取不到這兩個變數
-const isLoading = ref(false)
-const isLogin = ref(null)
-在首頁開啟都說not define，我有return
-
-## 差別
-
-Q：VUE CLI和VITE有哪些寫法比較大的差別
-比如：
-引入路經少了@的寫法，變成直接寫最外層資料夾名稱的樣子 ?
-
-> 感覺用create vue 安裝後就沒有了，沒有噴@引入元件的錯誤
->
-> 套件冷門的都會噴錯
-> prductModal 兩個套件引入內部檔案都有問題
-> https://github.com/SortableJS/vue.draggable.next
-
 # //////////////////解決///////////////////////
+
+## x Q : 關於 useLoginStore.js
+
+我嘗試將loginMixin改成pinia統一管理"登入狀態" ( 取代mixin混用方法 )
+在homeView測試，會出現 isLoading 和 inLogin ，was accessed during render but is not defined on instance.
+猜測是created(）時，同步載入和使用導致錯誤，使用非同步還是無法
+也有試過此寫法...mapActions(useLoginStore, ['checkLoginStatus']),
+
+> 要 mapState
 
 ## x storysModal 報錯
 
@@ -107,16 +123,13 @@ https://ithelp.ithome.com.tw/articles/10301528
 
 ## 1. SPA (Single Page Application):
 
-SPA是指单页应用程序，它是一种Web应用程序的架构模式。在SPA中，整个应用程序只有一个HTML页面，页面的内容通过JavaScript动态加载和更新，实现页面的无刷新切换。SPA的好处是能够提供更流畅的用户体验，减少了页面的刷新，同时也提高了应用程序的性能。
-
-2. SFC (Single File Component): SFC是指单文件组件，它是Vue.js框架中的一种组件化开发方式。在SFC中，一个组件的所有代码（包括HTML模板、CSS样式和JavaScript代码）都被封装在一个单独的文件中。这种方式使得组件的开发更加模块化和可维护，同时也提高了开发效率。
-
+SPA是指单页应用程序，它是一种Web应用程序的架构模式。在SPA中，整个应用程序只有一个HTML页面，页面的内容通过JavaScript动态加载和更新，实现页面的无刷新切换。SPA的好处是能够提供更流畅的用户体验，减少了页面的刷新，同时也提高了应用程序的性能。2. SFC (Single File Component): SFC是指单文件组件，它是Vue.js框架中的一种组件化开发方式。在SFC中，一个组件的所有代码（包括HTML模板、CSS样式和JavaScript代码）都被封装在一个单独的文件中。这种方式使得组件的开发更加模块化和可维护，同时也提高了开发效率。
 总结：
 
 - SPA是一种Web应用程序的架构模式，它通过JavaScript动态加载和更新页面内容，实现无刷新切换页面的效果。
 - SFC是Vue.js框架中的一种组件化开发方式，它将一个组件的所有代码封装在一个单独的文件中，提高了组件的开发效率和可维护性。
 
-  3.SSR (Server-Side Rendering): SSR是指服务器端渲染，它是一种将页面的渲染工作从客户端转移到服务器端的技术。在传统的SPA中，页面的渲染是由客户端的JavaScript完成的，而在SSR中，服务器在接收到请求后，会先进行页面的渲染，然后将渲染好的页面发送给客户端。这样做的好处是可以提供更好的首次加载性能和SEO优化，但也增加了服务器的负载。
+## 3.SSR (Server-Side Rendering): SSR是指服务器端渲染，它是一种将页面的渲染工作从客户端转移到服务器端的技术。在传统的SPA中，页面的渲染是由客户端的JavaScript完成的，而在SSR中，服务器在接收到请求后，会先进行页面的渲染，然后将渲染好的页面发送给客户端。这样做的好处是可以提供更好的首次加载性能和SEO优化，但也增加了服务器的负载。
 
 SSR是一种将页面的渲染工作从客户端转移到服务器端的技术，通过在服务器端进行页面的渲染，可以提供更好的首次加载性能和SEO优化。
 
@@ -131,7 +144,7 @@ MPA (Multi-Page Application): MPA是指多页应用程序，它是一种传统�
 - MPA通常需要更多的服务器请求和网络传输，因为每个页面都需要单独加载。
 
 与SPA相比，MPA的主要区别在于页面的加载方式和用户体验。SPA通过动态加载和更新页面内容，实现了无刷新切换页面的效果，提供了更流畅的用户体验。而MPA每次页面切换都需要重新加载整个页面，用户体验相对较差。然而，MPA在某些情况下仍然有其优势，特别是在SEO和初始加载性能方面。
-
+****
 ## gitpages vite (可checkout -b main)
 
 <!-- #!/usr/bin/env sh
@@ -163,3 +176,26 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<REPO>.git main:gh-pages
 
 cd - -->
+
+## 安裝vite
+
+類CLI環境 但有VITE
+npm create vue@latest
+https://github.com/vuejs/create-vue
+內含
+
+- pinia
+- prettier
+- vitest (cypress版推薦)
+- eslint
+- hotload
+- @ = src
+  需
+  npm dependencies 上述沒有的
+  npm i -D sass
+
+複製各種檔案
+改.env import.meta.env.VITE_APP_API
+
+npm run dev看缺什麼
+****

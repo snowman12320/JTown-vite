@@ -78,9 +78,11 @@ export default {
     }
   },
   methods: {
-    nameWithLang ({ title }) { //* 整理選單
+     // 下拉選項
+    nameWithLang ({ title }) {
       return `${title}`;
     },
+    // 取得分類選單
     getProducts () {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`;
       this.isLoading = true;

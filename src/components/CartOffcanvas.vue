@@ -1,4 +1,3 @@
-
 <script>
 import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
@@ -26,17 +25,12 @@ export default {
       }
     }
   },
-  mounted() {
-    // this.emitter.on('customEvent_getCart', () => {
-    //   this.getCart()
-    // })
-  },
   created() {
     console.clear()
-    // this.getCart()
+    this.getCart()
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading', 'carts', 'statusBtn', 'sumFinalTotal', 'sumFinalQty'])
+    ...mapState(useCartStore, ['isLoading', 'carts', 'statusBtn_car', 'sumTotal', 'sumFinalQty'])
   },
   methods: {
     ...mapActions(useCartStore, ['getCart', 'updateCart']),
@@ -156,7 +150,7 @@ export default {
                 style="height: 30px"
                 @click="minusQty(item)"
                 class="btn btn-outline-secondary py-0"
-                :disabled="item.qty === 1 || item.id === statusBtn.loadingItem"
+                :disabled="item.qty === 1 || item.id === statusBtn_car.loadingItem"
               >
                 -
               </button>
@@ -172,7 +166,7 @@ export default {
                 style="height: 30px"
                 @click="plusQty(item)"
                 class="btn btn-outline-secondary py-0"
-                :disabled="item.id === statusBtn.loadingItem"
+                :disabled="item.id === statusBtn_car.loadingItem"
               >
                 +
               </button>
@@ -190,7 +184,7 @@ export default {
         <!--  -->
         <p class="d-flex justify-content-between fs-4 mt-3">
           <span class="">TOTAL( {{ sumFinalQty }} )</span>
-          <span class="">$ {{ $filters.currency(sumFinalTotal) }}</span>
+          <span class="">$ {{ $filters.currency(sumTotal) }}</span>
         </p>
         <!--  -->
         <router-link

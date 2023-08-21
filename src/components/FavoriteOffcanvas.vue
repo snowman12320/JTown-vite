@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      // isLoading: false,
       //
       offcanvas: {},
       //
@@ -24,25 +24,17 @@ export default {
     this.getFavorite()
   },
   computed: {
-    ...mapState(useFavoriteStore, ['filteredProducts', 'favoriteIds'])
+    ...mapState(useFavoriteStore, ['filteredProducts', 'favoriteIds','isLoading'])
   },
   methods: {
-    ...mapActions(useFavoriteStore, ['getFavorite', 'getFavoriteId']),
+    ...mapActions(useFavoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
     //
     delFavorite(id) {
-      this.isLoading = true
-      //* 搜尋目標
-      if (this.favoriteIds.indexOf(id) !== -1) {
-        //* 存在就刪除
-        this.favoriteIds.splice(this.favoriteIds.indexOf(id), 1)
-        localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
-        this.getFavorite()
-        this.isLoading = false
-      }
+      this.delFavorite_store(id)
+      //
       const delCp = this.$refs.delModal
-      // 通过属性选择器获取具有 data-ref="delModal" 属性的 DOM 元素
+      // 通过属性选择器获取具有 data-ref="delModal" 属性的 DOM 元素 > 只能取到dom但沒有方法 (不是proxy)
       // let delCp = document.querySelector('[data-ref="delModal"]')
-      console.log(delCp);
       delCp.hideModal()
     },
     delFavorites() {

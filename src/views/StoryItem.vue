@@ -83,7 +83,7 @@
               <a
                 type="button"
                 @click.prevent="getMerchandise()"
-                class="btn btn-nbaBlue rounded-pill fs-4 btnRwd mx-auto mb-4 stretched-link"
+                class="btn btn-nbaBlue rounded-pill fs-4 btnRwd mx-auto mb-4 "
                 >Visit Merchandise</a
               >
             </div>
@@ -94,11 +94,9 @@
   </div>
 </template>
 <script>
-// import loginMixin from '../mixins/loginMixin';
 
 
 export default {
-  // mixins: [loginMixin],
   inject: ['emitter'],
   components: {},
   data() {

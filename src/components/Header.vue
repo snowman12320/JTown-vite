@@ -156,22 +156,36 @@ export default {
                 @click="openFavoriteOffcanvas()"
                 class="bg-transparent border-0 position-relative"
               >
-                <i class="fa-regular fa-heart text-nbaRed fs-3 mt-2 px-1 ms-md-2"></i>
+                <i class="fa-regular fa-heart text-nbaRed fs-2 mt-2 px-1 ms-md-2"></i>
                 <span
                   v-if="favoriteIds.length && isLogin"
                   class="position-absolute text-nbaRed"
-                  style="top: 35%; left: 49%; font-size: 10px"
+                  style="
+                    top: 27%;
+                    left: 45%;
+                    font-size: 18px;
+                    text-shadow:
+                      2px 2px 4px white,
+                      -2px -2px 4px white;
+                  "
                   >{{ favoriteIds.length }}</span
                 >
               </button>
             </li>
             <li>
               <button @click="openOffcanvas()" class="bg-transparent border-0 position-relative">
-                <i class="fa-sharp fa-solid fa-cart-shopping text-nbaRed fs-3 mt-2 px-1"></i>
+                <i class="fa-sharp fa-solid fa-cart-shopping text-nbaRed fs-2 mt-2 px-1"></i>
                 <span
                   v-if="carts.length && isLogin"
                   class="position-absolute text-white"
-                  style="top: 26%; left: 41%; font-size: 5px; padding: 0px 3px; border-radius: 50px"
+                  style="
+                    top: 15%;
+                    left: 43%;
+                    font-size: 18px;
+                    text-shadow:
+                      0.3px 0.3px 1px white,
+                      -0.3px -0.3px 1px white;
+                  "
                   >{{ carts.length }}</span
                 >
               </button>

@@ -122,7 +122,7 @@ export default {
     },
     updateComment() {
       this.isLoading_big = true
-      this.rateData.push(JSON.parse(localStorage.getItem('rateData')))
+      this.rateData.unshift(JSON.parse(localStorage.getItem('rateData')))
       //* 使用箭头函数，回调函数将继承包含它的函数的上下文，这样就可以正确地访问和更新"this.isLoading_big"属性
       setTimeout(() => {
         this.isLoading_big = false
@@ -467,7 +467,7 @@ export default {
               </h2>
               <div
                 id="panelsStayOpen-collapseOne"
-                class="accordion-collapse collapse"
+                class="accordion-collapse collapse show"
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body text-start">

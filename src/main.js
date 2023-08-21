@@ -24,7 +24,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import ElementPlus from 'element-plus' // 引入element-plus库
 import 'element-plus/dist/index.css' // 引入element-plus样式
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+import 'vue-multiselect/dist/vue-multiselect.css' //*npm i vue-multiselect@3.0.0-beta.2
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import VueClickAway from 'vue3-click-away'
 import $toast from './methods/toast' //* 定義完程式功能，需全域註冊，$錢字號應該是辨識用，若沒有包其他函式，就錢字號開頭(如$httpMessageState)，反之就(如$filters.currency)
@@ -70,6 +70,9 @@ app.use(CKEditor)
 app.use(VueClickAway)
 const pinia = createPinia()
 app.use(pinia)
+
+// pinia.use(VueSweetalert2)
+// pinia.config.globalProperties.$toast = $toast
 
 //! Mount the app to the DOM and initialize any additional functionality:
 app.mount('#app')

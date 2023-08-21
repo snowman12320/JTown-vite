@@ -105,7 +105,7 @@
                 <!--  多檔圖片 ＋ 拖拉移動順序 -->
                 <div class="     ">
                   <!-- <div>{{ drag ? 'dragging' : 'drag done' }}</div> -->
-                  <!-- <draggable
+                  <draggable
                     style="margin: 10px"
                     v-model="tempProduct.imagesUrl"
                     group="group1"
@@ -155,7 +155,7 @@
                         ></i>
                       </div>
                     </template>
-                  </draggable> -->
+                  </draggable>
                 </div>
               </div>
               <!-- 右 -->
@@ -216,7 +216,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label">運送方式</label>
-                  <!-- <multiselect
+                  <multiselect
                     v-model="value"
                     tag-placeholder="Add this as new tag"
                     placeholder="Search or add a tag"
@@ -227,7 +227,7 @@
                     :taggable="true"
                     @tag="addTag"
                   >
-                  </multiselect> -->
+                  </multiselect>
                 </div>
                 <hr />
                 <div class="mb-3">
@@ -294,19 +294,19 @@
 </template>
 <script>
 import modalMixin from '@/mixins/modalMixin'
-// import Multiselect from 'vue-multiselect' //? 有問題的套件 (都較冷門套件) > 不能新增標籤 可改E+的板 
+import Multiselect from 'vue-multiselect' //* 有問題的套件 (都較冷門套件) > 不能新增標籤 可改E+的板 > 版本太舊
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic' //* 需從public中，換成有取得新增外掛的
-// import draggable from 'vuedraggable/dist/vuedraggable.umd.min.js'//? 有問題的套件 (都較冷門套件) > 不能拖拉和增刪 改另一個版
-// import draggable from 'vuedraggable/src/vuedraggable.js'
-// import draggable from 'vuedraggable'
+
+//! 有問題的套件 (都較冷門套件) > 不能拖拉和增刪 改另一個版
+import draggable from 'vuedraggable' //*npm install vuedraggable@4.1.0
 import CropperModal from '../components/CropperModal.vue'
 
 export default {
   mixins: [modalMixin],
   components: {
     //! 少一個s，就會掛掉
-    // Multiselect,
-    // draggable,
+    Multiselect,
+    draggable,
     CropperModal
   },
   data() {

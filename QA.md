@@ -35,6 +35,43 @@ at Header.vue:8:5
     },
 ```
 
+> A：pinia 是一個狀態管理的工具
+> 意指它本身是用來解決原先跨元件狀態存取的問題
+> 按照這個思路去想的話
+> 會發現 store 需要存的是"需要共用的狀態"
+> 而 actions 則是改變這個狀態的 method
+> 因此你不需要在 store 使用 $refs
+> 更像是在 FavoriteOffcanvas.vue 有一個 delFavorite 的 method
+> 當它需要改變 store 狀態的時候呼叫 action
+
+## Q:回覆 在 store 的 js，如何使用 $refs 
+依照建議"不需要在 store 使用 $refs"
+我將刪除的邏輯拆出來，就是delFavorite_store 放在store中，其餘用this.$refs操作彈窗開關，留在vue中
+請問我這樣的理解沒錯嗎?
+```
+    delFavorite(id) {
+      this.delFavorite_store(id)
+      //
+      const delCp = this.$refs.delModal
+      // 通过属性选择器获取具有 data-ref="delModal" 属性的 DOM 元素 > 只能取到dom但沒有方法 (不是proxy)
+      // let delCp = document.querySelector('[data-ref="delModal"]')
+      delCp.hideModal()
+    },
+```
+
+## Q：回覆addToCart 的 $swal 和 $toast 失效
+1.這樣若邏輯有很多if，要觸發多次$swal(如addToCart這個函式)，這樣都要拆分出來嗎???
+ 會不會變更複雜，邏輯都被拆開了呢?
+
+ 我這邊另一個理解是，addToCart方法，不是整個丟進store，而是把關鍵的API那段，就是觸發購物車資料更新的放進去即可，
+ 應該是這樣沒錯吧 ?
+2. "toast 跟 swal 都是掛在 Vue 的 app 上，與 store 沒有任何關聯"
+  但axios和router都有掛載到app上，可是我在store，是直接引入套件本身，是正常使用的
+  所以在store不能使用那些套件囉?
+  就只能放在vue使用，像第一點一樣，只有改變狀態的方法，才能放store
+
+
+
 ## Q : 關於 useCartStores.js
 
 將addTocart.js轉成pinia統一管理"加入購物車方法" ( 取代emitter跨元件溝通 )
@@ -144,7 +181,9 @@ MPA (Multi-Page Application): MPA是指多页应用程序，它是一种传统�
 - MPA通常需要更多的服务器请求和网络传输，因为每个页面都需要单独加载。
 
 与SPA相比，MPA的主要区别在于页面的加载方式和用户体验。SPA通过动态加载和更新页面内容，实现了无刷新切换页面的效果，提供了更流畅的用户体验。而MPA每次页面切换都需要重新加载整个页面，用户体验相对较差。然而，MPA在某些情况下仍然有其优势，特别是在SEO和初始加载性能方面。
-****
+
+---
+
 ## gitpages vite (可checkout -b main)
 
 <!-- #!/usr/bin/env sh
@@ -198,4 +237,5 @@ https://github.com/vuejs/create-vue
 改.env import.meta.env.VITE_APP_API
 
 npm run dev看缺什麼
-****
+
+---

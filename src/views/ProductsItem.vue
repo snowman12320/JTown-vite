@@ -76,8 +76,7 @@ export default {
   methods: {
     ...mapActions(useCartStore, ['addToCart', 'setSize']),
     ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
-    ...mapActions(productStore, ['getProduct_item']),
-
+    ...mapActions(productStore, ['getProduct_item', 'setCategory']),
     //
     getProduct() {
       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
@@ -91,7 +90,8 @@ export default {
         this.isLoading_big = false
         if (response.data.success) {
           this.product = response.data.product
-          this.emitter.emit('customEvent_category', this.product.category)
+          // this.emitter.emit('customEvent_category', this.product.category)
+          this.setCategory(this.product.category)
         }
       })
     },
@@ -158,7 +158,14 @@ export default {
               >Product</router-link
             >
           </li>
-          <li class="breadcrumb-item active" aria-current="page">{{ product_item.title }}</li>
+          <li class="breadcrumb-item active">
+            <router-link
+              @click="setCategory(product_item.category)"
+              style="text-decoration: none !important"
+              to="/products-view/products-content/title"
+              >{{ product_item.category }}</router-link
+            >
+          </li>
         </ol>
       </nav>
       <!--  -->

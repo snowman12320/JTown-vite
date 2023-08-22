@@ -6,7 +6,11 @@ export default defineStore('productStore', {
   state: () => ({
     isLoading_productStore: false,
     //
-    product_item: []
+    product_item: [],
+    //
+    cacheCategory: null,
+    cacheSearch: null,
+    filterCheck: null
   }),
   getters: {},
   actions: {
@@ -35,6 +39,22 @@ export default defineStore('productStore', {
           window.scrollTo(0, 0)
         }
       })
+    },
+    setCategory(val) {
+      this.cacheCategory = val
+      this.cacheSearch = ''
+      this.filterCheck = ''
+    },
+    setCacheSearch(val) {
+      this.cacheSearch = val.title.trim().toLowerCase()
+      this.cacheCategory = ''
+      this.filterCheck = ''
+    },
+    setFilterCheck(val) {
+      this.filterCheck = val
+      //*篩選價格不清空
+      // this.cacheSearch = ''
+      // this.cacheCategory = ''
     }
   }
 })

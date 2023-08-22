@@ -108,7 +108,7 @@
 </template>
 <script>
 import { VueCropper } from 'vue-cropper';
-import 'vue-cropper/next/dist/index.css';
+import 'vue-cropper/dist/index.css';
 // import modalMixin from '@/mixins/modalMixin';
 
 export default {

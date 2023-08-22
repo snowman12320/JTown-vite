@@ -161,12 +161,12 @@ export default {
                   v-if="favoriteIds.length && isLogin"
                   class="position-absolute text-nbaRed"
                   style="
-                    top: 27%;
+                    top: 24%;
                     left: 45%;
                     font-size: 18px;
                     text-shadow:
-                      2px 2px 4px white,
-                      -2px -2px 4px white;
+                      2px 2px 1px white,
+                      -2px -2px 1px white;
                   "
                   >{{ favoriteIds.length }}</span
                 >
@@ -181,7 +181,7 @@ export default {
                   style="
                     top: 15%;
                     left: 43%;
-                    font-size: 18px;
+                    font-size: 16px;
                     text-shadow:
                       0.3px 0.3px 1px white,
                       -0.3px -0.3px 1px white;

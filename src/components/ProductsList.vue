@@ -21,10 +21,10 @@ export default {
       // id: '',
       // product: {},
       //
-      cacheSearch: '', //名稱搜尋
-      cacheCategory: '', //分類搜尋
+      // cacheSearch: '', //名稱搜尋
+      // cacheCategory: '', //分類搜尋
       //
-      filterCheck: '', //價格篩選
+      // filterCheck: '', //價格篩選
       selectSort: '0', //名稱價格排序
       //
       setClass: false,
@@ -38,21 +38,21 @@ export default {
     this.productsList_hight = this.$refs.productsList_hight.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
     window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
     //
-    this.emitter.on('customEvent_search', (data) => {
-      this.cacheSearch = data
-    })
-    this.emitter.on('customEvent_category', (data) => {
-      this.cacheCategory = data
-      // console.log(this.cacheCategory);//*檢視emitter有無觸發
-      this.cacheSearch = ''
-    })
-    this.emitter.on('customEvent_Check', (data) => {
-      this.filterCheck = data
-    })
+    // this.emitter.on('customEvent_search', (data) => {
+    //   this.cacheSearch = data
+    // })
+    // this.emitter.on('customEvent_category', (data) => {
+    //   this.cacheCategory = data
+    //   // console.log(this.cacheCategory);//*檢視emitter有無觸發
+    //   this.cacheSearch = ''
+    // })
+    // this.emitter.on('customEvent_Check', (data) => {
+    //   this.filterCheck = data
+    // })
   },
   created() {
     console.clear()
-    this.cacheSearch = this.$route.params.search
+    // this.cacheSearch = this.$route.params.search
     this.getProducts()
     this.getFiltered() //! 取得全域搜尋資料
   },
@@ -60,11 +60,12 @@ export default {
     productSize_list(newValue) {
       // 调用 useCartStore.js 中的方法来更新 productSize_list
       this.setSize(newValue, '')
-    }
+    },
   },
   computed: {
     ...mapState(useCartStore, ['isLoading', 'statusBtn_car']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
     ...mapState(useFavoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds']),
+    ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck']),
     //
     filteredData() {
       let filteredData = []
@@ -76,8 +77,7 @@ export default {
       } else {
         filteredData = this.Filtered.filter(
           (item) =>
-            (!this.cacheSearch ||
-              item.title.toLowerCase().includes(this.cacheSearch.trim().toLowerCase())) &&
+            (!this.cacheSearch || item.title.toLowerCase().includes(this.cacheSearch)) &&
             (!this.cacheCategory ||
               item.category.toLowerCase().includes(this.cacheCategory.trim().toLowerCase()))
         )
@@ -114,7 +114,6 @@ export default {
     ...mapActions(useCartStore, ['addToCart', 'setSize']),
     ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
     ...mapActions(productStore, ['getProduct_item']),
-
     //
     handleScroll() {
       //! 這邊定義會在切換router時，取不到dom（可生命週期沒有重整吧）
@@ -248,7 +247,8 @@ export default {
               <h6 class="text-white text-center">$ {{ $filters.currency(item.price) }}</h6>
               <!--  -->
               <div
-                class="position-relative border border-white rounded-1 px-2 py-3 bg-transparent d-flex justify-content-around m-2"
+                class="position-relative border border-white rounded-1 px-2 py-3 d-flex justify-content-around m-2"
+                style="backdrop-filter: blur(5px)"
               >
                 <i
                   @click="updateFavorite(item.id)"
@@ -395,7 +395,7 @@ export default {
   justify-content: end;
   transition: all;
   z-index: 2;
-  animation-duration: 500ms;
+  animation-duration: 1500ms;
   overflow: hidden !important;
   border-radius: 3%;
 

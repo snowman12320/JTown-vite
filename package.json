@@ -32,7 +32,7 @@
     "vee-validate": "^4.11.1",
     "vue": "^3.3.4",
     "vue-axios": "^3.5.2",
-    "vue-cropper": "^0.6.2",
+    "vue-cropper": "^1.0.9",
     "vue-multiselect": "^3.0.0-beta.2",
     "vue-router": "^4.2.4",
     "vue-sweetalert2": "^5.0.5",

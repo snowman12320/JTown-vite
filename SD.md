@@ -38,28 +38,27 @@ isloading 分大小
 > store 固定 small和big，
 > vue內就用 獨立變數去操作 獨立動畫html
 
-## x 元件分類資料夾
+## - 元件分類資料夾
 
 如vite官方安裝時的範本
 
 > 之後專案分 後台和前台 或 細分種類(產品/故事等)
 
-## x 修改router
+## - 修改router
 
 統一上方import 避免攏長影響閱讀
 改名成 簡單路徑名稱 為了引用方便
 
 > 刪掉無用的即可
 
-##
+## - CKEditor 5 為何不能放影片和圖片
 
-為何不能放影片和圖片
 是因為文章api的限制嗎
 ＊影片沒顯示
 ＊圖片報䥘原因
 https://ckeditor.com/docs/ckeditor5/latest/support/error-codes.html#error-filerepository-no-upload-adapter
 
-教學
+教學 (要設定header之類 可能需後端協助 且應該是要先上傳時轉檔formData後觸發上傳API，然後轉成圖片網址，再存回該上傳的文章內頁個別資料)
 https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html
 
 https://stackoverflow.com/questions/39290712/ckeditor-is-not-uploading-images-and-files-even-i-have-no-option-to-upload-imag

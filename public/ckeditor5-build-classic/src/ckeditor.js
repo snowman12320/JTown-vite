@@ -13,7 +13,7 @@ import Image from '@ckeditor/ckeditor5-image/src/image.js';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption.js';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle.js';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar.js';
-import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload.js';
+import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload.js'; //? 已安裝上傳
 import Indent from '@ckeditor/ckeditor5-indent/src/indent.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
 import Link from '@ckeditor/ckeditor5-link/src/link.js';
@@ -42,8 +42,8 @@ Editor.builtinPlugins = [
   ImageCaption,
   ImageStyle,
   ImageToolbar,
-  ImageUpload,
-  Indent,// 依照套件加入方式再加入看看
+  ImageUpload, //? 已安裝上傳
+  Indent, // 依照套件加入方式再加入看看
   Italic,
   Link,
   List,
@@ -56,7 +56,7 @@ Editor.builtinPlugins = [
   TextTransformation,
   // 將套件加入建構工具列
   Highlight
-];
+]
 
 // Editor configuration.
 Editor.defaultConfig = {
@@ -73,7 +73,7 @@ Editor.defaultConfig = {
       'outdent',
       'indent',
       '|',
-      'imageUpload',
+      'imageUpload', //? 已安裝上傳
       'blockQuote',
       'insertTable',
       'mediaEmbed',
@@ -95,16 +95,14 @@ Editor.defaultConfig = {
     ]
   },
   table: {
-    contentToolbar: [
-      'tableColumn',
-      'tableRow',
-      'mergeTableCells'
-    ]
+    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
   },
+  // 文章提到的
+  // 應該是要先上傳時轉檔formData後觸發上傳API，然後轉成圖片網址，再存回該上傳的文章內頁個別資料
   ckfinder: {
     // uploadUrl: `${process.env.url}/upload`,
-    // 可能還需要轉成formData
-    uploadUrl: `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`,
+    //? 可能還需要轉成formData
+    uploadUrl: `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/upload`,
     // 後端的上傳圖片 API 路徑
     options: {
       resourceType: 'Images'
@@ -112,7 +110,7 @@ Editor.defaultConfig = {
     }
   },
   image: {
-  // 設定圖片可選擇的對齊方式
+    // 設定圖片可選擇的對齊方式
     toolbar: [
       'imageTextAlternative',
       '|',
@@ -128,6 +126,6 @@ Editor.defaultConfig = {
     previewsInData: true
     // 設定影片為可見的格式
   }
-};
+}
 
 export default Editor;

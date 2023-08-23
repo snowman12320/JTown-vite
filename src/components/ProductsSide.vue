@@ -2,24 +2,22 @@
 import Multiselect from '@/components/Multiselect.vue'
 //
 import productStore from '@/stores/productStore'
-import { mapActions, mapState } from 'pinia'
+import { mapActions } from 'pinia'
 
 export default {
   inject: ['emitter'],
   components: { Multiselect },
   data() {
     return {
-      products: [],
-      product: {},
       status: {
         loadingItem: ''
       },
       uniqueCategories: [],
+      options: [], //*下拉選單的選項
+      //
       cacheSearch: '',
       cacheCategory: '',
-      filterCheck: '',
-      input_all: null,
-      options: []
+      filterCheck: ''
     }
   },
   created() {
@@ -27,41 +25,30 @@ export default {
   },
   watch: {
     cacheSearch(val) {
-      // this.emitter.emit('customEvent_search', this.cacheSearch.title)
-      // this.cacheCategory = ''
       this.setCacheSearch(val)
     },
     cacheCategory(val) {
-      // this.cacheSearch = '' //* 避免分類內容和搜尋內容，兩個條件衝突
-      // this.filterCheck = ''
-      // this.emitter.emit('customEvent_category', this.cacheCategory);
       this.setCategory(val)
     },
     filterCheck(val) {
-      // this.emitter.emit('customEvent_Check', this.filterCheck)
       this.setFilterCheck(val)
     }
   },
-  computed: {
-    // ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck'])
-  },
   methods: {
     ...mapActions(productStore, ['setCategory', 'setCacheSearch', 'setFilterCheck']),
-    // 下拉選項
+    // 下拉選項，帶入商品名稱
     nameWithLang({ title }) {
       return `${title}`
     },
     // 取得分類選單
     getProducts() {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-      this.isLoading = true
-      this.$http.get(url).then((response) => {
-        this.products = response.data.products
-        this.options = response.data.products
-        this.isLoading = false
-        this.products.forEach((product) => {
-          if (!this.uniqueCategories.includes(product.category)) {
-            this.uniqueCategories.push(product.category)
+      this.$http.get(url).then((res) => {
+        let products = res.data.products
+        this.options = res.data.products
+        products.forEach((i) => {
+          if (!this.uniqueCategories.includes(i.category)) {
+            this.uniqueCategories.push(i.category)
           }
         })
       })

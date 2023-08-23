@@ -10,27 +10,24 @@ export default defineStore('productStore', {
     //
     cacheCategory: null,
     cacheSearch: null,
-    filterCheck: null
+    filterCheck: null //側邊選單的價格篩選
   }),
   getters: {},
   actions: {
+    // 商品內頁，切換內容
     getProduct_item(id) {
       //! 只取一個商品，傳入該商品id到內頁使用
       router.push(`/products-view/products-item/${id}`)
       this.isLoading_productStore = true
-      //this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/product/${id}`
       axios.get(api).then((res) => {
         this.isLoading_productStore = false
-        // this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {
-          // 更新內頁商品資料
-          this.product_item = res.data.product
-          //   this.emitter.emit('customEvent_getProduct', this.product)
+          this.product_item = res.data.product // 更新內頁商品資料
           // 輪播回到第一張，取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-          //? 取得dom方式？
+          //* 取得多個dom方式
           const carouselItems = document.querySelectorAll('.carousel-item')
           carouselItems.forEach(function (item) {
             item.classList.remove('active')
@@ -40,19 +37,24 @@ export default defineStore('productStore', {
         }
       })
     },
+    //側邊搜尋欄，觸發商品列表
     setCategory(val) {
       this.cacheCategory = val
-      this.cacheSearch = ''
-      this.filterCheck = ''
+      this.cacheSearch = '' //* 衝突，避免分類內容和搜尋內容，兩個條件衝突
+      this.filterCheck = '' //* 重置，避免資料顯示不完全
     },
     setCacheSearch(val) {
-      this.cacheSearch = val.title.trim().toLowerCase()
+      if (val.title) {
+        this.cacheSearch = val.title.trim().toLowerCase()
+      } else {
+        this.cacheSearch = val.trim().toLowerCase()
+      }
       this.cacheCategory = ''
       this.filterCheck = ''
     },
     setFilterCheck(val) {
       this.filterCheck = val
-      //*篩選價格不清空
+      //*不重置，篩選價格時不清空搜尋
       // this.cacheSearch = ''
       // this.cacheCategory = ''
     }

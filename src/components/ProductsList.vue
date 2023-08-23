@@ -18,14 +18,7 @@ export default {
       //
       productsList_hight: 0,
       //
-      // id: '',
-      // product: {},
-      //
-      // cacheSearch: '', //名稱搜尋
-      // cacheCategory: '', //分類搜尋
-      //
-      // filterCheck: '', //價格篩選
-      selectSort: '0', //名稱價格排序
+      selectSort: '0', //名稱價格排序 (不用與其他元件共用狀態，故保留)
       //
       setClass: false,
       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
@@ -33,26 +26,13 @@ export default {
     }
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
-  props: ['customClass'], //* 傳入用一串class包起來的變數，來改變子元件樣式
+  props: ['childClass'], //* 傳入用一串class包起來的變數，來改變子元件樣式
   mounted() {
     this.productsList_hight = this.$refs.productsList_hight.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
     window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
-    //
-    // this.emitter.on('customEvent_search', (data) => {
-    //   this.cacheSearch = data
-    // })
-    // this.emitter.on('customEvent_category', (data) => {
-    //   this.cacheCategory = data
-    //   // console.log(this.cacheCategory);//*檢視emitter有無觸發
-    //   this.cacheSearch = ''
-    // })
-    // this.emitter.on('customEvent_Check', (data) => {
-    //   this.filterCheck = data
-    // })
   },
   created() {
     console.clear()
-    // this.cacheSearch = this.$route.params.search
     this.getProducts()
     this.getFiltered() //! 取得全域搜尋資料
   },
@@ -60,7 +40,7 @@ export default {
     productSize_list(newValue) {
       // 调用 useCartStore.js 中的方法来更新 productSize_list
       this.setSize(newValue, '')
-    },
+    }
   },
   computed: {
     ...mapState(useCartStore, ['isLoading', 'statusBtn_car']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
@@ -75,6 +55,7 @@ export default {
       ) {
         filteredData = this.products
       } else {
+        // 名稱搜尋或分類搜尋
         filteredData = this.Filtered.filter(
           (item) =>
             (!this.cacheSearch || item.title.toLowerCase().includes(this.cacheSearch)) &&
@@ -89,7 +70,7 @@ export default {
         if (!this.cacheCategory && !this.cacheSearch) {
           filteredData = this.products
         }
-
+        // 排序
         const filterFunc = {
           2999: (item) => item.price <= 2999,
           5000: (item) => item.price >= 5000,
@@ -136,13 +117,7 @@ export default {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/products/?page=${page}`
-      // this.isLoading = true
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
       this.$http.get(api).then((res) => {
-        // this.isLoading = false
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {
           this.products = res.data.products
           this.pagination = res.data.pagination
@@ -155,8 +130,6 @@ export default {
       //! 要用this.isLoading阻擋，避免讀取api間隔，持續捲動導致重複讀取資料
       if (!this.isLoading_small && this.pagination.has_next) {
         this.isLoading_small = true
-        // if (this.pagination.has_next) {
-        // console.log(this.pagination);
         this.page++
         const api = `${import.meta.env.VITE_APP_API}api/${
           import.meta.env.VITE_APP_PATH
@@ -164,44 +137,16 @@ export default {
         this.$http.get(api).then((res) => {
           if (res.data.success) {
             this.pagination = res.data.pagination
-            // console.log(this.pagination);
             this.products = this.products.concat(res.data.products)
-            // console.log(this.products);
             //! 成功讀取分頁數後，才能關閉載入，進行下次資料儲存，否則會重複儲存
             this.isLoading_small = false
           }
         })
-        // }
       }
     },
-    //goToProduct
+    //
     goToProduct(id) {
       this.getProduct_item(id)
-    },
-    getProduct(id) {
-      //! 只取一個商品，傳入該商品id到內頁使用
-      this.$router.push(`/products-view/products-item/${id}`)
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/product/${id}`
-      this.$http.get(api).then((res) => {
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-        if (res.data.success) {
-          // 更新內頁商品資料
-          this.product = res.data.product
-          this.emitter.emit('customEvent_getProduct', this.product)
-          // 輪播回到第一張，取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-          const carouselItems = document.querySelectorAll('.carousel-item')
-          carouselItems.forEach(function (item) {
-            item.classList.remove('active')
-          })
-          carouselItems[0].classList.add('active')
-          window.scrollTo(0, 0)
-        }
-      })
     }
   }
 }
@@ -210,7 +155,7 @@ export default {
 <template>
   <div class="">
     <!-- 排序  -->
-    <div class="mb-3 d-flex justify-content-end align-items-center" :class="customClass">
+    <div class="mb-3 d-flex justify-content-end align-items-center" :class="childClass">
       <label for="" class="form-label mb-0">Sort by：</label>
       <select
         v-model="selectSort"

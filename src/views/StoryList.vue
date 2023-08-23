@@ -1,3 +1,50 @@
+<script>
+import Pagination from '@/components/Pagination.vue'
+
+export default {
+  inject: ['emitter'],
+  components: {
+    Pagination
+  },
+  data() {
+    return {
+      storyList: [],
+      pagination: {},
+    }
+  },
+  created() {
+    this.getStoryList()
+  },
+  mounted() {
+    // this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法 > 最上層的視圖層就有判斷了
+  },
+  computed: {
+    // ...mapState(useLoginStore, ['isLoading', 'isLogin']) //*[Vue warn]: Write operation failed: computed property "isLoading" is readonly.
+  },
+  methods: {
+    // ...mapActions(useLoginStore, ['checkLoginStatus']),
+    getStoryList(page = 1) {
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/articles/?page=${page}`
+      this.isLoading = true
+      this.$http.get(api).then((res) => {
+        this.isLoading = false
+        if (res.data.success) {
+          // This code will create a new array  this.storyList  that contains only the items from  res.data.articles  where  isPublic  is  true .
+          this.storyList = res.data.articles.filter((story) => story.isPublic)
+          this.pagination = res.data.pagination
+        }
+      })
+    },
+    getStory(id) {
+      //! 只取一個文章
+      this.$router.push(`/story/item/${id}`)
+    }
+  }
+}
+</script>
+
 <template>
   <div class="">
     <Loading :active="isLoading"></Loading>
@@ -51,70 +98,7 @@
     </div>
   </div>
 </template>
-<script>
-// import loginMixin from '../mixins/loginMixin';
-import Pagination from '@/components/Pagination.vue'
 
-// import { useLoginStore } from '@/stores/useLoginStore.js'
-// import { mapActions, mapState } from 'pinia'
-
-export default {
-  // mixins: [loginMixin],
-  inject: ['emitter'],
-  components: {
-    Pagination
-  },
-  data() {
-    return {
-      storyList: [],
-      pagination: {},
-      story: {}
-    }
-  },
-  created() {
-    this.getStoryList()
-  },
-  mounted() {
-    // this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
-  },
-  computed: { 
-    // ...mapState(useLoginStore, ['isLoading', 'isLogin']) //*[Vue warn]: Write operation failed: computed property "isLoading" is readonly.
-  },
-  methods: {
-    // ...mapActions(useLoginStore, ['checkLoginStatus']),
-    getStoryList(page = 1) {
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/admin/articles/?page=${page}`
-      this.isLoading = true
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        if (res.data.success) {
-          // This code will create a new array  this.storyList  that contains only the items from  res.data.articles  where  isPublic  is  true .
-          this.storyList = res.data.articles.filter((story) => story.isPublic)
-          this.pagination = res.data.pagination
-        }
-      })
-    },
-    getStory(id) {
-      //! 只取一個文章
-      this.$router.push(`/story/item/${id}`)
-      this.isLoading = true
-      this.isLoading_big = true
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/article/${id}`
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        if (res.data.success) {
-          this.story = res.data.article
-        }
-      })
-    }
-  }
-}
-</script>
 <style>
 .single-ellipsis {
   overflow: hidden;

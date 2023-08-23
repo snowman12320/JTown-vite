@@ -40,12 +40,6 @@ export default {
   },
   //! mitt
   mounted() {
-    this.emitter.on('customEvent_isLoading_big', (data) => {
-      this.isLoading_big = data
-    })
-    this.emitter.on('customEvent_getProduct', (data) => {
-      this.product = data
-    })
     //* 只能放一個圖
     this.container = this.$refs.myPanzoom
     this.panzoom = new Panzoom(this.container, this.options, { Pins })
@@ -54,13 +48,12 @@ export default {
     console.clear()
     this.productId = this.$route.params.productId //! 統一商品唯一的ID(item.id)
     this.getProduct()
+    this.getProduct_item(this.productId)
     //
     this.getFavorite() //! 用其他電腦，先新增本地陣列
     //
     this.sendComment()
     this.changeClass()
-    //
-    this.getProduct_item(this.productId)
   },
   watch: {
     productSize_item(newValue) {
@@ -90,7 +83,6 @@ export default {
         this.isLoading_big = false
         if (response.data.success) {
           this.product = response.data.product
-          // this.emitter.emit('customEvent_category', this.product.category)
           this.setCategory(this.product.category)
         }
       })
@@ -489,7 +481,7 @@ export default {
       <h3 class="mt-7">RECOMMEND</h3>
       <!-- //! 取得全部資料的分類，並更新相關商品列表，無法用props覆蓋，故作罷 -->
       <!-- <ProductsList :filteredData="filteredData" @update-category="getProducts"></ProductsList> -->
-      <!-- :customClass="['d-none']" ，父元件傳入值，子元件放:class="customClass" -->
+      <!-- :childClass="['d-none']" ，父元件傳入值，子元件放:class="childClass" -->
       <ProductsList></ProductsList>
     </div>
   </div>

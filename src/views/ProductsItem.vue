@@ -7,6 +7,7 @@ import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
 import useFavoriteStore from '../stores/useFavoriteStore'
 import useCartStore from '../stores/useCartStore'
 import productStore from '../stores/productStore'
+import useLoginStore from '../stores/useLoginStore'
 import { mapState, mapActions } from 'pinia'
 
 export default {
@@ -17,6 +18,9 @@ export default {
   data() {
     return {
       isLoading_big: false,
+      statusBtn_car: {
+        loadingItem: ''
+      },
       //
       product: {},
       productId: '',
@@ -55,21 +59,45 @@ export default {
     this.sendComment()
     this.changeClass()
   },
-  watch: {
-    productSize_item(newValue) {
-      // 调用 useCartStore.js 中的方法来更新 productSize_item
-      this.setSize('', newValue)
-    }
-  },
   computed: {
     ...mapState(useFavoriteStore, ['statusBtn']),
     ...mapState(useFavoriteStore, ['isFavorite', 'favoriteIds']),
-    ...mapState(productStore, ['isLoading_productStore', 'product_item'])
+    ...mapState(productStore, ['isLoading_productStore', 'product_item']),
+    ...mapState(useLoginStore, ['isLogin'])
   },
   methods: {
-    ...mapActions(useCartStore, ['addToCart', 'setSize']),
+    ...mapActions(useCartStore, ['getCart']),
     ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
     ...mapActions(productStore, ['getProduct_item', 'setCategory']),
+    //
+    addToCart(id, qty = 1, isBuy) {
+      if (!this.isLogin) {
+        // ! 在store不會用到this ，共用狀態才會放store
+        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        this.$router.push('/login')
+      } else {
+        if (!this.productSize_item) {
+          this.$swal.fire('Please', 'Size must be selected.', 'warning')
+        } else {
+          this.isLoading_big = true
+          const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+          const cart = {
+            product_id: id,
+            qty
+          }
+          this.$http.post(url, { data: cart }).then(() => {
+            this.getCart()
+            this.isLoading_big = false
+            this.$toast('success', 'add to cart.')
+            if (isBuy) {
+              this.$router.push('/cart-view/cart-list')
+              // *觸發該頁函式，讓下一頁資料更新
+              this.getCart()
+            }
+          })
+        }
+      }
+    },
     //
     getProduct() {
       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${

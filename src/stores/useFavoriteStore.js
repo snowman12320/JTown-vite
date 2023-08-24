@@ -6,11 +6,16 @@ import { setTimeout } from 'core-js'
 export default defineStore('useFavoriteStore', {
   state: () => ({
     statusBtn: { loadingItem: '' },
-    isLoading:false,
-    // 
+    isLoading: false,
+    //
     filteredProducts: [], //* 含商品資料總表（收藏側欄用）
     favoriteIds: [], //* 只有商品id總表
     //
+    toast: {
+      id: null,
+      res: '',
+      info: ''
+    }
   }),
   getters: {},
   actions: {
@@ -36,16 +41,24 @@ export default defineStore('useFavoriteStore', {
         localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
         setTimeout(() => {
           this.statusBtn.loadingItem = ''
+          //
+          this.toast.id = id
+          this.toast.res = 'warning'
+          this.toast.info = 'delete favorite.'
           // this.$toast('success', 'delete favorite.')
-        }, 1000)
+        }, 500)
       } else {
         //* 不存在就新增
         this.favoriteIds.push(id)
         localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
         setTimeout(() => {
           this.statusBtn.loadingItem = ''
+          //
+          this.toast.id = id
+          this.toast.res = 'success'
+          this.toast.info = 'add to favorite.'
           // this.$toast('success', 'add to favorite.')
-        }, 1000)
+        }, 500)
       }
       //
       this.getFavorite()
@@ -61,7 +74,7 @@ export default defineStore('useFavoriteStore', {
         this.getFavorite()
         setTimeout(() => {
           this.isLoading = false
-        }, 1000)
+        }, 500)
       }
     }
   }

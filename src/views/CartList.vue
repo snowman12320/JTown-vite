@@ -63,22 +63,7 @@ export default {
     }
     //
     this.getCart() //* 本頁的購物車
-    this.couponCode = localStorage.getItem('local-couponCode')
-  },
-  mounted() {
-    // this.emitter.on('customEvent_getCart', () => {
-    //   this.getCart()
-    // })
-  },
-  watch: {
-    couponCode() {
-      // if (this.couponCode !== 'default') {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
-      this.$http.get(api).then((res) => {
-        this.couponPercent = res.data.data.carts[0].coupon.percent
-      })
-      // }
-    }
+    this.getCouponPercent() //* 每次都要取得折扣，本地記錄使用或取消折扣的狀態
   },
   computed: {
     ...mapState(useCartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
@@ -86,41 +71,28 @@ export default {
   methods: {
     ...mapActions(useCartStore, ['getCart', 'updateCart']),
     //
-    // getCart() {
-    //   this.isLoading = true
-    //   const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
-
-    //   this.$http.get(api).then((res) => {
-    //     this.isLoading = false
-    //     this.carts = res.data.data.carts
-    //     //* 需先歸零，必需在這計算
-    //     this.sumTotal = 0
-    //     this.sumFinalTotal = 0
-    //     this.sumFinalQty = 0
-    //     this.carts.forEach((item) => {
-    //       this.sumTotal += item.total
-    //       this.sumFinalTotal += item.final_total
-    //       this.sumFinalQty += item.qty
-    //     })
-    //     //! 有新增優惠券時 或 重新整理判斷有無優惠券，避免沒有變數錯誤或下拉選單重整
-    //     //!  加這段剛開始沒有值會錯 || res.data.data.carts[0].coupon.code
-    //     localStorage.setItem('local-couponCode', this.couponCode)
-    //     this.couponCode = localStorage.getItem('local-couponCode')
-    //     if (this.couponCode !== 'default') {
-    //       if (this.$route.path.includes('cart-list')) {
-    //         this.couponPercent = res.data.data.carts[0].coupon.percent
-    //       }
-    //     }
-    //   })
-    // },
+    getCouponPercent() {
+      //! 有新增優惠券時 或 重新整理判斷有無優惠券，避免沒有變數錯誤或下拉選單重整
+      //!  加這段剛開始沒有值會錯 || res.data.data.carts[0].coupon.code
+      if (!localStorage.getItem('local-couponCode')) {
+        localStorage.setItem('local-couponCode', this.couponCode)
+      }
+      this.couponCode = localStorage.getItem('local-couponCode')
+      if (this.couponCode !== 'default') {
+        if (this.$route.path.includes('cart-list')) {
+          const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+          this.$http.get(api).then((res) => {
+            this.couponPercent = res.data.data.carts[0].coupon.percent
+          })
+        }
+      }
+    },
     delCart(item) {
-      this.isLoading = true
       // !塞入要刪除的ＩＤ
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
         item.id
       }`
       this.$http.delete(url).then(() => {
-        this.isLoading = false
         this.$toast('success', 'delete ' + `"${item.product.title}"`)
         this.updateCart(item)
       })
@@ -160,13 +132,17 @@ export default {
       }
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
+          localStorage.setItem('local-couponCode', this.couponCode) //*要放最上，先更新折扣碼，再取得折扣數
+          //
           this.getCart()
-          this.$toast('success', '加入優惠券')
-          localStorage.setItem('local-couponCode', this.couponCode)
+          this.getCouponPercent()
+          this.$toast('success', 'Add Coupon')
         } else {
           localStorage.removeItem('local-couponCode', this.couponCode)
           this.getCart()
-          this.$toast('success', '取消優惠券')
+          this.getCouponPercent()
+          this.$toast('success', 'Cancel coupon')
+          //
           this.couponCode = 'default'
           this.couponPercent = ''
           localStorage.setItem('local-couponCode', this.couponCode)
@@ -193,7 +169,7 @@ export default {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`
       const order = this.form
       this.$http.post(url, { data: order }).then((res) => {
-        this.emitter.emit('customEvent_getCart', this.getCart) //! 每頁導覽列都要更新購物車
+        this.getCart()
         this.$router.push(`checkout/${res.data.orderId}`)
       })
     },
@@ -254,7 +230,9 @@ export default {
                   <!-- -$ {{ $filters.currency(Math.round((sumFinalTotal / (couponPercent / 100)) - sumFinalTotal)) }} -->
                   <!-- 可以在表达式中使用条件语句、三元表达式 -->
                   -$
-                  {{ couponPercent ? $filters.currency(sumTotal / (100 - couponPercent)) : 0 }}
+                  {{
+                    couponPercent ? $filters.currency(sumTotal * ((100 - couponPercent) / 100)) : 0
+                  }}
                 </p>
               </li>
               <li class="list-group-item d-flex justify-content-between pb-0">

@@ -3,12 +3,16 @@ import useCartStore from '../stores/useCartStore.js'
 import useFavoriteStore from '../stores/useFavoriteStore'
 import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
+import useLoginStore from '../stores/useLoginStore'
 
 export default {
   inject: ['emitter'],
   data() {
     return {
       isLoading_small: false, //列表載入
+      statusBtn_car: {
+        loadingItem: ''
+      },
       //
       products: [], // 原始資料
       Filtered: [], //! 搜尋全部商品用
@@ -19,10 +23,11 @@ export default {
       productsList_hight: 0,
       //
       selectSort: '0', //名稱價格排序 (不用與其他元件共用狀態，故保留)
-      //
       setClass: false,
+      //
       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
-      productSize_list: ''
+      productSize_list: '',
+      productSize_item: ''
     }
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
@@ -37,15 +42,18 @@ export default {
     this.getFiltered() //! 取得全域搜尋資料
   },
   watch: {
-    productSize_list(newValue) {
-      // 调用 useCartStore.js 中的方法来更新 productSize_list
-      this.setSize(newValue, '')
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info)
+      },
+      deep: true
     }
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading', 'statusBtn_car']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
-    ...mapState(useFavoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds']),
+    ...mapState(useCartStore, ['isLoading']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
+    ...mapState(useFavoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds', 'toast']),
     ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck']),
+    ...mapState(useLoginStore, ['isLogin']),
     //
     filteredData() {
       let filteredData = []
@@ -92,9 +100,40 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useCartStore, ['addToCart', 'setSize']),
+    ...mapActions(useCartStore, ['getCart']),
     ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
     ...mapActions(productStore, ['getProduct_item']),
+    //
+    addToCart(id, qty = 1, isBuy) {
+      if (!this.isLogin) {
+        // ! 在store不會用到this ，共用狀態才會放store
+        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        this.$router.push('/login')
+      } else {
+        if (!this.productSize_list && !this.productSize_item) {
+          this.$swal.fire('Please', 'Size must be selected.', 'warning')
+        } else {
+          this.statusBtn_car.loadingItem = id
+          //
+          const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+          const cart = {
+            product_id: id,
+            qty
+          }
+          this.$http.post(url, { data: cart }).then(() => {
+            this.getCart()
+            //
+            this.statusBtn_car.loadingItem = ''
+            this.$toast('success', 'add to cart.')
+            if (isBuy) {
+              this.$router.push('/cart-view/cart-list')
+              // *觸發該頁函式，讓下一頁資料更新
+              this.getCart()
+            }
+          })
+        }
+      }
+    },
     //
     handleScroll() {
       //! 這邊定義會在切換router時，取不到dom（可生命週期沒有重整吧）

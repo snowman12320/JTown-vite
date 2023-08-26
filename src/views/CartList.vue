@@ -2,12 +2,11 @@
 import CartModal from '@/components/CartModal.vue'
 import validatorMixin from '../mixins/validatorMixin'
 
-import useCartStore from '../stores/useCartStore.js'
+import cartStore from '../stores/cartStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
   mixins: [validatorMixin],
-  inject: ['emitter'],
   components: {
     CartModal
   },
@@ -61,23 +60,30 @@ export default {
       this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))
       this.getCoupons()
     }
+    //* 判斷有無折扣馬 然後自動addCouponCode()送出折扣馬 這樣才有折扣趴數資料
+    if (localStorage.getItem('local-couponCode')) {
+      this.couponCode = localStorage.getItem('local-couponCode')
+    }
     //
+    this.addCouponCode() //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
     this.getCart() //* 本頁的購物車
-    this.getCouponPercent() //* 每次都要取得折扣，本地記錄使用或取消折扣的狀態
   },
-  computed: {
-    ...mapState(useCartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
-  },
-  methods: {
-    ...mapActions(useCartStore, ['getCart', 'updateCart']),
-    //
-    getCouponPercent() {
-      //! 有新增優惠券時 或 重新整理判斷有無優惠券，避免沒有變數錯誤或下拉選單重整
-      //!  加這段剛開始沒有值會錯 || res.data.data.carts[0].coupon.code
+  watch: {
+    couponCode() {
       if (!localStorage.getItem('local-couponCode')) {
         localStorage.setItem('local-couponCode', this.couponCode)
       }
-      this.couponCode = localStorage.getItem('local-couponCode')
+      localStorage.setItem('local-couponCode', this.couponCode)
+      this.addCouponCode()
+    }
+  },
+  computed: {
+    ...mapState(cartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
+  },
+  methods: {
+    ...mapActions(cartStore, ['getCart', 'updateCart']),
+    //
+    getCouponPercent() {
       if (this.couponCode !== 'default') {
         if (this.$route.path.includes('cart-list')) {
           const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
@@ -132,15 +138,14 @@ export default {
       }
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
-          localStorage.setItem('local-couponCode', this.couponCode) //*要放最上，先更新折扣碼，再取得折扣數
-          //
-          this.getCart()
           this.getCouponPercent()
+          this.getCart()
           this.$toast('success', 'Add Coupon')
         } else {
+          //* addCouponCode((couponCode = 'default')) 判斷沒有default這個折扣馬就刪除
           localStorage.removeItem('local-couponCode', this.couponCode)
-          this.getCart()
           this.getCouponPercent()
+          this.getCart()
           this.$toast('success', 'Cancel coupon')
           //
           this.couponCode = 'default'
@@ -169,6 +174,7 @@ export default {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`
       const order = this.form
       this.$http.post(url, { data: order }).then((res) => {
+        localStorage.removeItem('local-couponCode', this.couponCode) //* 每次送出要刪掉折扣馬
         this.getCart()
         this.$router.push(`checkout/${res.data.orderId}`)
       })

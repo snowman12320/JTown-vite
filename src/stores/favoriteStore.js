@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { setTimeout } from 'core-js'
 
-export default defineStore('useFavoriteStore', {
+export default defineStore('favoriteStore', {
   state: () => ({
     statusBtn: { loadingItem: '' },
     isLoading: false,
@@ -41,11 +41,12 @@ export default defineStore('useFavoriteStore', {
         localStorage.setItem('favorite', JSON.stringify(this.favoriteIds))
         setTimeout(() => {
           this.statusBtn.loadingItem = ''
-          //
-          this.toast.id = id
-          this.toast.res = 'warning'
-          this.toast.info = 'delete favorite.'
-          // this.$toast('success', 'delete favorite.')
+          //使用對象字面量的簡寫形式來給予
+          this.toast = {
+            id,
+            res: 'warning',
+            info: 'delete favorite.'
+          }
         }, 500)
       } else {
         //* 不存在就新增
@@ -54,10 +55,11 @@ export default defineStore('useFavoriteStore', {
         setTimeout(() => {
           this.statusBtn.loadingItem = ''
           //
-          this.toast.id = id
-          this.toast.res = 'success'
-          this.toast.info = 'add to favorite.'
-          // this.$toast('success', 'add to favorite.')
+          this.toast = {
+            id,
+            res: 'success',
+            info: 'add favorite.'
+          }
         }, 500)
       }
       //

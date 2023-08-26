@@ -5,7 +5,6 @@ import productStore from '@/stores/productStore'
 import { mapActions } from 'pinia'
 
 export default {
-  inject: ['emitter'],
   components: { Multiselect },
   data() {
     return {

@@ -2,7 +2,6 @@
 import productStore from '../stores/productStore'
 import { mapActions } from 'pinia'
 export default {
-  inject: ['emitter'],
   components: {},
   data() {
     return {
@@ -135,7 +134,7 @@ export default {
         aria-label="Page navigation example"
       >
         <ul class="pagination w-100 d-flex justify-content-between">
-          <li class="page-item">
+          <li class="page-item" :class="{ disabled: isNotPrev }">
             <a
               class="page-link"
               :class="{ disabled: isNotPrev }"
@@ -146,7 +145,7 @@ export default {
               <i class="fa fa-caret-left" aria-hidden="true"></i> Prev
             </a>
           </li>
-          <li class="page-item">
+          <li class="page-item" :class="{ disabled: isNotNext }">
             <a
               class="page-link"
               :class="{ disabled: isNotNext }"
@@ -199,11 +198,7 @@ export default {
                 class="allstaritem_back img-fluid op-center of-cover"
                 alt=""
               />
-              <div
-                @click.prevent="handleClick"
-                class="card-body fs-6"
-                v-html="story.content"
-              ></div>
+              <div @click.prevent="handleClick" class="card-body fs-6" v-html="story.content"></div>
               <a
                 type="button"
                 @click.prevent="getMerchandise()"

@@ -1,12 +1,11 @@
 <script>
-import useCartStore from '../stores/useCartStore.js'
-import useFavoriteStore from '../stores/useFavoriteStore'
+import cartStore from '../stores/cartStore.js'
+import favoriteStore from '../stores/favoriteStore'
 import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
-import useLoginStore from '../stores/useLoginStore'
+import loginStore from '../stores/loginStore'
 
 export default {
-  inject: ['emitter'],
   data() {
     return {
       isLoading_small: false, //列表載入
@@ -50,10 +49,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
-    ...mapState(useFavoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds', 'toast']),
+    ...mapState(cartStore, ['isLoading']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
+    ...mapState(favoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds', 'toast']),
     ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck']),
-    ...mapState(useLoginStore, ['isLogin']),
+    ...mapState(loginStore, ['isLogin']),
     //
     filteredData() {
       let filteredData = []
@@ -100,8 +99,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useCartStore, ['getCart']),
-    ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
+    ...mapActions(cartStore, ['getCart']),
+    ...mapActions(favoriteStore, ['getFavorite', 'updateFavorite']),
     ...mapActions(productStore, ['getProduct_item']),
     //
     addToCart(id, qty = 1, isBuy) {

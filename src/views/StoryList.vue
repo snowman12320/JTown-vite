@@ -2,14 +2,13 @@
 import Pagination from '@/components/Pagination.vue'
 
 export default {
-  inject: ['emitter'],
   components: {
     Pagination
   },
   data() {
     return {
       storyList: [],
-      pagination: {},
+      pagination: {}
     }
   },
   created() {
@@ -19,10 +18,10 @@ export default {
     // this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法 > 最上層的視圖層就有判斷了
   },
   computed: {
-    // ...mapState(useLoginStore, ['isLoading', 'isLogin']) //*[Vue warn]: Write operation failed: computed property "isLoading" is readonly.
+    // ...mapState(loginStore, ['isLoading', 'isLogin']) //*[Vue warn]: Write operation failed: computed property "isLoading" is readonly.
   },
   methods: {
-    // ...mapActions(useLoginStore, ['checkLoginStatus']),
+    // ...mapActions(loginStore, ['checkLoginStatus']),
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH

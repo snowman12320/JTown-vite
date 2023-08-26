@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 // 改成default才能在其他store引入，不然引入時都要用解構取出(但不是問題)
-export default defineStore('useCartStore', {
+export default defineStore('cartStore', {
   state: () => ({
     isLoading: false,
     statusBtn_car: {

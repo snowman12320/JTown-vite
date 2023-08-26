@@ -44,10 +44,12 @@ at Header.vue:8:5
 > 更像是在 FavoriteOffcanvas.vue 有一個 delFavorite 的 method
 > 當它需要改變 store 狀態的時候呼叫 action
 
-## Q:回覆 在 store 的 js，如何使用 $refs 
+## Q:回覆 在 store 的 js，如何使用 $refs
+
 依照建議"不需要在 store 使用 $refs"
 我將刪除的邏輯拆出來，就是delFavorite_store 放在store中，其餘用this.$refs操作彈窗開關，留在vue中
 請問我這樣的理解沒錯嗎?
+
 ```
     delFavorite(id) {
       this.delFavorite_store(id)
@@ -60,17 +62,15 @@ at Header.vue:8:5
 ```
 
 ## Q：回覆addToCart 的 $swal 和 $toast 失效
+
 1.這樣若邏輯有很多if，要觸發多次$swal(如addToCart這個函式)，這樣都要拆分出來嗎???
- 會不會變更複雜，邏輯都被拆開了呢?
+會不會變更複雜，邏輯都被拆開了呢?
 
- 我這邊另一個理解是，addToCart方法，不是整個丟進store，而是把關鍵的API那段，就是觸發購物車資料更新的放進去即可，
- 應該是這樣沒錯吧 ?
-2. "toast 跟 swal 都是掛在 Vue 的 app 上，與 store 沒有任何關聯"
-  但axios和router都有掛載到app上，可是我在store，是直接引入套件本身，是正常使用的
-  所以在store不能使用那些套件囉?
-  就只能放在vue使用，像第一點一樣，只有改變狀態的方法，才能放store
-
-
+我這邊另一個理解是，addToCart方法，不是整個丟進store，而是把關鍵的API那段，就是觸發購物車資料更新的放進去即可，
+應該是這樣沒錯吧 ? 2. "toast 跟 swal 都是掛在 Vue 的 app 上，與 store 沒有任何關聯"
+但axios和router都有掛載到app上，可是我在store，是直接引入套件本身，是正常使用的
+所以在store不能使用那些套件囉?
+就只能放在vue使用，像第一點一樣，只有改變狀態的方法，才能放store
 
 ## Q : 關於 useCartStores.js
 
@@ -160,17 +160,23 @@ https://ithelp.ithome.com.tw/articles/10301528
 
 ## 1. SPA (Single Page Application):
 
-SPA是指单页应用程序，它是一种Web应用程序的架构模式。在SPA中，整个应用程序只有一个HTML页面，页面的内容通过JavaScript动态加载和更新，实现页面的无刷新切换。SPA的好处是能够提供更流畅的用户体验，减少了页面的刷新，同时也提高了应用程序的性能。2. SFC (Single File Component): SFC是指单文件组件，它是Vue.js框架中的一种组件化开发方式。在SFC中，一个组件的所有代码（包括HTML模板、CSS样式和JavaScript代码）都被封装在一个单独的文件中。这种方式使得组件的开发更加模块化和可维护，同时也提高了开发效率。
+SPA是指单页应用程序，它是一种Web应用程序的架构模式。在SPA中，整个应用程序只有一个HTML页面，页面的内容通过JavaScript动态加载和更新，实现页面的无刷新切换。SPA的好处是能够提供更流畅的用户体验，减少了页面的刷新，同时也提高了应用程序的性能。
+
+## 2. SFC (Single File Component): SFC是指单文件组件，它是Vue.js框架中的一种组件化开发方式。在SFC中，一个组件的所有代码（包括HTML模板、CSS样式和JavaScript代码）都被封装在一个单独的文件中。这种方式使得组件的开发更加模块化和可维护，同时也提高了开发效率。
+
 总结：
 
 - SPA是一种Web应用程序的架构模式，它通过JavaScript动态加载和更新页面内容，实现无刷新切换页面的效果。
 - SFC是Vue.js框架中的一种组件化开发方式，它将一个组件的所有代码封装在一个单独的文件中，提高了组件的开发效率和可维护性。
 
-## 3.SSR (Server-Side Rendering): SSR是指服务器端渲染，它是一种将页面的渲染工作从客户端转移到服务器端的技术。在传统的SPA中，页面的渲染是由客户端的JavaScript完成的，而在SSR中，服务器在接收到请求后，会先进行页面的渲染，然后将渲染好的页面发送给客户端。这样做的好处是可以提供更好的首次加载性能和SEO优化，但也增加了服务器的负载。
+## 3.SSR (Server-Side Rendering):
+
+SSR是指服务器端渲染，它是一种将页面的渲染工作从客户端转移到服务器端的技术。在传统的SPA中，页面的渲染是由客户端的JavaScript完成的，而在SSR中，服务器在接收到请求后，会先进行页面的渲染，然后将渲染好的页面发送给客户端。这样做的好处是可以提供更好的首次加载性能和SEO优化，但也增加了服务器的负载。
 
 SSR是一种将页面的渲染工作从客户端转移到服务器端的技术，通过在服务器端进行页面的渲染，可以提供更好的首次加载性能和SEO优化。
 
-4.另一种与SPA相对的应用程序类型是MPA（Multi-Page Application），也称为多页应用程序。以下是对MPA的解释和特点的條列说明：
+## 4.另一种与SPA相对的应用程序类型是MPA（Multi-Page Application），也称为多页应用程序。以下是对MPA的解释和特点的條列说明：
+
 MPA (Multi-Page Application): MPA是指多页应用程序，它是一种传统的Web应用程序架构模式。在MPA中，每个页面都是一个独立的HTML文件，每次用户与应用程序交互时，都会通过服务器加载一个新的HTML页面。这意味着每次页面切换都会导致整个页面的刷新，因此会有较长的加载时间和页面闪烁的问题。
 
 特点：
@@ -239,3 +245,42 @@ https://github.com/vuejs/create-vue
 npm run dev看缺什麼
 
 ---
+
+## try 和 async 是 JavaScript 中的兩個不同概念，它們不是相互依賴的
+
+- try / catch：
+  try 和 catch 是 JavaScript 中的錯誤處理機制。您可以使用 try 區塊來執行可能會拋出錯誤的程式碼，並使用 catch 區塊來捕捉和處理這些錯誤。如果在 try 區塊中的程式碼拋出了錯誤，執行將立即跳轉到相應的 catch 區塊。這樣可以避免整個應用程序因為錯誤而崩潰。
+
+- async / await：
+  async 函式是一種特殊類型的函式，它允許在函式內部使用 await 關鍵字來暫停執行，等待一個 Promise 解析為值。這樣可以實現更易讀和更具同步風格的異步程式碼。await 關鍵字僅在 async 函式內部有效。
+
+* then 和 async 和 try都是異步處理
+then是舊寫法
+async是新的，避免回調地獄
+都可以使用try>catch>finally
+
+## .then 格式是使用 Promise 的傳統異步語法
+
+使用了 .then 和 .catch，以及 .finally 方法來處理異步操作。請注意，使用 async/await 通常更容易讀寫和理解，因為它提供了一個更接近同步的程式碼結構，可以避免回調地獄和錯綜複雜的 Promise 鏈。
+<!-- 
+    async checkLoginStatus() {
+    this.isLoading = true
+    const token = document.cookie.replace(/(?:(?:^|._;\s_)hexToken\s*=\s*([^;]_)._$)|^.*$/, '$1')
+    axios.defaults.headers.common.Authorization = token
+      const api = `${import.meta.env.VITE_APP_API}api/user/check`
+
+      try {
+        const response = await axios.post(api, this.user)
+        if (!response.data.success) {
+          this.isLogin = false
+          if (localStorage.getItem('VIP')) this.isLogin = true
+        } else {
+          this.isLogin = true
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error)
+        this.isLogin = false
+      } finally {
+        this.isLoading = false
+      }
+    } -->

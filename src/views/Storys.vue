@@ -1,10 +1,119 @@
+<script>
+import StoryModal from '@/components/StoryModal.vue'
+import Pagination from '@/components/Pagination.vue'
+import DelModal from '@/components/DelModal.vue'
+
+import { mapActions } from 'pinia'
+import messageStore from '../stores/messageStore'
+
+export default {
+  components: {
+    StoryModal,
+    DelModal,
+    Pagination
+  },
+  data() {
+    return {
+      storyList: [], //* 原始資料
+      pagination: {}, //* 頁數資料
+      tempStory: {}, //* 暫存區
+      isNew: false, //* 判斷有無資料
+      isLoading: false //* 載入效果開關
+    }
+  },
+  created() {
+    console.clear()
+    this.getStoryList()
+  },
+  methods: {
+    ...mapActions(messageStore, ['pushMessage']),
+    // 產品後台 取得遠端資料
+    // !透過頁數取得資料
+    getStoryList(page = 1) {
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/articles/?page=${page}`
+      this.isLoading = true
+      this.$http.get(api).then((res) => {
+        this.isLoading = false
+        if (res.data.success) {
+          this.storyList = res.data.articles
+          this.pagination = res.data.pagination
+        }
+      })
+    },
+    //! 新增時會帶一個true，編輯時會帶false和資料
+    openModal(isNew, id) {
+      if (isNew) {
+        this.tempStory = {}
+      } else {
+        this.isLoading = true
+        // !story 的 content 沒有在彈窗正確顯示是因為取得文章列表並沒有 content 這筆資料
+        const api = `${import.meta.env.VITE_APP_API}api/${
+          import.meta.env.VITE_APP_PATH
+        }/admin/article/${id}`
+        this.$http.get(api).then((res) => {
+          if (res.data.success) {
+            this.tempStory = res.data.article
+            this.isLoading = false
+          }
+        })
+      }
+      this.isNew = isNew
+      const storyCp = this.$refs.storyModal
+      storyCp.showModal()
+    },
+    //* 以下進行新增或編輯，使用不同ＡＰＩ
+    updateStory(item) {
+      this.tempStory = item
+      // 新增
+      let api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article`
+      let httpMethod = 'post'
+      // 編輯
+      if (!this.isNew) {
+        api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article/${
+          item.id
+        }`
+        httpMethod = 'put'
+      }
+      const storyCp = this.$refs.storyModal
+      this.$http[httpMethod](api, { data: this.tempStory }).then((response) => {
+        storyCp.hideModal()
+        if (response.data.success) {
+          this.getStoryList()
+          this.pushMessage(response, '更新')
+        } else {
+          this.pushMessage(response, '更新')
+        }
+      })
+    },
+    // 開啟刪除 Modal
+    openDelStoryModal(item) {
+      this.tempStory = { ...item }
+      const delComponent = this.$refs.delModal
+      delComponent.showModal()
+    },
+    delStory() {
+      // !塞入要刪除的ＩＤ
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/article/${this.tempStory.id}`
+      this.$http.delete(url).then((response) => {
+        this.pushMessage(response, response.data.message)
+        const delComponent = this.$refs.delModal
+        delComponent.hideModal()
+        this.getStoryList()
+      })
+    }
+  }
+}
+</script>
+
 <template>
   <div class="w-100">
     <Loading :active="isLoading"></Loading>
     <div class="text-end mt-3">
-      <button class="btn btn-primary" type="button" @click="openModal(true, null)">
-        新增文章
-      </button>
+      <button class="btn btn-primary" type="button" @click="openModal(true, null)">新增文章</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -29,8 +138,12 @@
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item.id)">編輯</button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelStoryModal(item)">刪除</button>
+              <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item.id)">
+                編輯
+              </button>
+              <button class="btn btn-outline-danger btn-sm" @click="openDelStoryModal(item)">
+                刪除
+              </button>
             </div>
           </td>
         </tr>
@@ -44,117 +157,14 @@
     <DelModal :item="tempStory" ref="delModal" @del-item="delStory" />
   </div>
 </template>
-<script>
-import StoryModal from '@/components/StoryModal.vue';
-import Pagination from '@/components/Pagination.vue';
-import DelModal from '@/components/DelModal.vue';
 
-export default {
-  components: {
-    StoryModal,
-    DelModal,
-    Pagination
-  },
-  inject: ['emitter'],
-  data () {
-    return {
-      storyList: [], //* 原始資料
-      pagination: {}, //* 頁數資料
-      tempStory: {}, //* 暫存區
-      isNew: false, //* 判斷有無資料
-      isLoading: false //* 載入效果開關
-    };
-  },
-  created () {
-    this.getStoryList();
-  },
-  methods: {
-    // 產品後台 取得遠端資料
-    // !透過頁數取得資料
-    getStoryList (page = 1) {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/articles/?page=${page}`;
-      this.isLoading = true;
-      this.$http.get(api).then((res) => {
-        this.isLoading = false;
-        if (res.data.success) {
-          this.storyList = res.data.articles;
-          this.pagination = res.data.pagination;
-        }
-      });
-    },
-    //! 新增時會帶一個true，編輯時會帶false和資料
-    openModal (isNew, id) {
-      if (isNew) {
-        this.tempStory = {};
-      } else {
-        this.isLoading = true;
-        // !story 的 content 沒有在彈窗正確顯示是因為取得文章列表並沒有 content 這筆資料
-        const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article/${id}`;
-        this.$http.get(api).then((res) => {
-          if (res.data.success) {
-            this.tempStory = res.data.article;
-            this.isLoading = false;
-          }
-        });
-      }
-      this.isNew = isNew;
-      const storyCp = this.$refs.storyModal;
-      storyCp.showModal();
-    },
-    //* 以下進行新增或編輯，使用不同ＡＰＩ
-    updateStory (item) {
-      this.tempStory = item;
-      // 新增
-      let api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article`;
-      let httpMethod = 'post';
-      // 編輯
-      if (!this.isNew) {
-        api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article/${item.id}`;
-        httpMethod = 'put';
-      }
-      const storyCp = this.$refs.storyModal;
-      this.$http[httpMethod](api, { data: this.tempStory }).then((response) => {
-        storyCp.hideModal();
-        if (response.data.success) {
-          this.getStoryList();
-          // ! mitt 跨元件互相溝通，且全域打包
-          // this.emitter.emit('push-message', {
-          //   style: 'success',
-          //   title: '更新成功'
-          // });
-          this.$httpMessageState(response, '更新');
-        } else {
-          this.$httpMessageState(response, '更新');
-        }
-      });
-    },
-    // 開啟刪除 Modal
-    openDelStoryModal (item) {
-      this.tempStory = { ...item };
-      const delComponent = this.$refs.delModal;
-      delComponent.showModal();
-    },
-    delStory () {
-      // !塞入要刪除的ＩＤ
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article/${this.tempStory.id}`;
-      this.$http.delete(url).then((response) => {
-        this.$httpMessageState(response, response.data.message);
-        const delComponent = this.$refs.delModal;
-        delComponent.hideModal();
-        this.getStoryList();
-      });
-    }
-  }
-
-};
-</script>
 <style lang="scss">
 tr:nth-child(even) {
   background-color: #eee;
 }
 
 tr:hover {
-  background-color: rgba(0, 81, 255, 0.227)
+  background-color: rgba(0, 81, 255, 0.227);
 }
 
 .single-ellipsis {

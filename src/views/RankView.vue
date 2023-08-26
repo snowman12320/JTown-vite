@@ -31,7 +31,7 @@ import emitter from '@/methods/emitter'
 import ToastMessages from '@/components/ToastMessages.vue'
 import RankList from '@/components/RankList.vue'
 
-import useLoginStore from '@/stores/useLoginStore.js'
+import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
@@ -42,19 +42,15 @@ export default {
     ToastMessages,
     RankList
   },
-  provide() {
-    return {
-      emitter
-    }
-  },
+
   mounted() {
     this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
   },
   computed: {
-    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ['isLoading', 'isLogin'])
   },
   methods: {
-    ...mapActions(useLoginStore, ['checkLoginStatus']),
+    ...mapActions(loginStore, ['checkLoginStatus']),
     // https://zhuanlan.zhihu.com/p/399939287
     getImageUrl() {
       return new URL('@/assets/nbaWeb/allstar-2016-011016-top-1.jpg', import.meta.url).href

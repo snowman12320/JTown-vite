@@ -4,14 +4,13 @@ import ProductsList from '@/components/ProductsList.vue'
 import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm'
 import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
 //
-import useFavoriteStore from '../stores/useFavoriteStore'
-import useCartStore from '../stores/useCartStore'
+import favoriteStore from '../stores/favoriteStore'
+import cartStore from '../stores/cartStore'
 import productStore from '../stores/productStore'
-import useLoginStore from '../stores/useLoginStore'
+import loginStore from '../stores/loginStore'
 import { mapState, mapActions } from 'pinia'
 
 export default {
-  inject: ['emitter'],
   components: {
     ProductsList
   },
@@ -60,14 +59,14 @@ export default {
     this.changeClass()
   },
   computed: {
-    ...mapState(useFavoriteStore, ['statusBtn']),
-    ...mapState(useFavoriteStore, ['isFavorite', 'favoriteIds']),
+    ...mapState(favoriteStore, ['statusBtn']),
+    ...mapState(favoriteStore, ['isFavorite', 'favoriteIds']),
     ...mapState(productStore, ['isLoading_productStore', 'product_item']),
-    ...mapState(useLoginStore, ['isLogin'])
+    ...mapState(loginStore, ['isLogin'])
   },
   methods: {
-    ...mapActions(useCartStore, ['getCart']),
-    ...mapActions(useFavoriteStore, ['getFavorite', 'updateFavorite']),
+    ...mapActions(cartStore, ['getCart']),
+    ...mapActions(favoriteStore, ['getFavorite', 'updateFavorite']),
     ...mapActions(productStore, ['getProduct_item', 'setCategory']),
     //
     addToCart(id, qty = 1, isBuy) {

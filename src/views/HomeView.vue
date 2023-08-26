@@ -8,17 +8,13 @@ import Footer from '@/components/Footer.vue'
 // import loginMixin from '../mixins/loginMixin'
 import emitter from '@/methods/emitter'
 
-import useLoginStore from '@/stores/useLoginStore.js'
+import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
   // name: 'HomeView', //*过设置name属性，可以为组件指定一个唯一的名称。这对于在组件之间进行通信
   // mixins: [loginMixin],
-  provide() {
-    return {
-      emitter
-    }
-  },
+
   components: {
     Header,
     HomeCarousel,
@@ -50,10 +46,10 @@ export default {
       this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
   },
   computed: {
-    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ['isLoading', 'isLogin'])
   },
   methods: {
-    ...mapActions(useLoginStore, ['checkLoginStatus']),
+    ...mapActions(loginStore, ['checkLoginStatus']),
     pad(n, s) {
       s = s || 2
       return ('00000' + n).slice(-s)

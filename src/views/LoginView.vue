@@ -4,7 +4,7 @@ import Footer from '@/components/Footer.vue'
 // import loginMixin from '@/mixins/loginMixin';
 import emitter from '@/methods/emitter'
 
-import useLoginStore from '@/stores/useLoginStore.js'
+import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
@@ -13,11 +13,7 @@ export default {
     Header,
     Footer
   },
-  provide() {
-    return {
-      emitter
-    }
-  },
+
   data() {
     return {
       user: {
@@ -35,7 +31,7 @@ export default {
     this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
   },
   computed: {
-    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ['isLoading', 'isLogin'])
   },
   watch: {
     rememberMe() {
@@ -68,7 +64,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useLoginStore, ['checkLoginStatus']),
+    ...mapActions(loginStore, ['checkLoginStatus']),
     signIn() {
       const api = `${import.meta.env.VITE_APP_API}admin/signin`
       this.$http.post(api, this.user).then((res) => {

@@ -2,10 +2,9 @@
 import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
 
-import useFavoriteStore from '../stores/useFavoriteStore.js'
+import favoriteStore from '../stores/favoriteStore.js'
 import { mapActions, mapState } from 'pinia'
 export default {
-  inject: ['emitter'],
   mixins: [offcanvasMixin], //* 混用獨立的功能
   components: {
     DelModal
@@ -24,10 +23,10 @@ export default {
     this.getFavorite()
   },
   computed: {
-    ...mapState(useFavoriteStore, ['filteredProducts', 'favoriteIds','isLoading'])
+    ...mapState(favoriteStore, ['filteredProducts', 'favoriteIds', 'isLoading'])
   },
   methods: {
-    ...mapActions(useFavoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
+    ...mapActions(favoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
     //
     delFavorite(id) {
       this.delFavorite_store(id)

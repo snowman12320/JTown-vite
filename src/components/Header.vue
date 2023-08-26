@@ -3,9 +3,9 @@ import CartOffcanvas from '@/components/CartOffcanvas.vue'
 import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue'
 import Collapse from 'bootstrap/js/dist/collapse'
 
-import useFavoriteStore from '../stores/useFavoriteStore'
-import useCartStore from '../stores/useCartStore'
-import useLoginStore from '../stores/useLoginStore'
+import favoriteStore from '../stores/favoriteStore'
+import cartStore from '../stores/cartStore'
+import loginStore from '../stores/loginStore'
 import { mapState } from 'pinia'
 
 export default {
@@ -34,9 +34,9 @@ export default {
     }, 500)
   },
   computed: {
-    ...mapState(useFavoriteStore, ['favoriteIds']),
-    ...mapState(useCartStore, ['carts']),
-    ...mapState(useLoginStore, ['isLogin'])
+    ...mapState(favoriteStore, ['favoriteIds']),
+    ...mapState(cartStore, ['carts']),
+    ...mapState(loginStore, ['isLogin'])
   },
   methods: {
     collapse_toggle() {

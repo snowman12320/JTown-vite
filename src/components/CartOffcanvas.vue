@@ -2,10 +2,9 @@
 import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
 
-import useCartStore from '../stores/useCartStore.js'
+import cartStore from '../stores/cartStore.js'
 import { mapActions, mapState } from 'pinia'
 export default {
-  inject: ['emitter'],
   mixins: [offcanvasMixin], //* 混用獨立的功能
   components: {
     DelModal
@@ -30,10 +29,10 @@ export default {
     this.getCart()
   },
   computed: {
-    ...mapState(useCartStore, ['isLoading', 'carts', 'statusBtn_car', 'sumTotal', 'sumFinalQty'])
+    ...mapState(cartStore, ['isLoading', 'carts', 'statusBtn_car', 'sumTotal', 'sumFinalQty'])
   },
   methods: {
-    ...mapActions(useCartStore, ['getCart', 'updateCart']),
+    ...mapActions(cartStore, ['getCart', 'updateCart']),
     //
     openDelCartModel(item) {
       this.tempCart = { ...item }

@@ -11,7 +11,7 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import emitter from '@/methods/emitter'
 
-import useLoginStore from '@/stores/useLoginStore.js'
+import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
@@ -19,19 +19,15 @@ export default {
     Header,
     Footer
   },
-  provide() {
-    return {
-      emitter
-    }
-  },
+
   mounted() {
     this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
   },
   computed: {
-    ...mapState(useLoginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ['isLoading', 'isLogin'])
   },
   methods: {
-    ...mapActions(useLoginStore, ['checkLoginStatus'])
+    ...mapActions(loginStore, ['checkLoginStatus'])
   }
 }
 </script>

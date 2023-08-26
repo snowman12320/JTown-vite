@@ -22,30 +22,28 @@ https://element.eleme.io/#/zh-CN/component/select
 
 有用到eimtter，都要統一狀態：
 x 登入（每個視圖層
-
 x 購物車 （側邊、結帳頁、商品列表和內頁、數量
-
 x 收藏 （側邊、商品列表、商品內頁、數量
-
 x 搜尋商品（統一商品列表、搜尋欄統一操作 ，看是否修正 搜尋完商品後第一次按分類篩選會失敗
-
 x 文章周邊商品（ 透過人物名稱 改變商品列表狀態
+x store有用到this 都要重拆細分
+x 後台資料會用到 > this.emitter.emit('push-message 改成共用狀態
+x 拿掉
+inject: ['emitter'], / provide()
 
 x 留言板由上新增 側邊預先展開
+x isloading 分大小 >
+store 固定 small和big，> vue內就用 獨立變數去操作 獨立動畫html > 分一般大小和store大小 (例如isLoading_big_product)
 
-store有用到this 都要重拆細分
 
-後台資料會用到 >
-this.emitter.emit('push-message
-
-isloading 分大小 >
-store 固定 small和big，> vue內就用 獨立變數去操作 獨立動畫html > 分一般大小和store大小 
-
+一鍵部屬vite
 ## - 元件分類資料夾
 
 如vite官方安裝時的範本
 
 > 之後專案分 後台和前台 或 細分種類(產品/故事等)
+
+> 判斷路由 動態元件 : 減少視圖層 且將元件分類到資料夾 包含再細分成插槽減少重複元件 （插槽也分類到資料夾）
 
 ## - 修改router
 

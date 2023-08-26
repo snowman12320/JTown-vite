@@ -1,6 +1,5 @@
 <script>
 export default {
-  inject: ['emitter'],
   data() {
     return {
       order: {

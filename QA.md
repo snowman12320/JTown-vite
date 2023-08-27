@@ -328,3 +328,6 @@ async是新的，避免回調地獄
 ## vite 3 deploy.sh
 https://v3.vitejs.dev/guide/static-deploy.html#github-pages
 https://courses.hexschool.com/courses/vue-20211/lectures/43730457
+
+## md 
++++ http://itmyhome.com/markdown/article/syntax/images.html

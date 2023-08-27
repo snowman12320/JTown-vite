@@ -13,40 +13,40 @@ JTown （Jersey Town） 是提供 NBA 球衣和商品的商店。
 
 - 響應式設計：能夠適應不同大小的屏幕和設備，提供良好的用戶體驗。
 
-<img src="/blob/pinia/src/assets/nbaWeb/1693139126056.jpg" alt="GitHub" title="GitHub,Social Coding" width="auto" height="300" />
-<img src="/blob/pinia/src/assets/nbaWeb/1693138968357.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+<img src="/src/assets/nbaWeb/1693139126056.jpg" alt="GitHub" title="GitHub,Social Coding" width="auto" height="300" />
+<img src="/src/assets/nbaWeb/1693138968357.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 
 ---
 
 - 商品展示：直觀和易於瀏覽的展示界面，通過分類、搜索和排序來找到所需商品。
-  <img src="/blob/pinia/src/assets/nbaWeb/1693139494129.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693139494129.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 ---
 
 - 商品詳情：點擊商品列表中的商品，獲取更多商品信息，包括圖片、價格、庫存狀態等。
-  <img src="/blob/pinia/src/assets/nbaWeb/1693140431225.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693140431225.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 ---
 
 - 購物車：將感興趣的商品添加到購物車中，結算時查看和編輯購物車內容。
 
-  <img src="/blob/pinia/src/assets/nbaWeb/1693139621982.jpg" alt="GitHub" title="GitHub,Social Coding" width="30%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693139621982.jpg" alt="GitHub" title="GitHub,Social Coding" width="30%" height="auto" />
 
 ---
 
 - 註冊和登錄：可註冊帳號，或使用現有的帳號登錄。登錄後，可以查看訂單歷史記錄、編輯個人信息等。
-  <img src="/blob/pinia/src/assets/nbaWeb/1693139526031.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693139526031.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 ---
 
 - 訂單管理：在網站上下訂單，選擇支付方式並填寫送貨地址。用戶可以查看和管理自己的訂單。
-  <img src="/blob/pinia/src/assets/nbaWeb/1693139561360.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693139561360.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 ---
 
 - 後台管理：提供後台管理界面，供商家管理商品、處理訂單等操作。
-  <img src="/blob/pinia/src/assets/nbaWeb/1693140809939.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
+  <img src="/src/assets/nbaWeb/1693140809939.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
 </br>
 </br>

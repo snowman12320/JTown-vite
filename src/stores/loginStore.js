@@ -9,7 +9,6 @@ export default defineStore('loginStore', {
   }),
   actions: {
     // getter 改为使用 actions
-
     checkLoginStatus() {
       this.isLoading = true
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')

@@ -46,11 +46,23 @@ export default {
         this.$toast(this.toast.res, this.toast.info)
       },
       deep: true
+    },
+    notLogin(newVal) {
+      if (newVal) {
+        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        // this.$router.push('/login')
+      }
     }
   },
   computed: {
     ...mapState(cartStore, ['isLoading']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
-    ...mapState(favoriteStore, ['statusBtn', 'filteredProducts', 'favoriteIds', 'toast']),
+    ...mapState(favoriteStore, [
+      'statusBtn',
+      'filteredProducts',
+      'favoriteIds',
+      'toast',
+      'notLogin'
+    ]),
     ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck']),
     ...mapState(loginStore, ['isLogin']),
     //
@@ -107,7 +119,7 @@ export default {
       if (!this.isLogin) {
         // ! 在store不會用到this ，共用狀態才會放store
         this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
-        this.$router.push('/login')
+        // this.$router.push('/login')
       } else {
         if (!this.productSize_list && !this.productSize_item) {
           this.$swal.fire('Please', 'Size must be selected.', 'warning')
@@ -235,7 +247,7 @@ export default {
               >
                 <i
                   @click="updateFavorite(item.id)"
-                  :class="{ 'text-danger': favoriteIds.indexOf(item.id) !== -1 }"
+                  :class="{ 'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1 }"
                   class="fa fa-heart fs-4"
                 ></i>
                 <!--  -->

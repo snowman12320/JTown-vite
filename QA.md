@@ -284,3 +284,47 @@ async是新的，避免回調地獄
         this.isLoading = false
       }
     } -->
+
+## 要刪除已經提交的 commit，你可以使用 `git reset` 命令或 `git revert` 命令，具體方法取決於你希望如何處理提交歷史。
+
+**注意：刪除提交的操作可能會對你的歷史紀錄造成影響，請在進行操作前進行備份或謹慎處理。**
+
+以下是兩種不同的方法：
+
+**方法 1：使用 git reset**
+
+1. 首先，使用以下命令查看你的提交歷史，確定你要刪除的提交的哈希值（commit hash）：
+
+   ```bash
+   git log
+   ```
+
+2. 使用 `git reset` 命令，將分支的 HEAD 移回到你想要刪除的提交之前的位置。請將 `<commit_hash>` 替換為你想要刪除的提交的哈希值。
+
+   ```bash
+   git reset --hard <commit_hash>
+   ```
+
+   這會移除你的分支上最新的提交，並將 HEAD 移動到指定的提交之前。
+
+3. 使用 `git push --force` 命令將你的更改強制推送到遠端。請注意，強制推送可能會影響其他人的存儲庫，請謹慎使用。
+
+**方法 2：使用 git revert**
+
+1. 使用以下命令來創建一個新的提交，該提交會撤銷你想要刪除的提交的更改。請將 `<commit_hash>` 替換為你想要刪除的提交的哈希值。
+
+   ```bash
+   git revert <commit_hash>
+   ```
+
+   這會創建一個新的提交，該提交會撤銷你想要刪除的提交引入的更改。
+
+2. 使用 `git push` 命令將這個新的撤銷提交推送到遠端。
+
+使用哪種方法取決於你希望如何處理提交歷史。`git reset` 會直接移除一個或多個提交，而 `git revert` 則會創建新的提交來撤銷之前的更改。請根據你的需求謹慎選擇。
+
+無論你選擇哪種方法，都建議在操作前進行備份，以避免意外情況。如果你對 git 的操作不太熟悉，最好請求有經驗的同事或技術人員協助你處理。
+
+## vite 3 deploy.sh
+https://v3.vitejs.dev/guide/static-deploy.html#github-pages
+https://courses.hexschool.com/courses/vue-20211/lectures/43730457

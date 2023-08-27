@@ -36,7 +36,7 @@ x isloading 分大小 >
 store 固定 small和big，> vue內就用 獨立變數去操作 獨立動畫html > 分一般大小和store大小 (例如isLoading_big_product)
 
 
-一鍵部屬vite
+x 一鍵部屬vite > sh deploy.sh
 ## - 元件分類資料夾
 
 如vite官方安裝時的範本

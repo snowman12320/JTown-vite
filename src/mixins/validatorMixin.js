@@ -22,7 +22,7 @@ export default {
     },
     termCheck(value) {
       if (!value) {
-        return '請閱讀"規範與聲明"文件，並將卷軸拉至底部，決定是否勾選同意'
+        return '請閱讀並將卷軸拉至底部，決定是否勾選同意'
       }
       return true
     },

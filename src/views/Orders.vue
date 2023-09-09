@@ -264,7 +264,7 @@ export default {
           :class="{ 'text-secondary': !item.is_paid }"
         >
           <td class="d-md-table-cell d-none">{{ $filters.dateAndTime(item.create_at) }}</td>
-          <td class="">{{ item.id }}</td>
+          <td class="w-50">{{ item.id }}</td>
           <td class="d-md-table-cell d-none">{{ item.user.name }}</td>
           <td class="d-md-table-cell d-none">
             <span v-text="item.user.email" v-if="item.user"></span>

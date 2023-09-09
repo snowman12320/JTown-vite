@@ -239,6 +239,10 @@
             <div>如果您對我們的服務或本使用條款有任何疑問，請直接與"JTown"客服中心（客服Email:</div>
             <div>"JTown"@gmail.com）聯絡，我們將儘速為您處理。</div>
           </div>
+          <!--  -->
+          <!-- <div class="btn btn-danger d-block text-center mt-5" @click="$emit('my-scroll')">
+            Agree Term
+          </div> -->
         </div>
       </div>
     </div>

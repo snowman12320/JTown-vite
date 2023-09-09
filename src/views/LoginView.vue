@@ -1,14 +1,11 @@
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-// import loginMixin from '@/mixins/loginMixin';
-import emitter from '@/methods/emitter'
 
 import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  // mixins: [loginMixin],
   components: {
     Header,
     Footer
@@ -188,18 +185,18 @@ export default {
           <div class="card-footer d-flex justify-content-center align-items-center">
             <div class="d-flex justify-content-center align-items-center links">
               Don't have an account?
-              <el-popconfirm
+              <!-- <el-popconfirm
                 width="350"
                 @confirm="confirmEvent"
                 confirm-button-text="Yap!"
                 cancel-button-text="No, Thanks"
                 icon-color="#626AEF"
                 title="Registration is not yet available... but would you like to use VIP to test it?"
-              >
-                <template #reference>
-                  <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
-                </template>
-              </el-popconfirm>
+              > -->
+              <!-- <template #reference> -->
+                <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
+              <!-- </template> -->
+              <!-- </el-popconfirm> -->
             </div>
             <!-- <div class="d-flex justify-content-center">
               <a href="#">Forgot your password?</a>

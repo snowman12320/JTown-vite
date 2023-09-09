@@ -26,7 +26,9 @@ export default {
       //
       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
       productSize_list: '',
-      productSize_item: ''
+      productSize_item: '',
+      //
+      addToCart_item_id: null
     }
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
@@ -52,6 +54,9 @@ export default {
         this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
         // this.$router.push('/login')
       }
+    },
+    productSize_list() {
+      this.addToCart(this.addToCart_item_id, 1, false)
     }
   },
   computed: {
@@ -203,7 +208,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div class="product_list">
     <!-- 排序  -->
     <div class="mb-3 d-flex justify-content-end align-items-center" :class="childClass">
       <label for="" class="form-label mb-0">Sort by：</label>
@@ -255,12 +260,13 @@ export default {
                   placement="top"
                   title="SIZE："
                   :width="200"
-                  trigger="hover"
+                  trigger="click"
                   content=""
                   @hide="setClass = false"
                   @show="setClass = index"
+                  popper-class="product_list_el-popover"
                 >
-                  <div class="d-flex justify-content-center w-100 mx-auto gap-1">
+                  <div class="d-flex justify-content-center w-100 mx-auto gap-1" style="z-index: 2">
                     <div class="">
                       <input
                         value="S"
@@ -336,8 +342,9 @@ export default {
                     </div>
                   </div>
                   <template #reference>
+                    <!-- @click="addToCart(item.id, qty, (isBuy = false))" 改成點擊加入購物車開啟選單 然後點擊尺寸就加入購物車 -->
                     <i
-                      @click="addToCart(item.id, qty, (isBuy = false))"
+                      @click="addToCart_item_id = item.id"
                       class="fa fa-cart-plus text-white fs-4"
                     ></i>
                   </template>
@@ -374,29 +381,47 @@ export default {
   </div>
 </template>
 
-<style scoped lang="scss">
-.col h5 {
-  cursor: pointer;
+<style lang="scss">
+.product_list_el-popover {
+  z-index: 2 !important;
 }
 
-.col i {
-  cursor: pointer;
-}
+.product_list {
+  .col h5 {
+    cursor: pointer;
+  }
 
-.newproduct_cloth_set {
-  opacity: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  transition: all;
-  z-index: 2;
-  animation-duration: 1500ms;
-  overflow: hidden !important;
-  border-radius: 3%;
+  .col i {
+    cursor: pointer;
+  }
 
-  & + img {
-    transform: scale(1.2);
+  .newproduct_cloth_set {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    transition: all;
+    z-index: 2;
+    animation-duration: 1500ms;
+    overflow: hidden !important;
     border-radius: 3%;
+
+    & + img {
+      transform: scale(1.2);
+      border-radius: 3%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .newproduct_cloth {
+      opacity: 1 !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      transition: all;
+      transition-duration: 500ms;
+      z-index: 2;
+    }
   }
 }
 </style>

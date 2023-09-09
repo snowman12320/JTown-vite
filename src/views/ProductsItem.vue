@@ -70,32 +70,33 @@ export default {
     ...mapActions(productStore, ['getProduct_item', 'setCategory']),
     //
     addToCart(id, qty = 1, isBuy) {
-      if (!this.isLogin) {
-        // ! 在store不會用到this ，共用狀態才會放store
-        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
-        this.$router.push('/login')
+      // 因為有些網站要登入才能下單，但助教好像覺得不用擋無會員
+      // if (!this.isLogin) {
+      //   // ! 在store不會用到this ，共用狀態才會放store
+      //   this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+      //   this.$router.push('/login')
+      // } else {
+      if (!this.productSize_item) {
+        this.$swal.fire('Please', 'Size must be selected.', 'warning')
       } else {
-        if (!this.productSize_item) {
-          this.$swal.fire('Please', 'Size must be selected.', 'warning')
-        } else {
-          this.isLoading_big = true
-          const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
-          const cart = {
-            product_id: id,
-            qty
-          }
-          this.$http.post(url, { data: cart }).then(() => {
-            this.getCart()
-            this.isLoading_big = false
-            this.$toast('success', 'add to cart.')
-            if (isBuy) {
-              this.$router.push('/cart-view/cart-list')
-              // *觸發該頁函式，讓下一頁資料更新
-              this.getCart()
-            }
-          })
+        this.isLoading_big = true
+        const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+        const cart = {
+          product_id: id,
+          qty
         }
+        this.$http.post(url, { data: cart }).then(() => {
+          this.getCart()
+          this.isLoading_big = false
+          this.$toast('success', 'add to cart.')
+          if (isBuy) {
+            this.$router.push('/cart-view/cart-list')
+            // *觸發該頁函式，讓下一頁資料更新
+            this.getCart()
+          }
+        })
       }
+      // }
     },
     //
     getProduct() {
@@ -188,7 +189,7 @@ export default {
         </ol>
       </nav>
       <!--  -->
-      <div class="row row-cols-md-2 g-5 mt-md-5">
+      <div class="row row-cols-md-2 g-md-5 mt-md-5">
         <div id="carouselExampleIndicators" class="carousel slide col-md-8" data-bs-ride="carouse">
           <div class="carousel-indicators">
             <!-- 第一個主圖的指標不用程式化，其餘其他圖片的指標用迴圈帶資料 -->

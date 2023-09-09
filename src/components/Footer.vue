@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <!-- 小圖示 -->
-    <a target="_blank" href="https://www.facebook.com/100002537945640" class="position-fixed  end-0 me-5"
+    <a target="_blank" href="https://www.facebook.com/100002537945640" class="position-fixed  end-0 me-5 d-md-block d-none"
       style="bottom: 100px;z-index:999" @mouseenter="updateHover()" @mouseleave="updateHover()">
       <img v-show="isHover" src="@\assets\nbaWeb\silhouette-basket-05.svg" alt="" height="100" width="100" />
       <img v-show="!isHover" src="@/assets/nbaWeb/1652102106slam-dunk-silhouette-basketball.svg" alt="" height="100"

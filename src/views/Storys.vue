@@ -119,17 +119,17 @@ export default {
       <thead>
         <tr>
           <th class="d-md-table-cell d-none" width="120">日期</th>
-          <th class="" width="120">標題</th>
+          <th width="120">標題</th>
           <th class="d-md-table-cell d-none" width="120">作者</th>
           <th class="d-md-table-cell d-none" width="120">內容</th>
           <th class="d-md-table-cell d-none" width="100">是否啟用</th>
-          <th class="" width="150">編輯</th>
+          <th width="150">編輯</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in storyList" :key="item.id">
           <td class="d-md-table-cell d-none">{{ $filters.dateAndTime(item.create_at) }}</td>
-          <td class="">{{ item.title }}</td>
+          <td>{{ item.title }}</td>
           <td class="d-md-table-cell d-none">{{ item.author }}</td>
           <td class="d-md-inline-block d-none multiline-ellipsis" v-html="item.description"></td>
           <td class="d-md-table-cell d-none">

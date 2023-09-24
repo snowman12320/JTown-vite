@@ -1,27 +1,26 @@
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
-    <Header :is-login="isLogin"></Header>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <router-view />
-    <Footer></Footer>
+    <FullFooter></FullFooter>
   </div>
 </template>
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import emitter from '@/methods/emitter'
+import FrontNavbar from '@/components/FrontNavbar.vue'
+import FullFooter from '@/components/FullFooter.vue'
 
 import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
   components: {
-    Header,
-    Footer
+    FrontNavbar,
+    FullFooter
   },
 
   mounted() {
-    this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
+    this.checkLoginStatus()
   },
   computed: {
     ...mapState(loginStore, ['isLoading', 'isLogin'])

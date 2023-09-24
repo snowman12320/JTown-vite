@@ -1,14 +1,14 @@
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
+import FrontNavbar from '@/components/FrontNavbar.vue'
+import FullFooter from '@/components/FullFooter.vue'
 
 import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
   components: {
-    Header,
-    Footer
+    FrontNavbar,
+    FullFooter
   },
 
   data() {
@@ -65,15 +65,12 @@ export default {
     signIn() {
       const api = `${import.meta.env.VITE_APP_API}admin/signin`
       this.$http.post(api, this.user).then((res) => {
-        // const { token, expired } = res.data;
-        // console.log(token, expired);
-        // document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
         this.isLoading = true
         if (res.data.success) {
           this.isLoading = false
           const { token, expired } = res.data
-          document.cookie = `hexToken=${token}; expires=${new Date(expired)}`
-          // this.$router.push('/dashboard');
+          document.cookie = `JTownToken=${token}; expires=${new Date(expired)}`
+          // https://github.com/snowman12320/meowforest/blob/main/src/views/admin/LoginAdmin.vue
           this.$router.go(-1)
           localStorage.setItem('username', JSON.stringify(this.user.username))
         } else {
@@ -107,9 +104,9 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
-    <Header :is-login="isLogin"></Header>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <div class="login_bg">
       <div class="d-flex justify-content-center align-items-center h-100">
         <div class="card">
@@ -194,7 +191,7 @@ export default {
                 title="Registration is not yet available... but would you like to use VIP to test it?"
               > -->
               <!-- <template #reference> -->
-                <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
+              <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
               <!-- </template> -->
               <!-- </el-popconfirm> -->
             </div>
@@ -205,7 +202,7 @@ export default {
         </div>
       </div>
     </div>
-    <Footer></Footer>
+    <FullFooter></FullFooter>
   </div>
 </template>
 

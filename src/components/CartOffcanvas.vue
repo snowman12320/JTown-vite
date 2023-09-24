@@ -92,7 +92,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <div
       ref="offcanvas"
       class="offcanvas offcanvas-end"
@@ -107,8 +107,6 @@ export default {
           <!--  -->
           <a
             @click.prevent="delCarts"
-            name=""
-            id=""
             class="btn btn-outline-danger fs-5 px-2 ms-1"
             href="#"
             role="button"
@@ -127,11 +125,11 @@ export default {
         <div
           class="d-flex p-2 border border-2 border-light rounded-3 my-2 gap-2"
           style="height: 130px"
-          v-for="(item, id) in carts"
-          :key="id"
+          v-for="item in carts"
+          :key="item.id"
         >
           <div class="h-100" style="width: 150px">
-            <img class="of-cover op-top w-100 h-100" :src="item.product.imageUrl" alt="" />
+            <img class="of-cover op-top w-100 h-100" :src="item.product.imageUrl" :alt="item.product.title" />
           </div>
           <div class="w-100 p-1">
             <h2 class="fs-6 text-center">{{ item.product.title }}</h2>
@@ -142,7 +140,7 @@ export default {
                 >$ {{ $filters.currency(item.product.origin_price) }}</small
               >
               $ {{ $filters.currency(item.product.price) }}
-              <!-- <span class="" style="font-size:5px">/{{ item.product.unit }}</span> -->
+              <span   style="font-size:5px">/{{ item.product.unit }}</span>
             </p>
             <div class="fs-1 d-flex justify-content-center gap-1 align-items-center">
               <button
@@ -182,15 +180,13 @@ export default {
         </div>
         <!--  -->
         <p class="d-flex justify-content-between fs-4 mt-3">
-          <span class="">TOTAL( {{ sumFinalQty }} )</span>
-          <span class="">$ {{ $filters.currency(sumTotal) }}</span>
+          <span>TOTAL( {{ sumFinalQty }} )</span>
+          <span>$ {{ $filters.currency(sumTotal) }}</span>
         </p>
         <!--  -->
         <router-link
           to="/cart-view/cart-list"
           @click="hideOffcanvas"
-          name=""
-          id=""
           class="btn btn-outline-nbaRed w-100 mt-5"
           href="#"
           role="button"

@@ -77,7 +77,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <head
       class="navbar navbar-expand-md position-fixed top-0 start-0 end-0 backdrop py-1"
       style="z-index: 10"

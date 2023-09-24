@@ -78,7 +78,7 @@ export default {
           class="d-none"
           name="side"
           id="all"
-          value=""
+          value=" "
           v-model="cacheCategory"
           :checked="cacheCategory === ''"
         />

@@ -1,18 +1,26 @@
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
     <!--  -->
-    <el-autocomplete :popper-class="'my-autocomplete'" class="my-autocomplete-self" v-model="state"
-      :fetch-suggestions="querySearch" placeholder="input order ID" @select="handleSelect">
+    <el-autocomplete
+      :popper-class="'my-autocomplete'"
+      class="my-autocomplete-self"
+      v-model="state"
+      :fetch-suggestions="querySearch"
+      placeholder="input order ID"
+      @select="handleSelect"
+    >
       <template #default="{ item }">
         <div class="p-2 el-autocomplete-list">
-          <div class="d-flex justify-content-between ">
+          <div class="d-flex justify-content-between">
             <div class="name">{{ item.id }}</div>
-            <div class="name d-md-table-cell d-none"> {{ $filters.dateAndTime(item.create_at) }}</div>
+            <div class="name d-md-table-cell d-none">
+              {{ $filters.dateAndTime(item.create_at) }}
+            </div>
           </div>
           <div class="d-flex gap-4">
             <span class="addr text-danger">${{ $filters.currency(item.total) }}</span>
-            <div class="">
+            <div>
               <span v-if="!item.is_paid">尚未付款</span>
               <span v-else class="text-success">付款完成</span>
             </div>
@@ -82,21 +90,22 @@
         <button class="btn btn-danger">pay now</button>
       </div>
       <div class="text-end" v-else>
-        <router-link to="/"><button class="btn btn-outline-primary">get other thing!</button></router-link>
+        <router-link to="/"
+          ><button class="btn btn-outline-primary">get other thing!</button></router-link
+        >
       </div>
     </form>
     <!--  -->
-    <Pagination :pages="pagination" @emit-pages="getOrders">
-    </Pagination>
+    <Pagination :pages="pagination" @emit-pages="getOrders"> </Pagination>
   </div>
 </template>
 
 <script>
-import Pagination from '../components/Pagination.vue';
+import Pagination from '../components/Pagination.vue'
 
 export default {
   components: { Pagination },
-  data () {
+  data() {
     return {
       orders: [],
       state: '',
@@ -106,63 +115,66 @@ export default {
       order: [],
       paid_date: null,
       create_at: null
-    };
+    }
   },
-  created () {
-    this.getOrders();
+  created() {
+    this.getOrders()
   },
-  mounted () {
-  },
+  mounted() {},
   methods: {
-    querySearch (queryString) {
-      const orders = this.orders;
-      const results = queryString ? this.createFilter(queryString) : orders;
+    querySearch(queryString) {
+      const orders = this.orders
+      const results = queryString ? this.createFilter(queryString) : orders
       // 调用 callback 返回建议列表的数据
       // cb(results);
-      return results;
+      return results
     },
-    createFilter (queryString) {
-      return this.orders.filter((i) => i.id.toLowerCase().includes(queryString.toLowerCase()));
+    createFilter(queryString) {
+      return this.orders.filter((i) => i.id.toLowerCase().includes(queryString.toLowerCase()))
     },
-    handleSelect (item) {
+    handleSelect(item) {
       // console.log(item);
-      this.isLoading = true;
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${item.id}`;
-      this.$http.get(url)
-        .then((res) => {
-          if (res.data.success) {
-            this.order = res.data.order;
-            this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString();
-            this.create_at = new Date(this.order.create_at * 1000).toLocaleString();
-            this.isLoading = false;
-            this.querySearch(false);
-          }
-        });
+      this.isLoading = true
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${
+        item.id
+      }`
+      this.$http.get(url).then((res) => {
+        if (res.data.success) {
+          this.order = res.data.order
+          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString()
+          this.create_at = new Date(this.order.create_at * 1000).toLocaleString()
+          this.isLoading = false
+          this.querySearch(false)
+        }
+      })
     },
     //
-    getOrders (currentPage = 1) {
-      this.currentPage = currentPage;
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/orders?page=${currentPage}`;
-      this.isLoading = true;
+    getOrders(currentPage = 1) {
+      this.currentPage = currentPage
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/orders?page=${currentPage}`
+      this.isLoading = true
       this.$http.get(url, this.tempProduct).then((response) => {
-        this.orders = response.data.orders;
-        this.pagination = response.data.pagination;
-        this.isLoading = false;
-      });
+        this.orders = response.data.orders
+        this.pagination = response.data.pagination
+        this.isLoading = false
+      })
     },
-    payOrder (order) {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${order.id}`;
-      this.$http.post(url)
-        .then((res) => {
-          if (res.data.success) {
-            // this.order = [];
-            this.handleSelect(order);
-            this.getOrders();
-          }
-        });
+    payOrder(order) {
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${
+        order.id
+      }`
+      this.$http.post(url).then((res) => {
+        if (res.data.success) {
+          // this.order = [];
+          this.handleSelect(order)
+          this.getOrders()
+        }
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -172,7 +184,6 @@ export default {
 }
 
 .my-autocomplete {
-
   li {
     line-height: normal;
     padding: 7px;
@@ -194,7 +205,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-
   .el-autocomplete-list {
     max-width: 200px;
   }

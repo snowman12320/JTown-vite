@@ -211,13 +211,12 @@ export default {
   <div class="product_list">
     <!-- 排序  -->
     <div class="mb-3 d-flex justify-content-end align-items-center" :class="childClass">
-      <label for="" class="form-label mb-0">Sort by：</label>
+      <label for="Sort" class="form-label mb-0">Sort by：</label>
       <select
         v-model="selectSort"
         class="form-select form-select-lg rounded-0 p-1 fs-6"
         style="width: 250px"
-        name=""
-        id=""
+        id="Sort"
       >
         <option class="fs-6" value="0" selected>Relevance</option>
         <option class="fs-6" value="AZ">Name - AZ</option>
@@ -228,7 +227,7 @@ export default {
     </div>
     <hr class="py-3" />
     <div class="row row-cols-2 row-cols-lg-5 g-4 mb-7" ref="productsList_hight">
-      <div class="" v-for="(item, index) in filteredData" :key="item.id">
+      <div v-for="(item, index) in filteredData" :key="item.id">
         <div class="col overflow-hidden">
           <div
             class="card w-100 position-relation newproduct_img"
@@ -261,13 +260,12 @@ export default {
                   title="SIZE："
                   :width="200"
                   trigger="click"
-                  content=""
                   @hide="setClass = false"
                   @show="setClass = index"
                   popper-class="product_list_el-popover"
                 >
                   <div class="d-flex justify-content-center w-100 mx-auto gap-1" style="z-index: 2">
-                    <div class="">
+                    <div>
                       <input
                         value="S"
                         v-model="productSize_list"
@@ -285,7 +283,7 @@ export default {
                         S
                       </label>
                     </div>
-                    <div class="">
+                    <div>
                       <input
                         value="M"
                         v-model="productSize_list"
@@ -303,7 +301,7 @@ export default {
                         M
                       </label>
                     </div>
-                    <div class="">
+                    <div>
                       <input
                         value="L"
                         v-model="productSize_list"

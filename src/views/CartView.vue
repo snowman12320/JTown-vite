@@ -1,17 +1,16 @@
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
-    <Header :is-login="isLogin"></Header>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <p style="margin-top: 104px !important"></p>
     <ToastMessages></ToastMessages>
     <router-view />
-    <Footer></Footer>
+    <FullFooter></FullFooter>
   </div>
 </template>
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import emitter from '@/methods/emitter'
+import FrontNavbar from '@/components/FrontNavbar.vue'
+import FullFooter from '@/components/FullFooter.vue'
 import ToastMessages from '@/components/ToastMessages.vue'
 
 import loginStore from '@/stores/loginStore.js'
@@ -19,11 +18,10 @@ import { mapActions, mapState } from 'pinia'
 
 export default {
   components: {
-    Header,
-    Footer,
+    FrontNavbar,
+    FullFooter,
     ToastMessages
   },
-
   computed: {
     ...mapState(loginStore, ['isLoading', 'isLogin'])
   },

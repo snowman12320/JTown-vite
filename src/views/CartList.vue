@@ -12,11 +12,6 @@ export default {
   },
   data() {
     return {
-      // isLoading: true,
-      // statusBtn: {
-      //   loadingItem: '' //! 可能沒用到的參數也要先定義，不然整個函式會掛
-      // },
-      //
       feeDeliver: 120,
       product: {},
       couponPercent: '',
@@ -40,9 +35,8 @@ export default {
         }
       },
       message: '這是留言',
-      isBuyPerson: false, //* 是否同購買人
+      isBuyPerson: false,
       tempForm: {
-        //* 已登入會員的資料
         user: {
           email: 'snowman12320@gmail.com',
           name: '陳威良',
@@ -50,7 +44,7 @@ export default {
           address: '台灣省'
         }
       },
-      isLookOver: false //* 是否閱讀條款
+      isLookOver: false
     }
   },
   created() {
@@ -66,7 +60,7 @@ export default {
     }
     //
     this.addCouponCode() //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
-    this.getCart() //* 本頁的購物車
+    this.getCart()
   },
   watch: {
     couponCode() {
@@ -94,7 +88,6 @@ export default {
       }
     },
     delCart(item) {
-      // !塞入要刪除的ＩＤ
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
         item.id
       }`
@@ -108,16 +101,6 @@ export default {
     },
     //
     getProduct(id) {
-      //! 只取一個商品，product.id才能取得商品內頁，不是id
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/product/${id}`
-      this.$http.get(api).then((res) => {
-        if (res.data.success) {
-          this.product = res.data.product
-          this.emitter.emit('customEvent_getProduct', this.product)
-        }
-      })
       this.$router.push(`/products-view/products-item/${id}`)
     },
     //
@@ -142,7 +125,6 @@ export default {
           this.getCart()
           this.$toast('success', 'Add Coupon')
         } else {
-          //* addCouponCode((couponCode = 'default')) 判斷沒有default這個折扣馬就刪除
           localStorage.removeItem('local-couponCode', this.couponCode)
           this.getCouponPercent()
           this.getCart()
@@ -174,7 +156,7 @@ export default {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`
       const order = this.form
       this.$http.post(url, { data: order }).then((res) => {
-        localStorage.removeItem('local-couponCode', this.couponCode) //* 每次送出要刪掉折扣馬
+        localStorage.removeItem('local-couponCode', this.couponCode)
         this.getCart()
         this.$router.push(`checkout/${res.data.orderId}`)
       })
@@ -192,7 +174,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
     <div class="row content container mx-auto mt-0">
       <aside class="col-12 col-lg-4" style="z-index: 1">
@@ -215,8 +197,6 @@ export default {
                       class="accordion-body d-flex justify-content-between border-bottom p-3 pb-0"
                     >
                       <p>商品總計</p>
-                      <!-- 在這邊算會有問題 <p style="width: 100px; text-align: end;">
-                        $ {{ $filters.currency(Math.round(sumFinalTotal /(couponPercent / 100))) }}</p> -->
                       <p style="width: 100px; text-align: end">$ {{ sumTotal }}</p>
                     </div>
                   </div>
@@ -233,8 +213,6 @@ export default {
                     ></i>
                     已使用"{{ couponCode }}"折抵
                   </span>
-                  <!-- -$ {{ $filters.currency(Math.round((sumFinalTotal / (couponPercent / 100)) - sumFinalTotal)) }} -->
-                  <!-- 可以在表达式中使用条件语句、三元表达式 -->
                   -$
                   {{
                     couponPercent ? $filters.currency(sumTotal * ((100 - couponPercent) / 100)) : 0
@@ -274,19 +252,18 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr class="" v-for="item in carts" :key="item.id">
-                <th scope="row" class="">
+              <tr v-for="item in carts" :key="item.id">
+                <th scope="row">
                   <img
                     :src="item.product.imageUrl"
-                    alt=""
-                    srcset=""
+                    :alt="item.product.title"
                     class="product_img_rwd of-cover op-top"
                     width="50"
                     height="50"
                     style="height: 50px; width: 50px"
                   />
                 </th>
-                <td class="">
+                <td>
                   <a
                     @click.prevent="getProduct(item.product.id)"
                     class="link-dark text-decoration-none text-nowrap"
@@ -350,7 +327,7 @@ export default {
               </li>
               <li class="list-group-item">
                 <h3>優惠折抵</h3>
-                <div for="offTicket" style="">
+                <div for="offTicket">
                   <select
                     name="offTicket"
                     id="offTicket"
@@ -432,7 +409,7 @@ export default {
                     value="snowman12320@gmail.com"
                     placeholder="購買人姓名"
                     maxlength="10"
-                    disabled=""
+                    disabled
                   />
                 </div>
                 <div class="col-md-12">
@@ -445,7 +422,7 @@ export default {
                     value="陳O良"
                     placeholder="購買人姓名"
                     maxlength="10"
-                    disabled=""
+                    disabled
                   />
                 </div>
                 <div class="col-md-12">
@@ -458,7 +435,7 @@ export default {
                     value="0912345678"
                     placeholder="購買人電話"
                     maxlength="10"
-                    disabled=""
+                    disabled
                   />
                 </div>
                 <div class="col-md-12">
@@ -471,20 +448,20 @@ export default {
                     value="台南市新營區"
                     placeholder="收件地址"
                     maxlength="10"
-                    disabled=""
+                    disabled
                   />
                 </div>
               </li>
               <li class="list-group-item">
                 <div class="col-12">
-                  <div class="">
+                  <div>
                     <input
                       @click="funcBuyPerson()"
                       type="radio"
                       id="buy_person"
                       class="d-inline-block"
                       name="person"
-                    /><label for="buy_person" class="">同購買人 </label>
+                    /><label for="buy_person">同購買人 </label>
                     <div class="d-none">
                       <p class="ps-2 my-2 mb-0">取件人資訊 :</p>
                       <div class="bg-light rounded-3 p-2 text-black">
@@ -497,7 +474,7 @@ export default {
                   </div>
                   <!--  -->
                   <div class="mt-3">
-                    <input type="radio" id="add_person" name="person" checked="" /><label
+                    <input type="radio" id="add_person" name="person" checked /><label
                       for="add_person"
                       >新增收件人
                     </label>
@@ -520,11 +497,11 @@ export default {
                       <!-- ! name要對到錯誤標籤的name / error['跟name一樣'] / :rule="自訂規則函式或vee內建" / -->
                       <label for="name">姓名：</label>
                       <Field
+                        require
                         type="text"
                         name="姓名"
                         id="name"
                         class="form-control w-md-50 mb-2"
-                        value=""
                         placeholder="姓氏大名"
                         maxlength="10"
                         :rules="isName"
@@ -543,7 +520,6 @@ export default {
                         name="手機"
                         id="tel"
                         class="form-control w-md-50 mb-2"
-                        value=""
                         placeholder="09-12345678"
                         maxlength="10"
                         :rules="isPhone"
@@ -559,6 +535,7 @@ export default {
                       <p>*取貨通知將以此電話聯繫</p>
                       <label for="address">地址：</label>
                       <Field
+                        require
                         type="text"
                         name="地址"
                         id="address"
@@ -592,7 +569,7 @@ export default {
                   <div class="mb-3 position-relative">
                     <!-- 無法顯示錯誤訊息原因是你沒有透過 :class 的方式去判斷 error-message何時該顯示，
                      另外 Field 後面也要記得利用 v-bind 去綁定 value  -->
-                    <!--  check :value="true" 預設應該是false， 口空的 -->
+                    <!--  check 打勾後會送出:value="true" ，預設應該是false， 會是沒打勾 會是口空的 -->
                     <Field
                       :disabled="!isLookOver"
                       :rules="termCheck"
@@ -614,7 +591,7 @@ export default {
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
                     ></error-message>
-                    <label for="termCheck" class="">
+                    <label for="termCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true">同意</span>
                       <button
                         type="button"
@@ -645,7 +622,7 @@ export default {
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
                     ></error-message>
-                    <label for="buyCheck" class="">
+                    <label for="buyCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true"
                         >同意，為保障彼此之權益，賣家在收到您的訂單後仍保有決定是否接受訂單及出貨與否之權利</span
                       >
@@ -673,13 +650,6 @@ export default {
 </template>
 
 <style scoped>
-h1,
-h2,
-h3,
-p {
-  font-family: Rubik, sans-serif !important;
-}
-
 .table_overflow {
   overflow-x: auto;
 }

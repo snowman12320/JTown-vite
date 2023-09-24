@@ -1,22 +1,21 @@
 <script>
-// @ is an alias to /src
-import Header from '@/components/Header.vue'
+import FrontNavbar from '@/components/FrontNavbar.vue'
 import HomeCarousel from '@/components/HomeCarousel.vue'
 import HomeProduct from '@/components/HomeProduct.vue'
 import HomeStory from '@/components/HomeStory.vue'
-import Footer from '@/components/Footer.vue'
+import FullFooter from '@/components/FullFooter.vue'
 
 import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  // name: 'HomeView', //*过设置name属性，可以为组件指定一个唯一的名称。这对于在组件之间进行通信
+  name: 'HomeView',
   components: {
-    Header,
+    FrontNavbar,
     HomeCarousel,
     HomeProduct,
     HomeStory,
-    Footer
+    FullFooter
   },
   data() {
     return {
@@ -85,16 +84,16 @@ export default {
 <template>
   <div class="position-relative">
     <Loading :active="isLoading"></Loading>
-    <Header :is-login="isLogin"></Header>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <HomeCarousel></HomeCarousel>
     <div class="container-xxl">
       <HomeStory></HomeStory>
       <HomeProduct></HomeProduct>
     </div>
     <div></div>
-    <Footer></Footer>
+    <FullFooter></FullFooter>
     <!-- alert -->
-    <transition name="fade" class="">
+    <transition name="fade">
       <el-alert
         class="el-alert_home"
         title="SIGN UP ! Get the Coupon ！"

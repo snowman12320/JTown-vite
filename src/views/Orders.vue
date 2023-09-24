@@ -209,7 +209,7 @@ export default {
             @click="selectSort = selectSort === 'Height' ? 'Low' : 'Height'"
           >
             <span>購買時間</span>
-            <div class="">
+            <div>
               <div class="form-check">
                 <input
                   class="form-check-input d-none"

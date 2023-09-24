@@ -161,7 +161,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading_big"></Loading>
     <Loading :active="isLoading_productStore"></Loading>
     <!--  -->
@@ -207,7 +207,6 @@ export default {
               type="button"
               data-bs-target="#carouselExampleIndicators"
               :data-bs-slide-to="index + 1"
-              class=""
               aria-current="true"
               :aria-label="'Slide ' + index + 1"
             ></button>
@@ -371,7 +370,7 @@ export default {
               >
                 -
               </button>
-              <span class="">{{ qty }}</span>
+              <span>{{ qty }}</span>
               <button style="height: 40px" @click="qty++" class="btn btn-outline-secondary py-0">
                 +
               </button>
@@ -421,7 +420,7 @@ export default {
         <div class="col-md-8">
           <h3 class="mt-7">DESCRIPTION</h3>
           <hr />
-          <p class="" v-html="product_item.content"></p>
+          <p v-html="product_item.content"></p>
           <!--  -->
           <h3 class="mt-7">COMMENT</h3>
           <hr />
@@ -467,7 +466,7 @@ export default {
                 class="form-control type_msg"
                 placeholder="Type your comment ..."
               ></textarea>
-              <span @click="sendComment()" class="input-group-text send_btn"
+              <span @click="sendComment" class="input-group-text send_btn"
                 ><i class="fas fa-location-arrow"></i
               ></span>
             </div>
@@ -498,7 +497,7 @@ export default {
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body text-start">
-                  <p class="" v-html="product_item.description"></p>
+                  <p v-html="product_item.description"></p>
                 </div>
               </div>
             </div>

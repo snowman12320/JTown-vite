@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <!-- Modal -->
     <div
       class="modal fade"
@@ -50,7 +50,11 @@
                   />
                 </div>
                 <div class="w-100 border" style="height: 300px">
-                  <img class="h-100 w-100 of-cover op-top" :src="tempProduct.imageUrl" alt="" />
+                  <img
+                    class="h-100 w-100 of-cover op-top"
+                    :src="tempProduct.imageUrl"
+                    :alt="tempProduct.title"
+                  />
                 </div>
                 <!--  -->
                 <!-- 延伸技巧，多圖 -->
@@ -98,8 +102,8 @@
                     Click to upload
                   </label>
                   <div class="text-center text-secondary" style="font-size: 8px">
-                    <small class="">drag to change the sorting of the image list</small> <br />
-                    <small class="">(jpg/png files with a size less than 500kb)</small>
+                    <small>drag to change the sorting of the image list</small> <br />
+                    <small>(jpg/png files with a size less than 500kb)</small>
                   </div>
                 </div>
                 <!--  多檔圖片 ＋ 拖拉移動順序 -->
@@ -324,7 +328,7 @@ export default {
       ],
       editor: ClassicEditor,
       editorData: `
-      <div class="">
+      <div  >
         <p>Material： Eco-friendly material</p>
         <p>Manufacturing location： Taiwan </p>
         <p>Manufacturer： Jersey Town </p>

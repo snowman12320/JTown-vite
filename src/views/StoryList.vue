@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading"></Loading>
     <div
       id="Ranking"
@@ -57,7 +57,6 @@ export default {
         src="../assets/nbaWeb/Lovepik_com-401319703-basketball.png"
         height="80"
         alt="storylogo"
-        class=""
       />
       <h2>STORY</h2>
     </div>

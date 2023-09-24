@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ErrorView from '../views/ErrorView.vue'
 
 const router = createRouter({
   //*https://courses.hexschool.com/courses/vue-20211/lectures/43730454
@@ -71,7 +72,7 @@ const router = createRouter({
         },
         {
           path: 'members',
-          component: () => import('../views/members.vue')
+          component: () => import('../views/Members.vue')
         }
       ]
     },
@@ -92,10 +93,18 @@ const router = createRouter({
     {
       path: '/rank',
       component: () => import('../views/RankView.vue')
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: ErrorView
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: '/error'
     }
   ],
   linkActiveClass: 'active'
 })
-
 
 export default router

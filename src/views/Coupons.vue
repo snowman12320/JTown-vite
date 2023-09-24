@@ -23,7 +23,7 @@ export default {
     config: Object
   },
   created() {
-    console.clear();
+    console.clear()
     this.getCoupons()
   },
   methods: {
@@ -82,7 +82,6 @@ export default {
       }/admin/coupon/${this.tempCoupon.id}`
       this.isLoading = true
       this.$http.delete(url).then((res) => {
-        // console.log(res, this.tempCoupon);
         this.pushMessage(res, '刪除優惠券')
         const delComponent = this.$refs.delModal
         delComponent.hideModal()
@@ -110,7 +109,7 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, key) in coupons" :key="key">
+        <tr v-for="item in coupons" :key="item.id">
           <td>{{ item.title }}</td>
           <td class="d-md-table-cell d-none">{{ item.percent }}%</td>
           <td class="d-md-table-cell d-none">{{ $filters.date(item.due_date) }}</td>

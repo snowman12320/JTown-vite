@@ -97,7 +97,7 @@
                   </el-button>
                 </div>
                 <!--  -->
-                <div class="">
+                <div>
                   <label for="title" class="form-label">標題</label>
                   <input
                     type="text"
@@ -119,7 +119,7 @@
                     />
                   </div>
                 </div>
-                <div class="">
+                <div>
                   <label for="editor1" class="form-label">文章描述</label>
                   <ckeditor
                     :editor="editor"
@@ -127,7 +127,7 @@
                     :config="editorConfig"
                   ></ckeditor>
                 </div>
-                <div class="">
+                <div>
                   <label for="content" class="form-label">球員內容</label>
                   <ckeditor
                     :editor="editor"
@@ -136,7 +136,7 @@
                   ></ckeditor>
                 </div>
                 <hr />
-                <div class="">
+                <div>
                   <div class="form-check">
                     <input
                       class="form-check-input"

@@ -1,26 +1,23 @@
 <template>
-  <!-- <Navbar></Navbar> -->
   <div class="container-fluid position-relative px-0  dashboard">
     <ToastMessages></ToastMessages>
     <div class="d-flex h-100 ">
-      <SideBar></SideBar>
+      <BackNavbar></BackNavbar>
       <router-view />
     </div>
-    <Footer></Footer>
+    <FullFooter></FullFooter>
   </div>
 </template>
 <script>
 import ToastMessages from '@/components/ToastMessages.vue';
-// import Navbar from '../components/Navbar.vue';
-import Footer from '../components/Footer.vue';
-import SideBar from '@/components/SideBar.vue';
+import FullFooter from '../components/FullFooter.vue';
+import BackNavbar from '@/components/BackNavbar.vue';
 
 export default {
   components: {
-    // Navbar,
     ToastMessages,
-    Footer,
-    SideBar
+    FullFooter,
+    BackNavbar
   },
   created () {
     if (localStorage.getItem('VIP')) {

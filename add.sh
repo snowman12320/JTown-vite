@@ -5,7 +5,7 @@ sleep 2
 
 # git commit -m "update to pinia ( story item/list )"
 
-git commit -m " fixed RWD / login order / addtocart  "
+git commit -m " fixed suggest  "
 
 # git commit -m " present homework (md) "
 

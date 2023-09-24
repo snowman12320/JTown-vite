@@ -3,10 +3,7 @@
 // <input
 //   type="email"
 //   v-model="text"
-//   name=""
-//   class=""
 //   v-validator="'form-control'"
-//   id=""
 // />
 // 註冊指令
 //* 前面用validator = 會顯示此變數不曾使用的錯誤 且需先定義

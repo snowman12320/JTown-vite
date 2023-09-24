@@ -112,7 +112,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <Loading :active="isLoading_big"></Loading>
     <div
       id="Ranking"
@@ -120,12 +120,7 @@ export default {
       style="margin-top: 104px !important"
     >
       <h2 class="d-md-block d-none">PLAYER</h2>
-      <img
-        src="@/assets/nbaWeb/Lovepik_com-401319703-basketball.png"
-        height="80"
-        alt="storylogo"
-        class=""
-      />
+      <img src="@/assets/nbaWeb/Lovepik_com-401319703-basketball.png" height="80" alt="storylogo" />
       <h2 class="d-md-block d-none">STORY</h2>
       <!--  -->
       <nav
@@ -173,7 +168,7 @@ export default {
               <small class="text-secondary text-end d-block w-100">
                 {{ story.author + ' , ' + $filters.dateAndTime(this.story.create_at) }}
               </small>
-              <p @click.prevent="handleClick" class="" v-html="story.description"></p>
+              <p @click.prevent="handleClick" v-html="story.description"></p>
               <!--  -->
               <div class="my-3 d-flex gap-3">
                 <el-tag class="ml-2" type="info">#NBA</el-tag>

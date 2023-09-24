@@ -1,17 +1,9 @@
 <template>
   <div class="rankView">
     <Loading :active="isLoading"></Loading>
-    <Header :is-login="isLogin"></Header>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <ToastMessages></ToastMessages>
     <p style="margin-top: 104px !important"></p>
-    <!-- banner -->
-    <!-- 記得外推 圖才會完整 -->
-    <!-- <section class="allstar_banner bgp-bottom bgs-cover mb-3"
-      :style="{ 'background-image': `url(${require('@/assets/nbaWeb/allstar-2016-011016-top-1.jpg')})` }" style="
-          background-repeat: no-repeat ;
-          height: 500px;
-          margin-top: 104px !important;
-        "></section> -->
     <section
       class="allstar_banner bgp-bottom bgs-cover mb-3"
       :style="{ 'background-image': `url(${getImageUrl()})` }"
@@ -20,14 +12,12 @@
     <div class="w-50 mx-auto">
       <RankList></RankList>
     </div>
-    <Footer></Footer>
+    <FullFooter></FullFooter>
   </div>
 </template>
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-// import loginMixin from '../mixins/loginMixin';
-import emitter from '@/methods/emitter'
+import FrontNavbar from '@/components/FrontNavbar.vue'
+import FullFooter from '@/components/FullFooter.vue'
 import ToastMessages from '@/components/ToastMessages.vue'
 import RankList from '@/components/RankList.vue'
 
@@ -35,10 +25,9 @@ import loginStore from '@/stores/loginStore.js'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  // mixins: [loginMixin],
   components: {
-    Header,
-    Footer,
+    FrontNavbar,
+    FullFooter,
     ToastMessages,
     RankList
   },

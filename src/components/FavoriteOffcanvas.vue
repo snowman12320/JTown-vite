@@ -113,7 +113,7 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <div
       ref="offcanvas"
       class="offcanvas offcanvas-end"
@@ -128,8 +128,6 @@ export default {
           <!--  -->
           <a
             @click.prevent="delFavorites"
-            name=""
-            id=""
             class="btn btn-outline-danger fs-5 px-2 ms-1"
             href="#"
             role="button"
@@ -147,11 +145,11 @@ export default {
       <div class="offcanvas-body">
         <div
           class="d-flex p-2 border border-2 border-light rounded-3 product_item my-2 gap-2"
-          v-for="(item, id) in filteredProducts"
-          :key="id"
+          v-for="item in filteredProducts"
+          :key="item.id"
         >
-          <div class="" style="width: 100px !important; height: 70px !important">
-            <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" alt="" />
+          <div style="width: 100px !important; height: 70px !important">
+            <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" :alt="item.title" />
           </div>
           <div class="w-100 p-1" @click="getProduct(item.id)">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
@@ -162,7 +160,7 @@ export default {
                 >$ {{ $filters.currency(item.origin_price) }}</small
               >
               $ {{ $filters.currency(item.price) }}
-              <span class="" style="font-size: 5px">/{{ item.unit }}</span>
+              <span style="font-size: 5px">/{{ item.unit }}</span>
             </p>
           </div>
           <button
@@ -176,7 +174,7 @@ export default {
         </div>
         <!--  -->
         <p class="d-flex justify-content-end fs-4 mt-3">
-          <span class="">TOTAL( {{ favoriteIds.length }} ) </span>
+          <span>TOTAL( {{ favoriteIds.length }} ) </span>
         </p>
       </div>
     </div>

@@ -9,7 +9,7 @@
     @mouseenter="startTimer"
     @mouseleave="cancelTimer"
   >
-    <div class="">
+    <div>
       <el-menu-item index="1">
         <el-icon>
           <img
@@ -21,7 +21,7 @@
           ><span class="text-primary mx-1 text-center w-100">{{ username }}</span></template
         >
       </el-menu-item>
-      <router-link to="/" class="">
+      <router-link to="/">
         <el-menu-item index="/">
           <el-icon>
             <Monitor />
@@ -31,7 +31,7 @@
           </template>
         </el-menu-item>
       </router-link>
-      <router-link to="/dashboard/members" class="">
+      <router-link to="/dashboard/members">
         <el-menu-item index="/dashboard/members">
           <el-icon>
             <User />

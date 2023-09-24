@@ -5,7 +5,7 @@ sleep 2
 
 # git commit -m "update to pinia ( story item/list )"
 
-git commit -m " fixed suggest  "
+git commit -m " fixed suggest2 / git conflict  "
 
 # git commit -m " present homework (md) "
 

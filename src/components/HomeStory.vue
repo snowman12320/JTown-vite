@@ -56,11 +56,9 @@ export default {
     this.getStoryList()
   },
   methods: {
-    getStoryList(page = 1) {
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/admin/articles/?page=${page}`
-      this.isLoading = true
+    getStoryList (page = 1) {
+      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/articles/?page=${page}`;
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
         this.isLoading = false
         if (res.data.success) {

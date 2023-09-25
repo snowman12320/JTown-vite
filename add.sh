@@ -5,9 +5,9 @@ sleep 2
 
 # git commit -m "update to pinia ( story item/list )"
 
-git commit -m " fixed suggest2 / git conflict  "
+# git commit -m " fixed suggest2 / git conflict  "
 
-# git commit -m " present homework (md) "
+git commit -m "pnpm in NCKU  "
 
 sleep 2
 git push

@@ -1,3 +1,18 @@
+<script>
+import modalMixin from '@/mixins/modalMixin';
+export default {
+  mixins: [modalMixin],
+  data () {
+    return {
+      modal: ''
+    };
+  },
+  props: {
+    item: {}
+  }
+};
+</script>
+
 <template>
   <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
     ref="modal">
@@ -30,17 +45,4 @@
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '@/mixins/modalMixin';
-export default {
-  mixins: [modalMixin],
-  data () {
-    return {
-      modal: ''
-    };
-  },
-  props: {
-    item: {}
-  }
-};
-</script>
+

@@ -3,6 +3,7 @@ import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
 
 import cartStore from '../stores/cartStore.js'
+import productStore from '../stores/productStore'
 import { mapActions, mapState } from 'pinia'
 export default {
   mixins: [offcanvasMixin], //* 混用獨立的功能
@@ -33,6 +34,7 @@ export default {
   },
   methods: {
     ...mapActions(cartStore, ['getCart', 'updateCart']),
+    ...mapActions(productStore, ['getProduct_item']),
     //
     openDelCartModel(item) {
       this.tempCart = { ...item }
@@ -124,12 +126,20 @@ export default {
       <div class="offcanvas-body">
         <div
           class="d-flex p-2 border border-2 border-light rounded-3 my-2 gap-2"
-          style="height: 130px"
+          style="height: 130px; cursor: pointer"
           v-for="item in carts"
           :key="item.id"
+          @click="
+            getProduct_item(item.product_id);
+            hideOffcanvas()
+          "
         >
           <div class="h-100" style="width: 150px">
-            <img class="of-cover op-top w-100 h-100" :src="item.product.imageUrl" :alt="item.product.title" />
+            <img
+              class="of-cover op-top w-100 h-100"
+              :src="item.product.imageUrl"
+              :alt="item.product.title"
+            />
           </div>
           <div class="w-100 p-1">
             <h2 class="fs-6 text-center">{{ item.product.title }}</h2>
@@ -140,7 +150,7 @@ export default {
                 >$ {{ $filters.currency(item.product.origin_price) }}</small
               >
               $ {{ $filters.currency(item.product.price) }}
-              <span   style="font-size:5px">/{{ item.product.unit }}</span>
+              <span style="font-size: 5px">/{{ item.product.unit }}</span>
             </p>
             <div class="fs-1 d-flex justify-content-center gap-1 align-items-center">
               <button

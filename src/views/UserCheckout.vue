@@ -51,10 +51,10 @@ export default {
           <img
             height="130"
             src="@/assets/nbaWeb/1588928235basketball-fire-logo-silhouette-freesvg.org.svg"
-            alt=""
+            alt="fire-logo"
           />
-          <img height="130" src="@/assets/nbaWeb/1506074059.svg" alt="" />
-          <img height="130" src="@/assets/nbaWeb/05284b30a1fda6bcdc09420b5c1e7127.svg" alt="" />
+          <img height="130" src="@/assets/nbaWeb/1506074059.svg" alt="1506074059" />
+          <img height="130" src="@/assets/nbaWeb/05284b30a1fda6bcdc09420b5c1e7127.svg" alt="05284b30a1fda6bcdc09420b5c1e7127" />
         </div>
         <p class="text-center">訂單已完成！</p>
         <p class="text-center">付款完成後，會盡快為您安排出貨！</p>

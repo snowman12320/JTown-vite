@@ -3,6 +3,7 @@ import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
 
 import favoriteStore from '../stores/favoriteStore.js'
+import productStore from '../stores/productStore'
 import { mapActions, mapState } from 'pinia'
 export default {
   mixins: [offcanvasMixin], //* 混用獨立的功能
@@ -27,6 +28,7 @@ export default {
   },
   methods: {
     ...mapActions(favoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
+    ...mapActions(productStore, ['getProduct_item']),
     //
     delFavorite(id) {
       this.delFavorite_store(id)
@@ -58,48 +60,6 @@ export default {
           })
       } else {
         this.$swal.fire('Favorites was empty.', '', 'warning')
-      }
-    },
-    //
-    getProduct(id) {
-      //! 只取一個商品
-      this.$router.push(`/products-view/products-item/${id}`)
-      this.isLoading = true
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/product/${id}`
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-        if (res.data.success) {
-          this.product = res.data.product
-          this.emitter.emit('customEvent_getProduct', this.product)
-          // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-          const carouselItems = document.querySelectorAll('.carousel-item')
-          carouselItems.forEach(function (item) {
-            item.classList.remove('active')
-          })
-          carouselItems[0].classList.add('active')
-          window.scrollTo(0, 0)
-        }
-      })
-      // 確認收藏狀態
-      //! 要用this.id ，用product.id會錯 ，需分清楚差別
-      //! 在其他電腦，若先判斷會錯誤
-      if (JSON.parse(localStorage.getItem('favorite'))) {
-        const checkFavorite = Boolean(
-          JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
-        ) //* 搜尋目標
-        if (checkFavorite) {
-          this.isFavorite = true
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        } else {
-          this.isFavorite = false
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        }
       }
     },
     //
@@ -151,7 +111,7 @@ export default {
           <div style="width: 100px !important; height: 70px !important">
             <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" :alt="item.title" />
           </div>
-          <div class="w-100 p-1" @click="getProduct(item.id)">
+          <div class="w-100 p-1" @click="getProduct_item(item.id);hideOffcanvas()">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
             <p class="text-center pt-2 fs-5 mb-0">
               <small

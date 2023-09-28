@@ -22,6 +22,7 @@ export default {
     console.clear()
     this.productListId = this.$route.params.storyId
     this.getStory()
+    // 
   },
   watch: {
     storyIndex() {
@@ -44,9 +45,7 @@ export default {
     getMerchandise() {
       const str = this.story.title.trim()
       const index = str.indexOf(' ')
-      this.sentence = str.substring(0, index)
-      // console.log(this.sentence); // 输出：Kobe bryant
-      // this.emitter.emit('customEvent_search', this.sentence); //! 無法跳轉頁面傳遞值
+      this.sentence = str.substring(0, index)// 输出：Kobe bryant
       this.$router.push(`/products-view/products-content/${this.sentence}`)
       this.setCacheSearch(this.sentence)
     },
@@ -74,11 +73,10 @@ export default {
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/articles/?page=${page}`
+      }/articles/?page=${page}`
       this.$http.get(api).then((res) => {
         if (res.data.success) {
           this.storyList = res.data.articles
-          // This code will create a new array  this.storyList  that contains only the items from  res.data.articles  where  isPublic  is  true .
           this.storyList = res.data.articles.filter((story) => story.isPublic)
           this.storyIndex = this.storyList.findIndex((obj) => obj.id === this.story.id)
           this.isNotPrev = !(this.storyIndex > 0)
@@ -91,7 +89,6 @@ export default {
       if (event.target.tagName === 'A') {
         this.$swal
           .fire({
-            // title: 'Are you sure remember it?',
             text: ' Do you agree to be directed to this link?',
             icon: 'warning',
             showCancelButton: true,
@@ -101,7 +98,6 @@ export default {
           })
           .then((result) => {
             if (result.isConfirmed) {
-              // window.location.href = event.target.href; // 转向链接
               window.open(event.target.href, '_blank').focus()
             }
           })
@@ -156,11 +152,9 @@ export default {
     </div>
     <div class="container-xxl my-3">
       <p class="fs-6 text-pickBlack text-center mb-5">how to become the NBA all star player?</p>
-      <!-- 球星個人列表 -->
       <main
         class="row row-cols-1 row-cols-xl-2 mx-md-2 g-xl-5 position-relative flex-xl-row flex-column-reverse"
       >
-        <!-- 必填 -->
         <article class="col col-xl-8 mx-auto mb-xl-5">
           <div class="card shadow">
             <div class="card-body">
@@ -168,7 +162,7 @@ export default {
               <small class="text-secondary text-end d-block w-100">
                 {{ story.author + ' , ' + $filters.dateAndTime(this.story.create_at) }}
               </small>
-              <p @click.prevent="handleClick" v-html="story.description"></p>
+              <a @click.prevent="handleClick" v-html="story.description"></a>
               <!--  -->
               <div class="my-3 d-flex gap-3">
                 <el-tag class="ml-2" type="info">#NBA</el-tag>
@@ -191,7 +185,7 @@ export default {
               <img
                 src="@/assets/nbaWeb/CYOKWOiUoAIJGu4.png"
                 class="allstaritem_back img-fluid op-center of-cover"
-                alt=""
+                alt="CYOKWOiUoAIJGu4"
               />
               <div @click.prevent="handleClick" class="card-body fs-6" v-html="story.content"></div>
               <a

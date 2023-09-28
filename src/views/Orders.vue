@@ -179,14 +179,12 @@ export default {
           v-model="search"
           type="search"
           class="form-control"
-          name=""
-          id=""
           aria-describedby="helpId"
           placeholder="search order ID / DATE"
         />
         <!--  -->
         <div class="flex-shrink-0">
-          <select v-model="filterPaid" class="form-select form-select-lg" name="" id="">
+          <select v-model="filterPaid" class="form-select form-select-lg" >
             <option value="default" selected>to sift</option>
             <option value="unpaid">no paid</option>
           </select>

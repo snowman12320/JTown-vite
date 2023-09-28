@@ -1,6 +1,35 @@
+<script>
+export default {
+  data() {
+    return {
+      products: {}
+    }
+  },
+  created() {
+    this.getProducts()
+  },
+  methods: {
+    getProducts() {
+      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
+      this.isLoading = true
+      this.$http.get(api).then((res) => {
+        if (res.data.success) {
+          this.isLoading = true
+          this.products = res.data.products
+        }
+      })
+    },
+    getProduct(id) {
+      //! 好像只要傳送id即可，
+      this.$router.push(`/products-view/products-item/${id}`)
+      window.scrollTo(0, 0)
+    }
+  }
+}
+</script>
+
 <template>
   <div>
-    <!-- 最新球衣 -->
     <div id="Product" class="my-5 d-flex justify-content-center align-items-center">
       <h2>NEW</h2>
       <img
@@ -10,7 +39,6 @@
       />
       <h2>PRODUCTS</h2>
     </div>
-    <!-- <ProductsList></ProductsList> -->
     <div style="height: 1000px !important; overflow: hidden">
       <div class="masonry">
         <div
@@ -50,39 +78,7 @@
     </div>
   </div>
 </template>
-<script>
-// import ProductsList from '@/components/ProductsList.vue';
-export default {
-  components: {
-    // ProductsList
-  },
-  data() {
-    return {
-      products: {}
-    }
-  },
-  created() {
-    this.getProducts()
-  },
-  methods: {
-    getProducts() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-      this.isLoading = true
-      this.$http.get(api).then((res) => {
-        if (res.data.success) {
-          this.isLoading = true
-          this.products = res.data.products
-        }
-      })
-    },
-    getProduct(id) {
-      //! 好像只要傳送id即可，
-      this.$router.push(`/products-view/products-item/${id}`)
-      window.scrollTo(0, 0)
-    }
-  }
-}
-</script>
+
 <style>
 .masonry {
   column-count: 4;

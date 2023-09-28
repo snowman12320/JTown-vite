@@ -47,7 +47,7 @@
                   @change="uploadFile"
                 />
               </div>
-              <img class="of-cover op-top w-100" style="300px" :src="tempStory.imageUrl" alt="" />
+              <img class="of-cover op-top w-100" style="300px" :src="tempStory.imageUrl" :alt="tempStory.name" />
             </div>
             <div class="col-sm-8">
               <div class="d-flex flex-column gap-3">

@@ -1,20 +1,3 @@
-<template>
-  <div class="rankView">
-    <Loading :active="isLoading"></Loading>
-    <FrontNavbar :is-login="isLogin"></FrontNavbar>
-    <ToastMessages></ToastMessages>
-    <p style="margin-top: 104px !important"></p>
-    <section
-      class="allstar_banner bgp-bottom bgs-cover mb-3"
-      :style="{ 'background-image': `url(${getImageUrl()})` }"
-      style="background-repeat: no-repeat; height: 500px; margin-top: 104px !important"
-    ></section>
-    <div class="w-50 mx-auto">
-      <RankList></RankList>
-    </div>
-    <FullFooter></FullFooter>
-  </div>
-</template>
 <script>
 import FrontNavbar from '@/components/FrontNavbar.vue'
 import FullFooter from '@/components/FullFooter.vue'
@@ -47,6 +30,25 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div class="rankView">
+    <Loading :active="isLoading"></Loading>
+    <FrontNavbar :is-login="isLogin"></FrontNavbar>
+    <ToastMessages></ToastMessages>
+    <p style="margin-top: 104px !important"></p>
+    <section
+      class="allstar_banner bgp-bottom bgs-cover mb-3"
+      :style="{ 'background-image': `url(${getImageUrl()})` }"
+      style="background-repeat: no-repeat; height: 500px; margin-top: 104px !important"
+    ></section>
+    <div class="w-50 mx-auto">
+      <RankList></RankList>
+    </div>
+    <FullFooter></FullFooter>
+  </div>
+</template>
+
 <style scoped lang="scss">
 .rankView {
   background-attachment: fixed;

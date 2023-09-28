@@ -402,14 +402,13 @@ export default {
             </button>
           </div>
           <!--  -->
-          <hr class="w-100 mx-auto" />
+          <hr class="w-100 mx-auto" /> 
           <div class="my-3 d-flex gap-3 w-100 flex-wrap mx-auto">
-            <!-- round="" = true -->
-            <el-tag class="fs-6" type="warning" size="" effect="plain" round=""
+            <el-tag class="fs-6" type="warning" size="small " effect="plain" round
               >Free shipping</el-tag
             >
-            <el-tag class="fs-6" type="info" size="" effect="plain" round="">Store pickup</el-tag>
-            <el-tag class="fs-6" type="danger" size="" effect="plain" round=""
+            <el-tag class="fs-6" type="info" size="small" effect="plain" round>Store pickup</el-tag>
+            <el-tag class="fs-6" type="danger" size="small" effect="plain" round
               >Fast delivery</el-tag
             >
           </div>
@@ -461,7 +460,6 @@ export default {
               <textarea
                 @keydown.enter="sendComment()"
                 v-model="rateComment"
-                name=""
                 rows="3"
                 class="form-control type_msg"
                 placeholder="Type your comment ..."

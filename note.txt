@@ -6,3 +6,22 @@ this.cacheSearch = this.$route.params.search
   path: '/:catchAll(.*)',
   redirect: '/'
 }
+ ///////////////////////////////////////////////storyitem//////////////////////////////////////////////
+ // 製作分頁切換使用
+    getStoryList(page = 1) {
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/articles/?page=${page}`
+      this.$http.get(api).then((res) => { .......
+// 用admin會需要token 不然抓不到值
+ /////////////////////////////////////////////////////////////////////////////////////////////
+     getMerchandise() {
+      const str = this.story.title.trim()
+      const index = str.indexOf(' ')
+      this.sentence = str.substring(0, index)// 输出：Kobe bryant
+      // this.emitter.emit('customEvent_search', this.sentence); //! 無法跳轉頁面傳遞值
+      this.$router.push(`/products-view/products-content/${this.sentence}`)
+      this.setCacheSearch(this.sentence)
+    },
+     /////////////////////////////////////////////////////////////////////////////////////////////
+  // window.location.href = event.target.href; // 转向链接

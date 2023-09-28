@@ -105,17 +105,17 @@ export default {
       />
     </transition>
     <!-- advertise modal -->
-    <el-dialog v-model="centerDialogVisible" title="" width="30%" center>
+    <el-dialog v-model="centerDialogVisible"  width="30%" center>
       <!-- v-slot:default来指定el-countdown组件中的默认插槽位置 -->
       <template v-slot:default>
-        <p class="text-center fs-4">
+        <p class="text-center fs-6">
           " GOOAYE COUPON 20% OFF "<br />
           ON ALL DEPARTMENTS
         </p>
         <img
           src="@\assets\nbaWeb\andre-hunter-RPKdvPcYAUo-unsplash.jpg"
           class="w-100 h-100 img-fluid"
-          alt=""
+          alt="andre-hunter"
         />
         <el-row>
           <el-col :span="24">

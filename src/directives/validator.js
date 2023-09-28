@@ -1,5 +1,5 @@
 // <!-- 第一個確認 BS樣式是正常的 第二個照理應該驗證通過會加入打勾樣式 有嘗試書寫簡單的信箱驗證去產生驗證通過樣式-->
-// <!-- <input type="email" v-model="text" name="" class="form-control is-valid " id=""> -->
+// <!-- <input type="email" v-model="text"  class="form-control is-valid " > -->
 // <input
 //   type="email"
 //   v-model="text"

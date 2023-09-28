@@ -128,7 +128,7 @@
                             class="flex-shrink-0 position-relative modal_img"
                             style="height: 70px; width: 70px"
                           >
-                            <img class="h-100 w-100 of-cover op-top" :src="element.url" alt="" />
+                            <img class="h-100 w-100 of-cover op-top" :src="element.url" :alt="element.name" />
                             <div
                               class="position-absolute top-0 start-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center end-0 img_wrap d-none gap-2"
                               style="backdrop: blur(5px)"

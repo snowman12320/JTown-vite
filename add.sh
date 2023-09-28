@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "pnpm in NCKU  "
+git commit -m "repair for suggest on NCKU  "
 
 sleep 2
 git push

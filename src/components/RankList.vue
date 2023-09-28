@@ -91,7 +91,7 @@
             src="@/assets/nbaWeb/PNG-images-NBA-Players-1png-removebg-preview.png"
             height="200"
             width="200"
-            alt=""
+            alt="NBA-Players-1png-removebg"
           />
         </div>
         <div class="text-center allstartext_rwd">
@@ -129,7 +129,7 @@
             src="@/assets/nbaWeb/images-NBA-Players-58png-removebg-preview.png"
             height="200"
             width="200"
-            alt=""
+            alt="NBA-Players-58png-removebg"
           />
         </div>
         <div class="text-center allstartext_rwd">
@@ -170,7 +170,7 @@
             src="@/assets/nbaWeb/PNG-images-NBA-Players-60png.png"
             height="200"
             width="200"
-            alt=""
+            alt="NBA-Players"
           />
         </div>
         <div class="text-center allstartext_rwd">

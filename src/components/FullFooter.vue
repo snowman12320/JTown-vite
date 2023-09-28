@@ -32,7 +32,7 @@
     <footer class="footer bg-dark text-center text-white py-2 pt-4">
       <div class="d-md-flex justify-content-around px-md-5">
         <p>Copyright © {{ new Date().getFullYear() }} JerseyTown.All rights reserved.</p>
-        <p>( 教學用，非商業用途 / Educational use, non-commercial use )</p>
+        <p>( 學術用，非商業用途 / Educational use, non-commercial use )</p>
         <p
           class="d-flex align-items-center justify-content-md-end justify-content-center gap-md-5 gap-3"
         >

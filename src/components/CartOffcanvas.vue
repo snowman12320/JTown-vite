@@ -26,7 +26,7 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
     this.getCart()
   },
   computed: {

@@ -18,7 +18,7 @@ export default {
     return {}
   },
   created() {
-    console.clear()
+    // console.clear()
   },
   mounted() {
     // this.emitter.on('push-message', (message) => {

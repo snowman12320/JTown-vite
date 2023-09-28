@@ -20,7 +20,7 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
     this.getFavorite()
   },
   computed: {

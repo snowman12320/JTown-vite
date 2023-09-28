@@ -84,13 +84,12 @@ export default {
 <template>
   <div class="position-relative">
     <Loading :active="isLoading"></Loading>
-    <FrontNavbar :is-login="isLogin"></FrontNavbar>
+    <FrontNavbar></FrontNavbar>
     <HomeCarousel></HomeCarousel>
     <div class="container-xxl">
       <HomeStory></HomeStory>
       <HomeProduct></HomeProduct>
     </div>
-    <div></div>
     <FullFooter></FullFooter>
     <!-- alert -->
     <transition name="fade">

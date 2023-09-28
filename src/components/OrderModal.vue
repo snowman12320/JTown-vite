@@ -135,7 +135,7 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
   },
   watch: {
     order() {

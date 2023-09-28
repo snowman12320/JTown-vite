@@ -41,7 +41,6 @@ configure({
 })
 setLocale('zh_TW') // 設定預設語系
 
-
 //! Create the Vue app instance:
 const app = createApp(App)
 
@@ -72,8 +71,15 @@ app.use(VueClickAway)
 const pinia = createPinia()
 app.use(pinia)
 
-// pinia.use(VueSweetalert2)
-// pinia.config.globalProperties.$toast = $toast
+app.mixin({
+  methods: {
+    // logWithTimestamp全局混入改變console.log
+    lt(...args) {
+      const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false })
+      console.log(`[${timestamp}]`, ...args)
+    }
+  }
+})
 
 //! Mount the app to the DOM and initialize any additional functionality:
 app.mount('#app')

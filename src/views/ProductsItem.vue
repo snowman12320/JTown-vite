@@ -48,7 +48,7 @@ export default {
     this.panzoom = new Panzoom(this.container, this.options, { Pins })
   },
   created() {
-    console.clear()
+    // console.clear()
     this.productId = this.$route.params.productId //! 統一商品唯一的ID(item.id)
     this.getProduct()
     this.getProduct_item(this.productId)
@@ -404,7 +404,7 @@ export default {
           <!--  -->
           <hr class="w-100 mx-auto" /> 
           <div class="my-3 d-flex gap-3 w-100 flex-wrap mx-auto">
-            <el-tag class="fs-6" type="warning" size="small " effect="plain" round
+            <el-tag class="fs-6" type="warning" size="small" effect="plain" round
               >Free shipping</el-tag
             >
             <el-tag class="fs-6" type="info" size="small" effect="plain" round>Store pickup</el-tag>

@@ -23,7 +23,7 @@ export default {
     config: Object
   },
   created() {
-    console.clear()
+    // console.clear()
     this.getCoupons()
   },
   methods: {

@@ -19,10 +19,10 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
     this.productListId = this.$route.params.storyId
     this.getStory()
-    // 
+    //
   },
   watch: {
     storyIndex() {
@@ -45,7 +45,7 @@ export default {
     getMerchandise() {
       const str = this.story.title.trim()
       const index = str.indexOf(' ')
-      this.sentence = str.substring(0, index)// 输出：Kobe bryant
+      this.sentence = str.substring(0, index) // 输出：Kobe bryant
       this.$router.push(`/products-view/products-content/${this.sentence}`)
       this.setCacheSearch(this.sentence)
     },
@@ -162,7 +162,7 @@ export default {
               <small class="text-secondary text-end d-block w-100">
                 {{ story.author + ' , ' + $filters.dateAndTime(this.story.create_at) }}
               </small>
-              <a @click.prevent="handleClick" v-html="story.description"></a>
+              <button @click.prevent="handleClick" v-html="story.description"></button>
               <!--  -->
               <div class="my-3 d-flex gap-3">
                 <el-tag class="ml-2" type="info">#NBA</el-tag>
@@ -187,7 +187,11 @@ export default {
                 class="allstaritem_back img-fluid op-center of-cover"
                 alt="CYOKWOiUoAIJGu4"
               />
-              <div @click.prevent="handleClick" class="card-body fs-6" v-html="story.content"></div>
+              <button
+                @click.prevent="handleClick"
+                class="card-body fs-6"
+                v-html="story.content"
+              ></button>
               <a
                 type="button"
                 @click.prevent="getMerchandise()"
@@ -212,5 +216,10 @@ export default {
 
 .disabled {
   cursor: not-allowed !important;
+}
+
+button {
+  border: none;
+  background: #fff;
 }
 </style>

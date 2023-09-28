@@ -48,7 +48,7 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
     //
     if (!this.isLogin) {
       this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))

@@ -38,7 +38,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
   },
   created() {
-    console.clear()
+    // console.clear()
     this.getProducts()
     this.getFiltered() //! 取得全域搜尋資料
   },

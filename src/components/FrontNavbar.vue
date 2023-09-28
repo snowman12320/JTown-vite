@@ -21,9 +21,6 @@ export default {
       collapse_none: true
     }
   },
-  props: {
-    isLogin: Boolean
-  },
   mounted() {
     this.nav = this.$refs.header.offsetHeight //* 在 mounted 階段獲取 header 的高度
     window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件

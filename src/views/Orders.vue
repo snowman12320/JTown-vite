@@ -29,7 +29,7 @@ export default {
     }
   },
   created() {
-    console.clear()
+    // console.clear()
     this.getOrders()
     this.getOrdersAll()
   },

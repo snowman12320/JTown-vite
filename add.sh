@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "repair for storyitem on home  "
+git commit -m "add vue-plugin-devtool / fixed login token  "
 
 sleep 2
 git push

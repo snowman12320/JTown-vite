@@ -141,10 +141,12 @@ export default {
         )
         this.$router.push('/login')
       } else {
+        console.log(1)
         const api = `${import.meta.env.VITE_APP_API}logout`
         this.$http.post(api, this.user).then((res) => {
           if (res.data.success) {
             this.$router.push('/login')
+            console.log(2)
           }
         })
       }

@@ -25,6 +25,7 @@ x 要渲染在畫面的元件，建議與元件名稱相同，例如：<HelloWor
 important 在使用時要多加注意權重問題哩。
 
 如果沒有要傳入參數，那麼請把 Function Call 移除，如： ProductsItem.vue 470 行。
+ex: @click="login()" 沒有參數，就不用()
 
 
 
@@ -61,6 +62,7 @@ Q：我將<Loading :active="isLoading"></Loading> ，
 > css改成scss寫法 檔案也是
 
 all.scss 跟 main.scss 應該都是相同的東西。
+> 刪掉 all or main 放到temp夾中備份
 
 assets/nbaWeb/參考，參考的東西請不要放在專案內，會凸顯作品的不專業度，因為這不屬於專案（src）的一部分。
 

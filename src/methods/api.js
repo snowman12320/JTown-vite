@@ -12,7 +12,8 @@ const instance = axios.create({
 // request 的攔截器
 instance.interceptors.request.use(
   function (config) {
-    const token = Cookies.get('JTownToken') || null
+    // const token = Cookies.get('JTownToken') || null
+    const token = Cookies.get('hexToken') || null
     // console.log(token);
     if (token) {
       config.headers.Authorization = token

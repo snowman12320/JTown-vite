@@ -65,11 +65,12 @@ export default {
     signIn() {
       const api = `${import.meta.env.VITE_APP_API}admin/signin`
       this.$http.post(api, this.user).then((res) => {
-        this.isLoading = true
+        // this.isLoading = true
         if (res.data.success) {
-          this.isLoading = false
+          // this.isLoading = false
           const { token, expired } = res.data
-          document.cookie = `JTownToken=${token}; expires=${new Date(expired)}`
+          document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+          // 這個代弊名稱錯誤就不能登入登出 > 應該說目前用api.js打包axios就會報錯，非代弊的問題 document.cookie = `JTownToken=${token}; expires=${new Date(expired)}`
           // https://github.com/snowman12320/meowforest/blob/main/src/views/admin/LoginAdmin.vue
           this.$router.go(-1)
           localStorage.setItem('username', JSON.stringify(this.user.username))

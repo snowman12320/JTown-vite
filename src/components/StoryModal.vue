@@ -1,3 +1,121 @@
+<script>
+import modalMixin from '@/mixins/modalMixin'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic' //* 需從public中，換成有取得新增外掛的
+
+export default {
+  mixins: [modalMixin],
+  data() {
+    return {
+      modal: {},
+      tempStory: {},
+      create_at: '', //! 限制數字存入資料
+      // defaultTime: new Date(2000, 1, 1, 12, 0, 0),
+      shortcuts: [
+        {
+          text: 'Today',
+          value: new Date()
+        },
+        {
+          text: 'Yesterday',
+          value: () => {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            return date
+          }
+        },
+        {
+          text: 'A week ago',
+          value: () => {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            return date
+          }
+        }
+      ],
+      //
+      inputValue: '',
+      dynamicTags: ['NBA', 'SPORT', 'NEWS'],
+      inputVisible: false,
+      InputRef: null,
+      //
+      editor: ClassicEditor,
+      // editorData: '<p>Content of the editor.</p>', //* 預設內容
+      editorConfig: {},
+      Loading_small: false
+    }
+  },
+  props: {
+    story: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  created() {},
+  watch: {
+    //* 監聽傳進來的story，並自動存到暫存區
+    story() {
+      this.tempStory = this.story
+      // ! StoryModal 日期要轉成 yyyy-mm-dd 格式 (年月日)，才會在彈窗正確顯示
+      // const date = new Date(this.tempStory.create_at * 1000);
+      // this.create_at = date.toISOString().split('T')[0];
+      //! 用元件的話會自動使用toLocaleString()，就會變成年月日時間，所以只要*1000即可(等於台北時間...之類的)，不能使用this.$filters.dateAndTime
+      this.create_at = new Date(this.tempStory.create_at * 1000)
+      //
+      //! 結果api文件中的tag欄位m，根本沒有QQ，難怪undefine
+      // this.dynamicTags = this.tempStory.tag;
+      // 多張圖
+      if (!this.tempStory.images) {
+        this.tempStory.images = []
+      }
+      // this.formData.richeditor78915 = this.tempStory.description;//! 可以編輯，但再次編輯取不出來
+    },
+    create_at() {
+      //! 限制數字存入資料
+      // console.log('先是輸入日期', this.create_at);
+      this.tempStory.create_at = Math.floor(new Date(this.create_at) / 1000)
+      // console.log('後轉以秒为单位的时间戳', this.tempStory.create_at);
+    }
+  },
+  methods: {
+    // * new FormData() 是一個 JavaScript 內建的物件，用於創建一個空的 FormData 物件。
+    // * 首先獲取一個 <form> 元素，FormData 物件可以用來構建一個包含鍵值對的表單數據，並且可以通過 AJAX 以 multipart/form-data 格式將這些數據發送到服務器。
+    uploadFile() {
+      this.Loading_small = true
+      const uploadedFile = this.$refs.fileInput.files[0]
+      const formData = new FormData()
+      formData.append('file-to-upload', uploadedFile)
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/upload`
+      this.$http.post(url, formData).then((response) => {
+        console.log(response)
+        if (response.data.success) {
+          this.tempStory.imageUrl = response.data.imageUrl
+          this.Loading_small = false
+        }
+      })
+    },
+    //* 標籤
+    handleClose(tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+    },
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(() => {
+        this.$refs.InputRef.focus()
+      })
+    },
+    handleInputConfirm() {
+      if (this.inputValue) {
+        this.dynamicTags.push(this.inputValue)
+      }
+      this.inputVisible = false
+      this.inputValue = ''
+    }
+  }
+}
+</script>
+
 <template>
   <!-- Modal -->
   <div
@@ -168,123 +286,7 @@
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '@/mixins/modalMixin'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic' //* 需從public中，換成有取得新增外掛的
 
-export default {
-  mixins: [modalMixin],
-  data() {
-    return {
-      modal: {},
-      tempStory: {},
-      create_at: '', //! 限制數字存入資料
-      // defaultTime: new Date(2000, 1, 1, 12, 0, 0),
-      shortcuts: [
-        {
-          text: 'Today',
-          value: new Date()
-        },
-        {
-          text: 'Yesterday',
-          value: () => {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            return date
-          }
-        },
-        {
-          text: 'A week ago',
-          value: () => {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-            return date
-          }
-        }
-      ],
-      //
-      inputValue: '',
-      dynamicTags: ['NBA', 'SPORT', 'NEWS'],
-      inputVisible: false,
-      InputRef: null,
-      //
-      editor: ClassicEditor,
-      // editorData: '<p>Content of the editor.</p>', //* 預設內容
-      editorConfig: {},
-      Loading_small: false
-    }
-  },
-  props: {
-    story: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
-  },
-  created() {},
-  watch: {
-    //* 監聽傳進來的story，並自動存到暫存區
-    story() {
-      this.tempStory = this.story
-      // ! StoryModal 日期要轉成 yyyy-mm-dd 格式 (年月日)，才會在彈窗正確顯示
-      // const date = new Date(this.tempStory.create_at * 1000);
-      // this.create_at = date.toISOString().split('T')[0];
-      //! 用元件的話會自動使用toLocaleString()，就會變成年月日時間，所以只要*1000即可(等於台北時間...之類的)，不能使用this.$filters.dateAndTime
-      this.create_at = new Date(this.tempStory.create_at * 1000)
-      //
-      //! 結果api文件中的tag欄位m，根本沒有QQ，難怪undefine
-      // this.dynamicTags = this.tempStory.tag;
-      // 多張圖
-      if (!this.tempStory.images) {
-        this.tempStory.images = []
-      }
-      // this.formData.richeditor78915 = this.tempStory.description;//! 可以編輯，但再次編輯取不出來
-    },
-    create_at() {
-      //! 限制數字存入資料
-      // console.log('先是輸入日期', this.create_at);
-      this.tempStory.create_at = Math.floor(new Date(this.create_at) / 1000)
-      // console.log('後轉以秒为单位的时间戳', this.tempStory.create_at);
-    }
-  },
-  methods: {
-    // * new FormData() 是一個 JavaScript 內建的物件，用於創建一個空的 FormData 物件。
-    // * 首先獲取一個 <form> 元素，FormData 物件可以用來構建一個包含鍵值對的表單數據，並且可以通過 AJAX 以 multipart/form-data 格式將這些數據發送到服務器。
-    uploadFile() {
-      this.Loading_small = true
-      const uploadedFile = this.$refs.fileInput.files[0]
-      const formData = new FormData()
-      formData.append('file-to-upload', uploadedFile)
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/upload`
-      this.$http.post(url, formData).then((response) => {
-        console.log(response)
-        if (response.data.success) {
-          this.tempStory.imageUrl = response.data.imageUrl
-          this.Loading_small = false
-        }
-      })
-    },
-    //* 標籤
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-    },
-    showInput() {
-      this.inputVisible = true
-      this.$nextTick(() => {
-        this.$refs.InputRef.focus()
-      })
-    },
-    handleInputConfirm() {
-      if (this.inputValue) {
-        this.dynamicTags.push(this.inputValue)
-      }
-      this.inputVisible = false
-      this.inputValue = ''
-    }
-  }
-}
-</script>
 <style lang="scss">
 .demo-datetime-picker {
   display: flex;

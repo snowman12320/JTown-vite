@@ -7,7 +7,10 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "add vue-plugin-devtool / fixed login token  "
-
+git commit -m "fixd ing login token / add note / UI   "
 sleep 2
+
 git push
+
+
+# 刪 /note

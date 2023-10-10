@@ -9,9 +9,11 @@ export default {
     this.getStoryList()
   },
   methods: {
-    getStoryList (page = 1) {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/articles/?page=${page}`;
-      this.isLoading = true;
+    getStoryList(page = 1) {
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/articles/?page=${page}`
+      this.isLoading = true
       this.$http.get(api).then((res) => {
         this.isLoading = false
         if (res.data.success) {
@@ -30,17 +32,23 @@ export default {
 <template>
   <div>
     <!-- 銷售排行 -->
-    <div id="Ranking" class="d-flex justify-content-center align-items-center mt-5">
-      <h2>PLAYER</h2>
-      <img src="../assets/nbaWeb/Lovepik_com-401319703-basketball.png" height="80" alt="sellLogo" />
-      <h2>STORY</h2>
+    <div class="my-8 py-5">
+      <div id="Ranking" class="d-flex justify-content-center align-items-center">
+        <h2 class="text-pickBlack">PLAYER</h2>
+        <img
+          src="@/assets/image/nbaWeb/Lovepik_com-401319703-basketball.png"
+          height="50"
+          alt="sellLogo"
+        />
+        <h2 class="text-pickBlack">STORY</h2>
+      </div>
+      <p class="fs-6 text-pickBlack text-center mb-5">who is your favorite NBA player?</p>
     </div>
-    <p class="fs-6 text-dark text-center mb-5">who is your favorite NBA player?</p>
     <!-- 目前的排版會感覺上下都沒有對齊，可先避免過多的水平間距調整 -->
     <section class="row row-cols-1 row-cols-lg-3 rank_card mx-2">
       <div
         class="col mb-5 mt-7 mb-lg-0"
-        v-for="(item,index) in storyList.splice(0, 3)"
+        v-for="(item, index) in storyList.splice(0, 3)"
         :key="item.id"
         @click="getStory(item.id)"
       >
@@ -67,15 +75,18 @@ export default {
         </div>
       </div>
     </section>
-    <div class="text-center">
-      <router-link to="/story/list" class="btn btn-outline-dark rounded-pill my-5 fs-5 sellbtn_Rwd">
+    <div class="text-center my-7">
+      <router-link
+        to="/story/list"
+        class="btn btn-outline-dark rounded-pill btn_pill my-5 fs-5 sellbtn_Rwd"
+      >
         MORE LISTS
       </router-link>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .single-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -90,5 +101,23 @@ export default {
   overflow: hidden;
   /*  有寬度才能多行  */
   width: 100%;
+}
+
+.btn_pill {
+  width: 50%;
+  transition: all;
+  transition-duration: 500ms;
+  box-shadow: 0 5px 1px black;
+  transform: translateY(-5px);
+  background-color: #0253a5;
+  color: white;
+  &:hover {
+    box-shadow: 0 6px 1px black;
+    transform: translateY(-8px);
+  }
+  &:focus {
+    box-shadow: 0 3px 1px black;
+    transform: translateY(0px);
+  }
 }
 </style>

@@ -1,7 +1,6 @@
 console.clear()
 
-import './assets/main.css' //*vite的示範檔 > 編譯main.scss後被覆蓋
-import './assets/all.scss'
+import '@/assets/scss/main.scss' //*vite的示範檔 > 編譯main.scss後被覆蓋
 
 import { createApp } from 'vue'
 import axios from 'axios'
@@ -17,7 +16,6 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import { currency, date, dateAndTime } from './methods/filters'
-import $httpMessageState from './methods/pushMessageState' //* 全域函式
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import VueSweetalert2 from 'vue-sweetalert2'
@@ -57,7 +55,6 @@ app.config.globalProperties.$filters = {
 }
 // 此函式的用途是整合 Ajax 的錯誤事件，統一整理發送給予 Toast 處理
 // 正常來說不建議太多方法掛Global,這裡可以使provide來處理
-app.config.globalProperties.$httpMessageState = $httpMessageState
 app.config.globalProperties.$toast = $toast
 
 //! Use plugins and libraries:

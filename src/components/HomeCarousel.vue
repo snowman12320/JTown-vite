@@ -44,7 +44,7 @@
         <div class="carousel-item" data-bs-interval="100000">
           <!-- 加寬度100%不錯位跑版 -->
           <img
-            src="../assets/nbaWeb/john-villablanca-_7EXgSQ98ew-unsplash.jpg"
+            src="@/assets/image/nbaWeb/john-villablanca-_7EXgSQ98ew-unsplash.jpg"
             class="of-cover op-top w-100"
             alt="..."
             style="height: 100vh"
@@ -52,7 +52,7 @@
         </div>
         <div class="carousel-item active" data-bs-interval="100000">
           <img
-            src="../assets/nbaWeb/dean-bennett-nFjLHE4vmn4-unsplash.jpg"
+            src="@/assets/image/nbaWeb/dean-bennett-nFjLHE4vmn4-unsplash.jpg"
             class="d-block w-100 op-center of-cover"
             alt="..."
             style="height: 100vh"

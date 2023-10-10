@@ -1,3 +1,22 @@
+<script>
+export default {
+  data() {
+    return {
+      value: 4.7,
+      format: (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
+    }
+  },
+  created() {
+    window.scrollTo(0, 0)
+  },
+  methods: {
+    toStory(id) {
+      this.$router.push(`/story/item/${id}`)
+    }
+  }
+}
+</script>
+
 <template>
   <section class="d-flex flex-column justify-content-around align-items-start rankList gap-5">
     <div
@@ -9,7 +28,7 @@
         <div class="allstar_bg d-flex justify-content-center align-items-center me-xl-0">
           <img
             class="of-contain"
-            src="@/assets/nbaWeb/PNG-images-NBA-Players-36png.png"
+            src="@/assets/image/nbaWeb/PNG-images-NBA-Players-36png.png"
             height="200"
             width="200"
             alt="NBA-Players-36png"
@@ -50,7 +69,7 @@
         <div class="allstar_bg d-flex justify-content-center align-items-center me-xl-0">
           <img
             class="of-cover op-top"
-            src="@/assets/nbaWeb/PNG-images-NBA-Players-28png.png"
+            src="@/assets/image/nbaWeb/PNG-images-NBA-Players-28png.png"
             height="200"
             width="200"
             alt="NBA-Players-36png"
@@ -88,7 +107,7 @@
         <div class="allstar_bg d-flex justify-content-center align-items-center me-xl-0">
           <img
             class="of-cover op-top"
-            src="@/assets/nbaWeb/PNG-images-NBA-Players-1png-removebg-preview.png"
+            src="@/assets/image/nbaWeb/PNG-images-NBA-Players-1png-removebg-preview.png"
             height="200"
             width="200"
             alt="NBA-Players-1png-removebg"
@@ -126,7 +145,7 @@
         <div class="allstar_bg d-flex justify-content-center align-items-center me-xl-0">
           <img
             class="of-cover op-top"
-            src="@/assets/nbaWeb/images-NBA-Players-58png-removebg-preview.png"
+            src="@/assets/image/nbaWeb/images-NBA-Players-58png-removebg-preview.png"
             height="200"
             width="200"
             alt="NBA-Players-58png-removebg"
@@ -167,7 +186,7 @@
         <div class="allstar_bg d-flex justify-content-center align-items-center me-xl-0">
           <img
             class="of-cover op-top"
-            src="@/assets/nbaWeb/PNG-images-NBA-Players-60png.png"
+            src="@/assets/image/nbaWeb/PNG-images-NBA-Players-60png.png"
             height="200"
             width="200"
             alt="NBA-Players"
@@ -201,24 +220,7 @@
     </div>
   </section>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      value: 4.7,
-      format: (percentage) => (percentage === 100 ? 'Full' : `${percentage}%`)
-    }
-  },
-  created() {
-    window.scrollTo(0, 0)
-  },
-  methods: {
-    toStory(id) {
-      this.$router.push(`/story/item/${id}`)
-    }
-  }
-}
-</script>
+
 <style lang="scss">
 .el-rate__text {
   color: blue;

@@ -3,9 +3,9 @@ import CartOffcanvas from '@/components/CartOffcanvas.vue'
 import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue'
 import Collapse from 'bootstrap/js/dist/collapse'
 
-import favoriteStore from '../stores/favoriteStore'
-import cartStore from '../stores/cartStore'
-import loginStore from '../stores/loginStore'
+import favoriteStore from '@/stores/favoriteStore'
+import cartStore from '@/stores/cartStore'
+import loginStore from '@/stores/loginStore'
 import { mapState } from 'pinia'
 
 export default {
@@ -94,7 +94,7 @@ export default {
           >
             JerseyTown
           </p>
-          <h1 class="fs-3 fw-bold mb-0 ms-5 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
+          <h1 class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
             JTown
           </h1>
         </router-link>
@@ -135,9 +135,6 @@ export default {
                 >Product</router-link
               >
             </li>
-            <li class="nav-item">
-              <router-link to="/rank" class="nav-link px-4 py-3"> Rank </router-link>
-            </li>
             <li class="ms-1">
               <router-link
                 :to="isLogin ? '/dashboard/products' : '/login'"
@@ -150,39 +147,25 @@ export default {
             </li>
             <li>
               <button
-                @click="openFavoriteOffcanvas()"
+                @click="openFavoriteOffcanvas"
                 class="bg-transparent border-0 position-relative"
               >
-                <i class="fa-regular fa-heart text-nbaRed fs-2 mt-2 px-1 ms-md-2"></i>
+                <i class="fa-solid fa-heart text-pickBlack fs-2 mt-2 px-1 ms-md-2"></i>
                 <span
                   v-if="favoriteIds.length && isLogin"
-                  class="position-absolute text-nbaRed"
-                  style="
-                    top: 24%;
-                    left: 45%;
-                    font-size: 18px;
-                    text-shadow:
-                      2px 2px 1px white,
-                      -2px -2px 1px white;
-                  "
+                  class="position-absolute text-white"
+                  style="top: 24%; left: 45%; font-size: 18px"
                   >{{ favoriteIds.length }}</span
                 >
               </button>
             </li>
             <li>
-              <button @click="openOffcanvas()" class="bg-transparent border-0 position-relative">
-                <i class="fa-sharp fa-solid fa-cart-shopping text-nbaRed fs-2 mt-2 px-1"></i>
+              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative">
+                <i class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"></i>
                 <span
                   v-if="carts.length && isLogin"
                   class="position-absolute text-white"
-                  style="
-                    top: 15%;
-                    left: 43%;
-                    font-size: 16px;
-                    text-shadow:
-                      0.3px 0.3px 1px white,
-                      -0.3px -0.3px 1px white;
-                  "
+                  style="top: 19%; left: 43%; font-size: 16px"
                   >{{ carts.length }}</span
                 >
               </button>
@@ -196,14 +179,15 @@ export default {
     <FavoriteOffcanvas ref="favorite"></FavoriteOffcanvas>
   </div>
 </template>
+
 <style>
 .navbar-toggler:focus {
   box-shadow: none !important;
 }
 
 .navbar.backdrop {
-  backdrop-filter: blur(7px);
-  background: rgb(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  background: rgb(255, 255, 255, 0.7);
 }
 
 .brand_scale {

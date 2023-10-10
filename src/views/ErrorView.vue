@@ -3,8 +3,8 @@
     <div class="container">
       <div class="relative">
         <div class="absolute-center">
-          <div class="heading">施工中</div>
-          <a class="btn-link" href="index.html">回首頁</a>
+          <div class="heading">Under construction.</div>
+          <button class="btn-link rounded-pill">Go Back</button>
         </div>
         <div class="img">
           <img src="https://i.ibb.co/G9DC8S0/404-2.png" alt="Image" />
@@ -48,11 +48,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #cursor {
   transition: all 0.1s ease;
   transform: scale(0);
   box-shadow: 0px 0px 50px 5px #fff;
+  pointer-events: none;
 }
 
 #cursor:not(.hidden) {
@@ -103,7 +104,10 @@ export default {
   font-size: 70px;
   font-weight: bold;
   letter-spacing: 0.1em;
-  color: #4f46e5; /* Replace with your desired color */
+  color: #0253a5; /* Replace with your desired color */
+  line-height: 1.1;
+  padding: 20px 0px;
+  text-shadow: 0 3px 1px black;
 }
 
 /* Link Button */
@@ -112,12 +116,25 @@ export default {
   padding: 4px 8px;
   width: 100%;
   text-align: center;
-  background-color: #4f46e5; /* Replace with your desired color */
+  background-color: #0253a5; /* Replace with your desired color */
   color: white;
   border-radius: 4px;
   display: inline-block;
   text-decoration: none;
   font-size: 50px;
+  transition: all;
+  transition-duration: 500ms;
+  box-shadow: 0 5px 1px black;
+  transform: translateY(-5px);
+  border: none;
+  &:hover {
+    box-shadow: 0 6px 1px black;
+    transform: translateY(-8px);
+  }
+  &:focus {
+    box-shadow: 0 3px 1px black;
+    transform: translateY(0px);
+  }
 }
 
 .btn-link:hover {

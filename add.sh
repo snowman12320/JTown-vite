@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "repair for storyitem on home  "
+git commit -m "test only use git add and git pull together  "
 
-sleep 2
-git push
+# sleep 2
+# git push

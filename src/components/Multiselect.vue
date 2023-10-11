@@ -1,22 +1,45 @@
 <template>
-  <div :tabindex="searchable ? -1 : tabindex"
-    :class="{ 'multiselect--active': isOpen, 'multiselect--disabled': disabled, 'multiselect--above': isAbove, 'multiselect--has-options-group': hasOptionGroup }"
-    @focus="activate()" @blur="searchable ? false : deactivate()" @keydown.self.down.prevent="pointerForward()"
-    @keydown.self.up.prevent="pointerBackward()" @keypress.enter.tab.stop.self="addPointerElement($event)"
-    @keyup.esc="deactivate()" class="multiselect" role="combobox" :aria-owns="'listbox-' + id">
+  <div
+    :tabindex="searchable ? -1 : tabindex"
+    :class="{
+      'multiselect--active': isOpen,
+      'multiselect--disabled': disabled,
+      'multiselect--above': isAbove,
+      'multiselect--has-options-group': hasOptionGroup
+    }"
+    @focus="activate()"
+    @blur="searchable ? false : deactivate()"
+    @keydown.self.down.prevent="pointerForward()"
+    @keydown.self.up.prevent="pointerBackward()"
+    @keypress.enter.tab.stop.self="addPointerElement($event)"
+    @keyup.esc="deactivate()"
+    class="multiselect"
+    role="combobox"
+    :aria-owns="'listbox-' + id"
+  >
     <slot name="caret" :toggle="toggle">
       <div @mousedown.prevent.stop="toggle()" class="multiselect__select"></div>
     </slot>
     <slot name="clear" :search="search"></slot>
     <div ref="tags" class="multiselect__tags">
-      <slot name="selection" :search="search" :remove="removeElement" :values="visibleValues" :is-open="isOpen">
+      <slot
+        name="selection"
+        :search="search"
+        :remove="removeElement"
+        :values="visibleValues"
+        :is-open="isOpen"
+      >
         <div class="multiselect__tags-wrap" v-show="visibleValues.length > 0">
           <div v-for="(option, index) of visibleValues" @mousedown.prevent :key="index">
             <slot name="tag" :option="option" :search="search" :remove="removeElement">
               <span class="multiselect__tag" :key="index">
                 <span v-text="getOptionLabel(option)"></span>
-                <i tabindex="1" @keypress.enter.prevent="removeElement(option)" @mousedown.prevent="removeElement(option)"
-                  class="multiselect__tag-icon"></i>
+                <i
+                  tabindex="1"
+                  @keypress.enter.prevent="removeElement(option)"
+                  @mousedown.prevent="removeElement(option)"
+                  class="multiselect__tag-icon"
+                ></i>
               </span>
             </slot>
           </div>
@@ -32,63 +55,115 @@
           <div v-show="loading" class="multiselect__spinner" />
         </slot>
       </transition>
-      <input ref="search" v-if="searchable" :name="name" :id="id" type="text" autocomplete="off" spellcheck="false"
-        :placeholder="placeholder" :style="inputStyle" :value="search" :disabled="disabled" :tabindex="tabindex"
-        @input="updateSearch($event.target.value)" @focus.prevent="activate()" @blur.prevent="deactivate()"
-        @keyup.esc="deactivate()" @keydown.down.prevent="pointerForward()" @keydown.up.prevent="pointerBackward()"
-        @keypress.enter.prevent.stop.self="addPointerElement($event)" @keydown.delete.stop="removeLastElement()"
-        class="multiselect__input" :aria-controls="'listbox-' + id" />
+      <input
+        ref="search"
+        v-if="searchable"
+        :name="name"
+        :id="id"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        :placeholder="placeholder"
+        :style="inputStyle"
+        :value="search"
+        :disabled="disabled"
+        :tabindex="tabindex"
+        @input="updateSearch($event.target.value)"
+        @focus.prevent="activate()"
+        @blur.prevent="deactivate()"
+        @keyup.esc="deactivate()"
+        @keydown.down.prevent="pointerForward()"
+        @keydown.up.prevent="pointerBackward()"
+        @keypress.enter.prevent.stop.self="addPointerElement($event)"
+        @keydown.delete.stop="removeLastElement()"
+        class="multiselect__input"
+        :aria-controls="'listbox-' + id"
+      />
       <span v-if="isSingleLabelVisible" class="multiselect__single" @mousedown.prevent="toggle">
         <slot name="singleLabel" :option="singleValue">
           {{ currentOptionLabel }}
         </slot>
       </span>
-      <span v-if="isPlaceholderVisible" class="multiselect__placeholder" @mousedown.prevent="toggle">
+      <span
+        v-if="isPlaceholderVisible"
+        class="multiselect__placeholder"
+        @mousedown.prevent="toggle"
+      >
         <slot name="placeholder">
           {{ placeholder }}
         </slot>
       </span>
     </div>
     <transition name="multiselect">
-      <div class="multiselect__content-wrapper" v-show="isOpen" @focus="activate" tabindex="-1" @mousedown.prevent
-        :style="{ maxHeight: optimizedHeight + 'px' }" ref="list">
+      <div
+        class="multiselect__content-wrapper"
+        v-show="isOpen"
+        @focus="activate"
+        tabindex="-1"
+        @mousedown.prevent
+        :style="{ maxHeight: optimizedHeight + 'px' }"
+        ref="list"
+      >
         <ul class="multiselect__content" :style="contentStyle" role="listbox" :id="'listbox-' + id">
           <slot name="beforeList"></slot>
           <li v-if="multiple && max === internalValue.length">
             <span class="multiselect__option">
-              <slot name="maxElements">Maximum of {{ max }} options selected. First remove a selected option to select
-                another.</slot>
+              <slot name="maxElements"
+                >Maximum of {{ max }} options selected. First remove a selected option to select
+                another.</slot
+              >
             </span>
           </li>
           <template v-if="!max || internalValue.length < max">
-            <li class="multiselect__element" v-for="(option, index) of filteredOptions" :key="index"
+            <li
+              class="multiselect__element"
+              v-for="(option, index) of filteredOptions"
+              :key="index"
               v-bind:id="id + '-' + index"
-              v-bind:role="!(option && (option.$isLabel || option.$isDisabled)) ? 'option' : null">
-              <span v-if="!(option && (option.$isLabel || option.$isDisabled))" :class="optionHighlight(index, option)"
-                @click.stop="select(option)" @mouseenter.self="pointerSet(index)"
+              v-bind:role="!(option && (option.$isLabel || option.$isDisabled)) ? 'option' : null"
+            >
+              <span
+                v-if="!(option && (option.$isLabel || option.$isDisabled))"
+                :class="optionHighlight(index, option)"
+                @click.stop="select(option)"
+                @mouseenter.self="pointerSet(index)"
                 :data-select="option && option.isTag ? tagPlaceholder : selectLabelText"
-                :data-selected="selectedLabelText" :data-deselect="deselectLabelText" class="multiselect__option">
+                :data-selected="selectedLabelText"
+                :data-deselect="deselectLabelText"
+                class="multiselect__option"
+              >
                 <slot name="option" :option="option" :search="search" :index="index">
                   <span>{{ getOptionLabel(option) }}</span>
                 </slot>
               </span>
-              <span v-if="option && (option.$isLabel || option.$isDisabled)"
-                :data-select="groupSelect && selectGroupLabelText" :data-deselect="groupSelect && deselectGroupLabelText"
-                :class="groupHighlight(index, option)" @mouseenter.self="groupSelect && pointerSet(index)"
-                @mousedown.prevent="selectGroup(option)" class="multiselect__option">
+              <span
+                v-if="option && (option.$isLabel || option.$isDisabled)"
+                :data-select="groupSelect && selectGroupLabelText"
+                :data-deselect="groupSelect && deselectGroupLabelText"
+                :class="groupHighlight(index, option)"
+                @mouseenter.self="groupSelect && pointerSet(index)"
+                @mousedown.prevent="selectGroup(option)"
+                class="multiselect__option"
+              >
                 <slot name="option" :option="option" :search="search" :index="index">
                   <span>{{ getOptionLabel(option) }}</span>
                 </slot>
               </span>
             </li>
           </template>
-          <li v-show="showNoResults && (filteredOptions.length === 0 && search && !loading)">
+          <li v-show="showNoResults && filteredOptions.length === 0 && search && !loading">
             <span class="multiselect__option">
               <slot name="noResult" :search="search">No found query.🧐</slot>
             </span>
           </li>
           <li
-            v-show="showNoOptions && ((options.length === 0 || (hasOptionGroup === true && filteredOptions.length === 0)) && !search && !loading)">
+            v-show="
+              showNoOptions &&
+              (options.length === 0 || (hasOptionGroup === true && filteredOptions.length === 0)) &&
+              !search &&
+              !loading
+            "
+          >
             <span class="multiselect__option">
               <slot name="noOptions">List is empty.</slot>
             </span>
@@ -101,8 +176,8 @@
 </template>
 
 <script>
-import multiselectMixin from '../mixins/multiselectMixin';
-import pointerMixin from '../mixins/pointerMixin';
+import multiselectMixin from '@/mixins/multiselectMixin'
+import pointerMixin from '@/mixins/pointerMixin'
 
 export default {
   name: 'vue-multiselect',
@@ -113,139 +188,139 @@ export default {
   },
   props: {
     /**
-       * name attribute to match optional label element
-       * @default ''
-       * @type {String}
-       */
+     * name attribute to match optional label element
+     * @default ''
+     * @type {String}
+     */
     name: {
       type: String,
       default: ''
     },
     /**
-       * Presets the selected options value.
-       * @type {Object||Array||String||Integer}
-       */
+     * Presets the selected options value.
+     * @type {Object||Array||String||Integer}
+     */
     modelValue: {
       type: null,
-      default () {
-        return [];
+      default() {
+        return []
       }
     },
     /**
-       * String to show when pointing to an option
-       * @default 'Press enter to select'
-       * @type {String}
-       */
+     * String to show when pointing to an option
+     * @default 'Press enter to select'
+     * @type {String}
+     */
     selectLabel: {
       type: String,
       default: 'Press enter to select'
     },
     /**
-       * String to show when pointing to an option
-       * @default 'Press enter to select'
-       * @type {String}
-       */
+     * String to show when pointing to an option
+     * @default 'Press enter to select'
+     * @type {String}
+     */
     selectGroupLabel: {
       type: String,
       default: 'Press enter to select group'
     },
     /**
-       * String to show next to selected option
-       * @default 'Selected'
-       * @type {String}
-       */
+     * String to show next to selected option
+     * @default 'Selected'
+     * @type {String}
+     */
     selectedLabel: {
       type: String,
       default: 'Selected'
     },
     /**
-       * String to show when pointing to an already selected option
-       * @default 'Press enter to remove'
-       * @type {String}
-       */
+     * String to show when pointing to an already selected option
+     * @default 'Press enter to remove'
+     * @type {String}
+     */
     deselectLabel: {
       type: String,
       default: 'Press enter to remove'
     },
     /**
-       * String to show when pointing to an already selected option
-       * @default 'Press enter to remove'
-       * @type {String}
-       */
+     * String to show when pointing to an already selected option
+     * @default 'Press enter to remove'
+     * @type {String}
+     */
     deselectGroupLabel: {
       type: String,
       default: 'Press enter to deselect group'
     },
     /**
-       * Decide whether to show pointer labels
-       * @default true
-       * @type {Boolean}
-       */
+     * Decide whether to show pointer labels
+     * @default true
+     * @type {Boolean}
+     */
     showLabels: {
       type: Boolean,
       default: true
     },
     /**
-       * Limit the display of selected options. The rest will be hidden within the limitText string.
-       * @default 99999
-       * @type {Integer}
-       */
+     * Limit the display of selected options. The rest will be hidden within the limitText string.
+     * @default 99999
+     * @type {Integer}
+     */
     limit: {
       type: Number,
       default: 99999
     },
     /**
-       * Sets maxHeight style value of the dropdown
-       * @default 300
-       * @type {Integer}
-       */
+     * Sets maxHeight style value of the dropdown
+     * @default 300
+     * @type {Integer}
+     */
     maxHeight: {
       type: Number,
       default: 300
     },
     /**
-       * Function that process the message shown when selected
-       * elements pass the defined limit.
-       * @default 'and * more'
-       * @param {Int} count Number of elements more than limit
-       * @type {Function}
-       */
+     * Function that process the message shown when selected
+     * elements pass the defined limit.
+     * @default 'and * more'
+     * @param {Int} count Number of elements more than limit
+     * @type {Function}
+     */
     limitText: {
       type: Function,
       default: (count) => `and ${count} more`
     },
     /**
-       * Set true to trigger the loading spinner.
-       * @default False
-       * @type {Boolean}
-       */
+     * Set true to trigger the loading spinner.
+     * @default False
+     * @type {Boolean}
+     */
     loading: {
       type: Boolean,
       default: false
     },
     /**
-       * Disables the multiselect if true.
-       * @default false
-       * @type {Boolean}
-       */
+     * Disables the multiselect if true.
+     * @default false
+     * @type {Boolean}
+     */
     disabled: {
       type: Boolean,
       default: false
     },
     /**
-       * Fixed opening direction
-       * @default ''
-       * @type {String}
-       */
+     * Fixed opening direction
+     * @default ''
+     * @type {String}
+     */
     openDirection: {
       type: String,
       default: ''
     },
     /**
-       * Shows slot with message about empty options
-       * @default true
-       * @type {Boolean}
-       */
+     * Shows slot with message about empty options
+     * @default true
+     * @type {Boolean}
+     */
     showNoOptions: {
       type: Boolean,
       default: true
@@ -260,80 +335,69 @@ export default {
     }
   },
   computed: {
-    hasOptionGroup () {
-      return this.groupValues && this.groupLabel && this.groupSelect;
+    hasOptionGroup() {
+      return this.groupValues && this.groupLabel && this.groupSelect
     },
-    isSingleLabelVisible () {
+    isSingleLabelVisible() {
       return (
         (this.singleValue || this.singleValue === 0) &&
-          (!this.isOpen || !this.searchable) &&
-          !this.visibleValues.length
-      );
+        (!this.isOpen || !this.searchable) &&
+        !this.visibleValues.length
+      )
     },
-    isPlaceholderVisible () {
-      return !this.internalValue.length && (!this.searchable || !this.isOpen);
+    isPlaceholderVisible() {
+      return !this.internalValue.length && (!this.searchable || !this.isOpen)
     },
-    visibleValues () {
-      return this.multiple ? this.internalValue.slice(0, this.limit) : [];
+    visibleValues() {
+      return this.multiple ? this.internalValue.slice(0, this.limit) : []
     },
-    singleValue () {
-      return this.internalValue[0];
+    singleValue() {
+      return this.internalValue[0]
     },
-    deselectLabelText () {
-      return this.showLabels ? this.deselectLabel : '';
+    deselectLabelText() {
+      return this.showLabels ? this.deselectLabel : ''
     },
-    deselectGroupLabelText () {
-      return this.showLabels ? this.deselectGroupLabel : '';
+    deselectGroupLabelText() {
+      return this.showLabels ? this.deselectGroupLabel : ''
     },
-    selectLabelText () {
-      return this.showLabels ? this.selectLabel : '';
+    selectLabelText() {
+      return this.showLabels ? this.selectLabel : ''
     },
-    selectGroupLabelText () {
-      return this.showLabels ? this.selectGroupLabel : '';
+    selectGroupLabelText() {
+      return this.showLabels ? this.selectGroupLabel : ''
     },
-    selectedLabelText () {
-      return this.showLabels ? this.selectedLabel : '';
+    selectedLabelText() {
+      return this.showLabels ? this.selectedLabel : ''
     },
-    inputStyle () {
-      if (
-        this.searchable ||
-          (this.multiple && this.modelValue && this.modelValue.length)
-      ) {
+    inputStyle() {
+      if (this.searchable || (this.multiple && this.modelValue && this.modelValue.length)) {
         // Hide input by setting the width to 0 allowing it to receive focus
-        return this.isOpen
-          ? { width: '100%' }
-          : { width: '0', position: 'absolute', padding: '0' };
+        return this.isOpen ? { width: '100%' } : { width: '0', position: 'absolute', padding: '0' }
       }
-      return '';
+      return ''
     },
-    contentStyle () {
-      return this.options.length
-        ? { display: 'inline-block' }
-        : { display: 'block' };
+    contentStyle() {
+      return this.options.length ? { display: 'inline-block' } : { display: 'block' }
     },
-    isAbove () {
+    isAbove() {
       if (this.openDirection === 'above' || this.openDirection === 'top') {
-        return true;
-      } else if (
-        this.openDirection === 'below' ||
-          this.openDirection === 'bottom'
-      ) {
-        return false;
+        return true
+      } else if (this.openDirection === 'below' || this.openDirection === 'bottom') {
+        return false
       } else {
-        return this.preferredOpenDirection === 'above';
+        return this.preferredOpenDirection === 'above'
       }
     },
-    showSearchInput () {
+    showSearchInput() {
       return (
         this.searchable &&
-          (this.hasSingleSelectedSlot &&
-            (this.visibleSingleValue || this.visibleSingleValue === 0)
-            ? this.isOpen
-            : true)
-      );
+        (this.hasSingleSelectedSlot && (this.visibleSingleValue || this.visibleSingleValue === 0)
+          ? this.isOpen
+          : true)
+      )
     }
   }
-};
+}
 </script>
 
 <style>
@@ -354,7 +418,7 @@ fieldset[disabled] .multiselect {
 .multiselect__spinner::before,
 .multiselect__spinner::after {
   position: absolute;
-  content: "";
+  content: '';
   top: 50%;
   left: 50%;
   margin: -8px 0 0 -8px;
@@ -463,8 +527,8 @@ fieldset[disabled] .multiselect {
   color: #35495e;
 }
 
-.multiselect__tag~.multiselect__input,
-.multiselect__tag~.multiselect__single {
+.multiselect__tag ~ .multiselect__input,
+.multiselect__tag ~ .multiselect__single {
   width: auto;
 }
 
@@ -531,7 +595,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__tag-icon::after {
-  content: "×";
+  content: '×';
   color: #266d4d;
   font-size: 14px;
 }
@@ -589,7 +653,7 @@ fieldset[disabled] .multiselect {
   border-style: solid;
   border-width: 5px 5px 0 5px;
   border-color: #999 transparent transparent transparent;
-  content: "";
+  content: '';
 }
 
 .multiselect__placeholder {
@@ -762,34 +826,34 @@ fieldset[disabled] .multiselect {
   vertical-align: top;
 }
 
-*[dir="rtl"] .multiselect {
+*[dir='rtl'] .multiselect {
   text-align: right;
 }
 
-*[dir="rtl"] .multiselect__select {
+*[dir='rtl'] .multiselect__select {
   right: auto;
   left: 1px;
 }
 
-*[dir="rtl"] .multiselect__tags {
+*[dir='rtl'] .multiselect__tags {
   padding: 8px 8px 0 40px;
 }
 
-*[dir="rtl"] .multiselect__content {
+*[dir='rtl'] .multiselect__content {
   text-align: right;
 }
 
-*[dir="rtl"] .multiselect__option::after {
+*[dir='rtl'] .multiselect__option::after {
   right: auto;
   left: 0;
 }
 
-*[dir="rtl"] .multiselect__clear {
+*[dir='rtl'] .multiselect__clear {
   right: auto;
   left: 12px;
 }
 
-*[dir="rtl"] .multiselect__spinner {
+*[dir='rtl'] .multiselect__spinner {
   right: auto;
   left: 1px;
 }

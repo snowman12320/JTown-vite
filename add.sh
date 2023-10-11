@@ -7,7 +7,10 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "test only use git add and git pull together  "
+git commit -m "fixd confilted   "
+sleep 2
 
-# sleep 2
-# git push
+git push
+
+
+# 刪 /note

@@ -1,5 +1,28 @@
+<script>
+import modalMixin from '@/mixins/modalMixin'
+export default {
+  mixins: [modalMixin],
+  data() {
+    return {
+      modal: {}
+    }
+  },
+  methods: {
+    handleScroll() {
+      // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
+      // console.log(this.$refs.element.scrollHeight);
+      if (
+        Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
+        this.$refs.element.scrollHeight
+      ) {
+        this.$emit('my-scroll')
+      }
+    }
+  }
+}
+</script>
+
 <template>
-  <!-- Modal -->
   <div
     ref="modal"
     class="modal fade"
@@ -248,26 +271,4 @@
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '@/mixins/modalMixin'
-export default {
-  mixins: [modalMixin],
-  data() {
-    return {
-      modal: {}
-    }
-  },
-  methods: {
-    handleScroll() {
-      // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
-      // console.log(this.$refs.element.scrollHeight);
-      if (
-        Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
-        this.$refs.element.scrollHeight
-      ) {
-        this.$emit('my-scroll')
-      }
-    }
-  }
-}
-</script>
+

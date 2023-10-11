@@ -36,6 +36,10 @@ export default {
     ...mapActions(cartStore, ['getCart', 'updateCart']),
     ...mapActions(productStore, ['getProduct_item']),
     //
+    async handleGetProductAndHideModal(id) {
+      await this.getProduct_item(id)
+      this.hideOffcanvas()
+    },
     openDelCartModel(item) {
       this.tempCart = { ...item }
       this.tempCartTitle = { ...item.product }
@@ -102,7 +106,7 @@ export default {
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <Loading :active="isLoading"></Loading>
+      <Loading :active="isLoading" />
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
           <i class="fa fa-check-circle text-nbaRed" aria-hidden="true"></i> MY CART
@@ -129,10 +133,6 @@ export default {
           style="height: 130px; cursor: pointer"
           v-for="item in carts"
           :key="item.id"
-          @click="
-            getProduct_item(item.product_id);
-            hideOffcanvas()
-          "
         >
           <div class="h-100" style="width: 150px">
             <img
@@ -142,7 +142,9 @@ export default {
             />
           </div>
           <div class="w-100 p-1">
-            <h2 class="fs-6 text-center">{{ item.product.title }}</h2>
+            <h2 class="fs-6 text-center" @click="handleGetProductAndHideModal(item.product_id)">
+              {{ item.product.title }}
+            </h2>
             <p class="text-center pt-2 fs-5 mb-0">
               <small
                 class="text-secondary text-decoration-line-through fw-lighter"

@@ -1,34 +1,20 @@
+<script>
+export default {
+  data() {
+    return {
+      isHover: false
+    }
+  },
+  methods: {
+    updateHover() {
+      this.isHover = !this.isHover
+    }
+  }
+}
+</script>
+
 <template>
   <div>
-    <!-- 小圖示 -->
-    <a
-      target="_blank"
-      href="https://www.facebook.com/100002537945640"
-      class="position-fixed end-0 me-5 d-md-block d-none"
-      style="bottom: 100px; z-index: 999"
-      @mouseenter="updateHover()"
-      @mouseleave="updateHover()"
-    >
-      <img
-        v-show="isHover"
-        src="@\assets\nbaWeb\silhouette-basket-05.svg"
-        alt="silhouette-basket"
-        height="100"
-        width="100"
-      />
-      <img
-        v-show="!isHover"
-        src="@/assets/nbaWeb/1652102106slam-dunk-silhouette-basketball.svg"
-        alt="slam-dunk-silhouette-basketball"
-        height="100"
-        width="100"
-      />
-      <i
-        class="bi bi-messenger position-absolute top-0 end-0 fs-3 text-primary"
-        style="transform: translateY(-30px)"
-      ></i>
-    </a>
-    <!--  -->
     <footer class="footer bg-dark text-center text-white py-2 pt-4">
       <div class="d-md-flex justify-content-around px-md-5">
         <p>Copyright © {{ new Date().getFullYear() }} JerseyTown.All rights reserved.</p>
@@ -60,7 +46,7 @@
             style="background-color: transparent"
           >
             <img
-              src="../assets/nbaWeb/instagram_icon.png"
+              src="@/assets/image/nbaWeb/instagram_icon.png"
               alt="instagram_icon"
               style="width: 30px; height: 30px"
             />
@@ -91,17 +77,3 @@
     </footer>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      isHover: false
-    }
-  },
-  methods: {
-    updateHover() {
-      this.isHover = !this.isHover
-    }
-  }
-}
-</script>

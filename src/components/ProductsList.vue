@@ -1,9 +1,9 @@
 <script>
-import cartStore from '../stores/cartStore.js'
-import favoriteStore from '../stores/favoriteStore'
+import cartStore from '@/stores/cartStore.js'
+import favoriteStore from '@/stores/favoriteStore'
 import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
-import loginStore from '../stores/loginStore'
+import loginStore from '@/stores/loginStore'
 
 export default {
   data() {

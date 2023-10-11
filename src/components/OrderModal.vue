@@ -1,3 +1,42 @@
+<script>
+import modalMixin from '@/mixins/modalMixin'
+
+export default {
+  name: 'orderModal',
+  emits: ['update-paid'],
+  mixins: [modalMixin],
+  data() {
+    return {
+      status: {},
+      modal: '',
+      tempOrder: {}
+    }
+  },
+  props: {
+    order: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
+  created() {
+    // console.clear()
+  },
+  watch: {
+    order() {
+      this.tempOrder = this.order
+    }
+  },
+  methods: {
+    setPaid() {
+      this.tempOrder.is_paid = !this.tempOrder.is_paid
+      this.$emit('update-paid', this.tempOrder)
+    }
+  }
+}
+</script>
+
 <template>
   <div
     class="modal fade"
@@ -112,41 +151,3 @@
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '../mixins/modalMixin'
-
-export default {
-  name: 'orderModal',
-  emits: ['update-paid'],
-  mixins: [modalMixin],
-  data() {
-    return {
-      status: {},
-      modal: '',
-      tempOrder: {},
-    }
-  },
-  props: {
-    order: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
-  },
-  created() {
-    // console.clear()
-  },
-  watch: {
-    order() {
-      this.tempOrder = this.order
-    }
-  },
-  methods: {
-    setPaid() {
-      this.tempOrder.is_paid = !this.tempOrder.is_paid
-      this.$emit('update-paid', this.tempOrder)
-    }
-  }
-}
-</script>

@@ -1,6 +1,6 @@
 <script>
 import Multiselect from '@/components/Multiselect.vue'
-//
+
 import productStore from '@/stores/productStore'
 import { mapActions } from 'pinia'
 
@@ -61,7 +61,7 @@ export default {
     <!--  -->
     <div class="my-3">
       <multiselect
-        @click="getProducts()"
+        @click="getProducts"
         v-model="cacheSearch"
         :options="options"
         :custom-label="nameWithLang"

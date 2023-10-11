@@ -1,3 +1,24 @@
+<script>
+export default {
+  props: ['pages'],
+  methods: {
+    updatePage(page) {
+      this.$emit('emit-pages', page)
+    },
+    prevPage(page) {
+      if (this.pages.has_pre) {
+        this.$emit('emit-pages', (page -= 1))
+      }
+    },
+    nextPage(page) {
+      if (this.pages.has_next) {
+        this.$emit('emit-pages', (page += 1))
+      }
+    }
+  }
+}
+</script>
+
 <template>
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
@@ -26,11 +47,9 @@
         </a>
       </li>
       <!-- PH -->
-      <li
-        class="page-item d-md-none active"
-      >
+      <li class="page-item d-md-none active">
         <!-- 透過emit傳出選擇頁數 -->
-        <a class="page-link" href="#/" >
+        <a class="page-link" href="#/">
           {{ pages.current_page }}
         </a>
       </li>
@@ -47,26 +66,7 @@
     </ul>
   </nav>
 </template>
-<script>
-export default {
-  props: ['pages'],
-  methods: {
-    updatePage(page) {
-      this.$emit('emit-pages', page)
-    },
-    prevPage(page) {
-      if (this.pages.has_pre) {
-        this.$emit('emit-pages', (page -= 1))
-      }
-    },
-    nextPage(page) {
-      if (this.pages.has_next) {
-        this.$emit('emit-pages', (page += 1))
-      }
-    }
-  }
-}
-</script>
+
 <style>
 .disabled {
   pointer-events: none;

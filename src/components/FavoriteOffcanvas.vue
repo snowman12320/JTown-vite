@@ -2,8 +2,8 @@
 import offcanvasMixin from '@/mixins/offcanvasMixin'
 import DelModal from '@/components/DelModal.vue'
 
-import favoriteStore from '../stores/favoriteStore.js'
-import productStore from '../stores/productStore'
+import favoriteStore from '@/stores/favoriteStore.js'
+import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
 export default {
   mixins: [offcanvasMixin], //* 混用獨立的功能
@@ -12,10 +12,7 @@ export default {
   },
   data() {
     return {
-      // isLoading: false,
-      //
       offcanvas: {},
-      //
       tempFavorite: ''
     }
   },
@@ -30,6 +27,10 @@ export default {
     ...mapActions(favoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
     ...mapActions(productStore, ['getProduct_item']),
     //
+    async handleGetProductAndHideModal(id) {
+      await this.getProduct_item(id)
+      this.hideOffcanvas()
+    },
     delFavorite(id) {
       this.delFavorite_store(id)
       //
@@ -81,7 +82,7 @@ export default {
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <Loading :active="isLoading"></Loading>
+      <Loading :active="isLoading" />
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
           <i class="fa fa-check-circle text-nbaRed" aria-hidden="true"></i> MY COLLECT
@@ -111,7 +112,7 @@ export default {
           <div style="width: 100px !important; height: 70px !important">
             <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" :alt="item.title" />
           </div>
-          <div class="w-100 p-1" @click="getProduct_item(item.id);hideOffcanvas()">
+          <div class="w-100 p-1" @click="handleGetProductAndHideModal(item.id)">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
             <p class="text-center pt-2 fs-5 mb-0">
               <small

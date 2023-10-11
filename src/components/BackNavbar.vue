@@ -1,3 +1,67 @@
+
+<script setup>
+import {
+  Ticket,
+  Monitor,
+  Basketball,
+  List,
+  User,
+  Notebook,
+  SwitchButton
+} from '@element-plus/icons-vue'
+</script>
+<script>
+export default {
+  data() {
+    return {
+      username: '',
+      isCollapse: true,
+      random_number: Math.floor(Math.random() * (50 - 1 + 1) + 3),
+      timer: null
+    }
+  },
+  created() {
+    if (!localStorage.getItem('username')) {
+      this.$router.push('/login')
+    } else {
+      const atIndex = JSON.parse(localStorage.getItem('username')).indexOf('@')
+      this.username = JSON.parse(localStorage.getItem('username')).slice(0, atIndex)
+    }
+  },
+  methods: {
+    logout() {
+      if (localStorage.getItem('VIP')) {
+        localStorage.removeItem('VIP')
+        this.$swal.fire(
+          'SEE YOU SOON VIP',
+          'THANK YOU ! than you can give me some suggestions from the FB links below the website.',
+          'success'
+        )
+        this.$router.push('/login')
+      } else {
+        console.log(1)
+        const api = `${import.meta.env.VITE_APP_API}logout`
+        this.$http.post(api, this.user).then((res) => {
+          if (res.data.success) {
+            this.$router.push('/login')
+            console.log(2)
+          }
+        })
+      }
+    },
+    startTimer() {
+      this.timer = setTimeout(() => {
+        this.isCollapse = false
+      }, 1500)
+    },
+    cancelTimer() {
+      this.isCollapse = true
+      clearTimeout(this.timer)
+    }
+  }
+}
+</script>
+
 <template>
   <el-menu
     :active-text-color="'#ffa500'"
@@ -101,66 +165,6 @@
   </el-menu>
 </template>
 
-<script setup>
-import {
-  Ticket,
-  Monitor,
-  Basketball,
-  List,
-  User,
-  Notebook,
-  SwitchButton
-} from '@element-plus/icons-vue'
-</script>
-<script>
-export default {
-  data() {
-    return {
-      username: '',
-      isCollapse: true,
-      random_number: Math.floor(Math.random() * (50 - 1 + 1) + 3),
-      timer: null
-    }
-  },
-  created() {
-    if (!localStorage.getItem('username')) {
-      this.$router.push('/login')
-    } else {
-      const atIndex = JSON.parse(localStorage.getItem('username')).indexOf('@')
-      this.username = JSON.parse(localStorage.getItem('username')).slice(0, atIndex)
-    }
-  },
-  methods: {
-    logout() {
-      if (localStorage.getItem('VIP')) {
-        localStorage.removeItem('VIP')
-        this.$swal.fire(
-          'SEE YOU SOON VIP',
-          'THANK YOU ! than you can give me some suggestions from the FB links below the website.',
-          'success'
-        )
-        this.$router.push('/login')
-      } else {
-        const api = `${import.meta.env.VITE_APP_API}logout`
-        this.$http.post(api, this.user).then((res) => {
-          if (res.data.success) {
-            this.$router.push('/login')
-          }
-        })
-      }
-    },
-    startTimer() {
-      this.timer = setTimeout(() => {
-        this.isCollapse = false
-      }, 1500)
-    },
-    cancelTimer() {
-      this.isCollapse = true
-      clearTimeout(this.timer)
-    }
-  }
-}
-</script>
 <style>
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 300px;

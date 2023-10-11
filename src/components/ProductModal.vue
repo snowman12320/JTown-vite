@@ -64,22 +64,6 @@
                     <i v-show="other_photo" class="fas fa-spinner fa-spin"></i>
                   </label>
                 </div>
-                <!-- el元件 / 無法更改上傳列表 取消使用 / 但可正常上傳了(action="#")-->
-                <el-upload
-                  :multiple="true"
-                  :limit="5"
-                  v-model:file-list="tempProduct.imagesUrl"
-                  class="upload-demo"
-                  v-if="false"
-                  action="#"
-                  :on-change="el_handleChange"
-                  list-type="picture"
-                >
-                  <el-button class="w-100" type="primary">Click to upload</el-button>
-                  <template #tip>
-                    <div class="el-upload__tip text-center"></div>
-                  </template>
-                </el-upload>
                 <!--  -->
                 <input
                   type="text"
@@ -128,7 +112,11 @@
                             class="flex-shrink-0 position-relative modal_img"
                             style="height: 70px; width: 70px"
                           >
-                            <img class="h-100 w-100 of-cover op-top" :src="element.url" :alt="element.name" />
+                            <img
+                              class="h-100 w-100 of-cover op-top"
+                              :src="element.url"
+                              :alt="element.name"
+                            />
                             <div
                               class="position-absolute top-0 start-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center end-0 img_wrap d-none gap-2"
                               style="backdrop: blur(5px)"
@@ -303,7 +291,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic' //* 需從public�
 
 //! 有問題的套件 (都較冷門套件) > 不能拖拉和增刪 改另一個版
 import draggable from 'vuedraggable' //*npm install vuedraggable@4.1.0
-import CropperModal from '../components/CropperModal.vue'
+import CropperModal from '@/components/CropperModal.vue'
 
 export default {
   mixins: [modalMixin],
@@ -400,10 +388,9 @@ export default {
     }
   },
   methods: {
-    onClickAway(ev) {
+    onClickAway() {
       this.isCropper = false
     },
-    // 新增標籤
     addTag(newTag) {
       const tag = {
         name: newTag,
@@ -442,42 +429,12 @@ export default {
         }
       })
     },
-    // 多檔/el元件
-    //! 多檔/el元件 （使用非同步仍會產生多次上傳，且最後一個才會成功）> action 有API所以才會兩次上傳
-    el_handleChange(file) {
-      const tempFile = file.raw //* 這個路徑才是與原本元件相同，才能用formdata轉檔
-      // console.log(tempFile);//* 與handleChange（）比較上傳的檔案格式
-      const name = tempFile.name // 重組資料，存圖檔名
-      const uid = Math.floor(Math.random() * 100000) // 隨機產生uid
-      const status = 'success'
-      // 修正blob開頭
-      // const tempFile = file;
-      // const newfile = new File([file], tempFile.name);
-      // console.log(newfile);//* 上述助教的方式，會產生這種連結 blob:http://localhost:8080/c0737403-604b-4e1e-b6cf-1e9e28ad47d2，導致破圖
-      // ?不執行以下，也可以上傳
-      if (!this.other_photo) {
-        this.other_photo = true
-        //* ，以下這種方式，連結也會出現blob開頭
-        const formData = new FormData() //! 放迴圈中才會每次獨立出來
-        formData.append('file-to-upload', tempFile)
-        //
-        this.$http.post(this.image_add, formData).then((res) => {
-          if (res.data.success) {
-            const url = res.data.imageUrl //* 這邊轉換後的連結才是可以存的
-            const item = { name, url, uid, status }
-            this.tempProduct.imagesUrl.push(item)
-            this.other_photo = false
-          }
-        })
-      }
-    },
-    // 多檔/手刻
     uploadFile_more() {
       const uploadedFiles = this.$refs.fileInput_more.files //* FileList
       for (let i = 0; i < uploadedFiles.length; i++) {
-        const name = uploadedFiles[i].name // 圖檔名
-        const uid = Math.floor(Math.random() * 10000000000000) // 隨機產生uid
-        const status = 'success' //
+        const name = uploadedFiles[i].name
+        const uid = Math.floor(Math.random() * 10000000000000)
+        const status = 'success'
         this.other_photo = true //* 讀取動畫
         const formData = new FormData() //! 放迴圈中才會每次獨立出來
         formData.append('file-to-upload', uploadedFiles[i])
@@ -497,30 +454,15 @@ export default {
       this.tempImg = img
       this.isCropper = !this.isCropper
       if (this.isCropper) {
-        // this.$swal.fire('Please', ' Upload new image ,than cropper it', 'info');
         this.$toast('info', ' Upload new image ,than cropper it')
       }
     },
     updateImages(img) {
-      // console.log(img); //物件包含已上傳雲端的圖片資料
       this.isCropper = false
       const id = img.uid
       const croppered = this.tempProduct.imagesUrl.filter((i) => i.uid === id)
       croppered.imageUrl = img.url
       this.$swal.fire('Success', ' Upload new image ', 'success')
-    },
-    // 重組過去上傳圖片的結構需要
-    resetImages() {
-      // const tempList = [];
-      // for (let i = 0; i < this.tempProduct.imagesUrl.length; i++) {
-      //   const url = this.tempProduct.imagesUrl[i];
-      //   const name = '123.jpg';
-      //   const uid = Math.floor(Math.random() * 100000);
-      //   const status = 'success';
-      //   const item = { name, url, uid, status };
-      //   tempList.push(item);
-      // }
-      // this.tempProduct.imagesUrl = tempList;
     }
   }
 }

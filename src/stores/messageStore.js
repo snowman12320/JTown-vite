@@ -9,7 +9,6 @@ export default defineStore('message', {
     },
     messages: []
   }),
-  getters: {},
   actions: {
     pushMessage(res, title = '更新') {
       if (res.data.success) {

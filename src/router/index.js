@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import ErrorView from '../views/ErrorView.vue'
+import HomeView from '@/views/frontend/HomeView.vue'
+import ErrorView from '@/views/ErrorView.vue'
 
 const router = createRouter({
   //*https://courses.hexschool.com/courses/vue-20211/lectures/43730454
@@ -13,86 +13,80 @@ const router = createRouter({
     },
     {
       path: '/products-view',
-      // name: 'ProductsView',
-      component: () => import(/* webpackChunkName: 'about' */ '../views/ProductsView.vue'),
+      component: () => import('@/views/frontend/ProductsView.vue'),
       children: [
         {
           path: 'products-content/:search', //* 好像要改api，才能解決找不到此路徑的警告>因為有router-link路徑沒寫/:...
-          component: () => import('../views/ProductsContent.vue')
+          component: () => import('@/views/frontend/ProductsContent.vue')
         },
         {
           path: 'products-item/:productId',
-          component: () => import('../views/ProductsItem.vue')
+          component: () => import('@/views/frontend/ProductsItem.vue')
         }
       ]
     },
     {
       path: '/cart-view',
-      // name: 'cart-view',
-      component: () => import(/* webpackChunkName: 'about' */ '../views/CartView.vue'),
+      component: () => import('@/views/frontend/CartView.vue'),
       children: [
         {
           path: 'cart-list',
-          component: () => import('../views/CartList.vue')
+          component: () => import('@/views/frontend/CartList.vue')
         },
         {
           path: 'cart-done',
-          component: () => import('../views/CartDone.vue')
+          component: () => import('@/views/frontend/CartDone.vue')
         },
         {
           path: 'checkout/:orderId',
-          component: () => import('../views/UserCheckout.vue')
+          component: () => import('@/views/frontend/UserCheckout.vue')
         }
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue')
+      component: () => import('@/views/frontend/LoginView.vue')
     },
     {
       path: '/dashboard',
-      component: () => import('../views/Dashboard.vue'),
+      component: () => import('@/views/backend/Dashboard.vue'),
       children: [
         {
           path: 'products',
-          component: () => import('../views/Products.vue')
+          component: () => import('@/views/backend/Products.vue')
         },
         {
           path: 'orders',
-          component: () => import('../views/Orders.vue')
+          component: () => import('@/views/backend/Orders.vue')
         },
         {
           path: 'coupons',
-          component: () => import('../views/Coupons.vue')
+          component: () => import('@/views/backend/Coupons.vue')
         },
         {
           path: 'storys',
-          component: () => import('../views/Storys.vue')
+          component: () => import('@/views/backend/Storys.vue')
         },
         {
           path: 'members',
-          component: () => import('../views/Members.vue')
+          component: () => import('@/views/backend/Members.vue')
         }
       ]
     },
     {
       path: '/story',
-      component: () => import('../views/StoryView.vue'),
+      component: () => import('@/views/frontend/StoryView.vue'),
       children: [
         {
           path: 'list',
-          component: () => import('../views/StoryList.vue')
+          component: () => import('@/views/frontend/StoryList.vue')
         },
         {
           path: 'item/:storyId',
-          component: () => import('../views/StoryItem.vue')
+          component: () => import('@/views/frontend/StoryItem.vue')
         }
       ]
-    },
-    {
-      path: '/rank',
-      component: () => import('../views/RankView.vue')
     },
     {
       path: '/error',

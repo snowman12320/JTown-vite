@@ -385,6 +385,7 @@ export default {
 }
 
 .product_list {
+  min-height: 100vh;
   .col h5 {
     cursor: pointer;
   }

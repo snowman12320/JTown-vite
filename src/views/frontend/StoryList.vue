@@ -57,7 +57,7 @@ export default {
         />
         <h2 class="text-pickBlack">STORY</h2>
       </div>
-      <p class="fs-6 text-pickBlack text-center mb-5">who is your favorite NBA player?</p>
+      <p class="fs-6 text-secondary text-center mb-5">Who is your favorite NBA player?</p>
     </div>
     <div class="container-xxl">
       <section class="row row-cols-1 row-cols-lg-3 rank_card mx-2">
@@ -95,7 +95,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .single-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,9 +106,14 @@ export default {
 .multiline-ellipsis {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   /*  有寬度才能多行  */
   width: 100%;
+  p {
+    a {
+      color: #000 !important;
+    }
+  }
 }
 </style>

@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd ing login token / add note / UI   "
+git commit -m "fixd  UI   "
 sleep 2
 
 git push

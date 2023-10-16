@@ -160,7 +160,8 @@
   opacity: 0;
 }
 // 要使用外面那層的CLS(.card) 不然本身圖片CLS(.card-img)會沒有效果 flex排版要放在hover裡 才不會重置跑版
-.newproduct_img:hover {
+// .newproduct_img:hove
+.newproduct_img {
   overflow: hidden;
   & .newproduct_cloth {
     // display: block;
@@ -228,6 +229,9 @@
   }
   :hover .card-img-top {
     display: none;
+  }
+  .card-img-top {
+    pointer-events: none;
   }
   .img_back {
     width: 100%;

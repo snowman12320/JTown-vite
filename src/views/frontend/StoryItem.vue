@@ -112,16 +112,16 @@ export default {
     <Loading :active="isLoading_big"></Loading>
     <div
       id="Ranking"
-      class="d-flex justify-content-center align-items-center text-dark border-3 border-nbaBlue border-top pt-5 position-relative"
+      class="d-flex justify-content-center align-items-center text-dark pt-5 position-relative"
       style="margin-top: 104px !important"
     >
-      <h2 class="d-md-block d-none">PLAYER</h2>
+      <h2 class="d-md-block d-none text-pickBlack">PLAYER</h2>
       <img
         src="@/assets/image/nbaWeb/Lovepik_com-401319703-basketball.png"
-        height="80"
+        height="50"
         alt="storylogo"
       />
-      <h2 class="d-md-block d-none">STORY</h2>
+      <h2 class="d-md-block d-none text-pickBlack">STORY</h2>
       <!--  -->
       <nav
         class="w-100 position-md-fixed position-absolute start-0 end-0 px-7"
@@ -155,7 +155,7 @@ export default {
       </nav>
     </div>
     <div class="container-xxl my-3">
-      <p class="fs-6 text-pickBlack text-center mb-5">how to become the NBA all star player?</p>
+      <p class="fs-6 text-secondary text-center mb-5">how to become the NBA all star player?</p>
       <main
         class="row row-cols-1 row-cols-xl-2 mx-md-2 g-xl-5 position-relative flex-xl-row flex-column-reverse"
       >

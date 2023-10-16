@@ -26,11 +26,11 @@ export default {
 </script>
 
 <template>
-  <div>
+  <di class="wrap">
     <Loading :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <ToastMessages></ToastMessages>
     <router-view />
     <FullFooter></FullFooter>
-  </div>
+  </di>
 </template>

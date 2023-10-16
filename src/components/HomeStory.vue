@@ -42,7 +42,7 @@ export default {
         />
         <h2 class="text-pickBlack">STORY</h2>
       </div>
-      <p class="fs-6 text-pickBlack text-center mb-5">who is your favorite NBA player?</p>
+      <p class="fs-6 text-secondary text-center mb-5">Who is your favorite NBA player?</p>
     </div>
     <!-- 目前的排版會感覺上下都沒有對齊，可先避免過多的水平間距調整 -->
     <section class="row row-cols-1 row-cols-lg-3 rank_card mx-2">

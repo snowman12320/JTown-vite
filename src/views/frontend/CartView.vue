@@ -22,7 +22,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="wrap">
     <Loading :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <p style="margin-top: 104px !important"></p>
@@ -31,3 +31,4 @@ export default {
     <FullFooter></FullFooter>
   </div>
 </template>
+

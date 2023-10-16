@@ -1,7 +1,9 @@
 <template>
-  <div class="row content container mx-auto mt-3">
+  <div
+    class="row content container mx-auto d-flex flex-column justify-content-center align-items-center"
+  >
     <section class="mx-auto">
-      <div class="d-flex justify-content-center my-5">
+      <div class="d-flex justify-content-center align-items-center my-7">
         <img
           height="130"
           src="@/assets/image/nbaWeb/1588928235basketball-fire-logo-silhouette-freesvg.org.svg"
@@ -20,3 +22,9 @@
     </section>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.container {
+  min-height: 80vh;
+}
+</style>

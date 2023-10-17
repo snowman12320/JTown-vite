@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd  UI   "
+git commit -m "fixd  UI 2  "
 sleep 2
 
 git push

@@ -1,0 +1,37 @@
+ /////////////////////////////////////////////// main.scss //////////////////////////////////////////////
+ //! 有問題無法編譯此檔 只能用套件去編譯後使用 > 改成引入all.scss 分頁樣式或新增全域樣式 > 因ray建議用scss就不要有css (此檔警告的問題仍存在，忽略)
+//! Deprecation Warning: Passing percentage units to the global abs() function is deprecated.
+//*  降板就解決了(vue cli 中正常的版本)   "sass-loader": "^12.0.0", "sass": "^1.32.7",
+
+ ///////////////////////////////////////////////  StoryModal.vue //////////////////////////////////////////////
+                 <div class="d-flex flex-column flex-md-row gap-1">
+                  <p>新增標籤</p>
+                  <el-tag
+                    v-for="tag in dynamicTags"
+                    :key="tag"
+                    class="mx-1"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleClose(tag)"
+                  >
+                    {{ tag }}
+                  </el-tag>
+                  <el-input
+                    v-if="inputVisible"
+                    ref="InputRef"
+                    v-model="inputValue"
+                    class="ms-1"
+                    style="width: 100px"
+                    size="small"
+                    @keyup.enter="handleInputConfirm"
+                    @blur="handleInputConfirm"
+                  />
+                  <el-button
+                    v-else
+                    class="button-new-tag ml-1"
+                    size="small"
+                    @click.stop="showInput"
+                  >
+                    + New Tag
+                  </el-button>
+                </div>

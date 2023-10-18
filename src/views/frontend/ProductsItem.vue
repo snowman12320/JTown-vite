@@ -1,73 +1,75 @@
 <script>
-import ProductsList from '@/components/ProductsList.vue'
+import ProductsList from "@/components/ProductsList.vue";
 //
-import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm'
-import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm'
+import { Pins } from "@fancyapps/ui/dist/panzoom/panzoom.pins.esm";
+import { Panzoom } from "@fancyapps/ui/dist/panzoom/panzoom.esm";
 //
-import favoriteStore from '@/stores/favoriteStore'
-import cartStore from '@/stores/cartStore'
-import productStore from '@/stores/productStore'
-import loginStore from '@/stores/loginStore'
-import { mapState, mapActions } from 'pinia'
+import favoriteStore from "@/stores/favoriteStore";
+import cartStore from "@/stores/cartStore";
+import productStore from "@/stores/productStore";
+import loginStore from "@/stores/loginStore";
+import { mapState, mapActions } from "pinia";
+
+import { useToggle } from "@vueuse/core";
 
 export default {
   components: {
-    ProductsList
+    ProductsList,
   },
   data() {
     return {
       isLoading_big: false,
       statusBtn_car: {
-        loadingItem: ''
+        loadingItem: "",
       },
       //
       product: {},
-      productId: '',
+      productId: "",
       //
       qty: 1,
       isBuy: false,
       //
-      productSize_item: '',
+      productSize_item: "",
       //
       rateValue: 5,
-      rateComment: 'The product is the best ,I have ever seen !',
-      rateTime: '8: 40 AM, Today',
+      rateComment: "The product is the best ,I have ever seen !",
+      rateTime: "8: 40 AM, Today",
       rateData: [],
       //
-      childClass: '',
+      childClass: "",
       //
       container: null,
       options: {},
-      panzoom: null
-    }
+      panzoom: null,
+    };
   },
   //! mitt
   mounted() {
     //* 只能放一個圖
-    this.container = this.$refs.myPanzoom
-    this.panzoom = new Panzoom(this.container, this.options, { Pins })
+    this.container = this.$refs.myPanzoom;
+    this.panzoom = new Panzoom(this.container, this.options, { Pins });
   },
   created() {
     // console.clear()
-    this.productId = this.$route.params.productId //! 統一商品唯一的ID(item.id)
-    this.getProduct()
-    this.getProduct_item(this.productId)
+    this.productId = this.$route.params.productId; //! 統一商品唯一的ID(item.id)
+    this.getProduct();
+    this.getProduct_item(this.productId);
     //
-    this.getFavorite() //! 用其他電腦，先新增本地陣列
+    this.getFavorite(); //! 用其他電腦，先新增本地陣列
     //
-    this.sendComment()
-    this.changeClass()
+    this.sendComment();
+    this.changeClass();
   },
   computed: {
-    ...mapState(favoriteStore, ['statusBtn']),
-    ...mapState(favoriteStore, ['isFavorite', 'favoriteIds']),
-    ...mapState(productStore, ['isLoading_productStore', 'product_item']),
-    ...mapState(loginStore, ['isLogin'])
+    ...mapState(favoriteStore, ["statusBtn"]),
+    ...mapState(favoriteStore, ["isFavorite", "favoriteIds"]),
+    ...mapState(productStore, ["isLoading_productStore", "product_item"]),
+    ...mapState(loginStore, ["isLogin"]),
   },
   methods: {
-    ...mapActions(cartStore, ['getCart']),
-    ...mapActions(favoriteStore, ['getFavorite', 'updateFavorite']),
-    ...mapActions(productStore, ['getProduct_item', 'setCategory']),
+    ...mapActions(cartStore, ["getCart"]),
+    ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
+    ...mapActions(productStore, ["getProduct_item", "setCategory"]),
     //
     addToCart(id, qty = 1, isBuy) {
       // 因為有些網站要登入才能下單，但助教好像覺得不用擋無會員
@@ -77,83 +79,92 @@ export default {
       //   this.$router.push('/login')
       // } else {
       if (!this.productSize_item) {
-        this.$swal.fire('Please', 'Size must be selected.', 'warning')
+        this.$swal.fire("Please", "Size must be selected.", "warning");
       } else {
-        this.isLoading_big = true
-        const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+        this.isLoading_big = true;
+        const url = `${import.meta.env.VITE_APP_API}api/${
+          import.meta.env.VITE_APP_PATH
+        }/cart`;
         const cart = {
           product_id: id,
-          qty
-        }
+          qty,
+        };
         this.$http.post(url, { data: cart }).then(() => {
-          this.getCart()
-          this.isLoading_big = false
-          this.$toast('success', 'add to cart.')
+          this.getCart();
+          this.isLoading_big = false;
+          this.$toast("success", "add to cart.");
           if (isBuy) {
-            this.$router.push('/cart-view/cart-list')
+            this.$router.push("/cart-view/cart-list");
             // *觸發該頁函式，讓下一頁資料更新
-            this.getCart()
+            this.getCart();
           }
-        })
+        });
       }
       // }
     },
     //
     getProduct() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
-        this.productId
-      }`
-      this.isLoading = true
-      this.isLoading_big = true
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/product/${this.productId}`;
+      this.isLoading = true;
+      this.isLoading_big = true;
       //
       this.$http.get(api).then((response) => {
-        this.isLoading = false
-        this.isLoading_big = false
+        this.isLoading = false;
+        this.isLoading_big = false;
         if (response.data.success) {
-          this.product = response.data.product
-          this.setCategory(this.product.category)
+          this.product = response.data.product;
+          this.setCategory(this.product.category);
         }
-      })
+      });
     },
     sendComment() {
       if (!this.rateValue || !this.rateComment) {
-        this.$toast('error', 'star and comment required.')
-        return
+        this.$toast("error", "star and comment required.");
+        return;
       }
       const data = {
         rateValue: this.rateValue,
         rateComment: this.rateComment,
-        rateTime: this.rateTime
-      }
-      localStorage.setItem('rateData', JSON.stringify(data))
-      this.updateComment()
+        rateTime: this.rateTime,
+      };
+      localStorage.setItem("rateData", JSON.stringify(data));
+      this.updateComment();
       //
-      const currentDate = new Date()
-      const currentHour = currentDate.getHours()
-      const currentMinute = currentDate.getMinutes()
-      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM'
-      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12
-      const formattedMinute = currentMinute.toString().padStart(2, '0')
-      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`
-      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' })
-      this.rateTime = `${formattedTime}, ${formattedDate}`
-      this.rateValue = null
-      this.rateComment = ''
+      const currentDate = new Date();
+      const currentHour = currentDate.getHours();
+      const currentMinute = currentDate.getMinutes();
+      const currentPeriod = currentHour >= 12 ? "PM" : "AM";
+      const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12;
+      const formattedMinute = currentMinute.toString().padStart(2, "0");
+      const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`;
+      const formattedDate = currentDate.toLocaleDateString("en-US", { weekday: "long" });
+      this.rateTime = `${formattedTime}, ${formattedDate}`;
+      this.rateValue = null;
+      this.rateComment = "";
     },
     updateComment() {
-      this.isLoading_big = true
-      this.rateData.unshift(JSON.parse(localStorage.getItem('rateData')))
+      this.isLoading_big = true;
+      this.rateData.unshift(JSON.parse(localStorage.getItem("rateData")));
       //* 使用箭头函数，回调函数将继承包含它的函数的上下文，这样就可以正确地访问和更新"this.isLoading_big"属性
       setTimeout(() => {
-        this.isLoading_big = false
-        this.$toast('success', 'add comment')
-      }, 1000)
+        this.isLoading_big = false;
+        this.$toast("success", "add comment");
+      }, 1000);
     },
     changeClass() {
-      this.childClass = 'products_sort'
-    }
-  }
-}
+      this.childClass = "products_sort";
+    },
+  },
+  setup() {
+    const [isHeart, toggleHeart] = useToggle();
+    return {
+      isHeart,
+      toggleHeart,
+    };
+  },
+};
 </script>
 
 <template>
@@ -165,7 +176,9 @@ export default {
       <nav aria-label="breadcrumb" class="mt-10">
         <ol class="breadcrumb">
           <li class="breadcrumb-item text-nbaBlue">
-            <router-link style="text-decoration: none !important" to="/">Home</router-link>
+            <router-link style="text-decoration: none !important" to="/"
+              >Home</router-link
+            >
           </li>
           <li class="breadcrumb-item text-nbaBlue">
             <router-link
@@ -186,7 +199,11 @@ export default {
       </nav>
       <!--  -->
       <div class="row row-cols-md-2 g-md-5 mt-md-5">
-        <div id="carouselExampleIndicators" class="carousel slide col-md-8" data-bs-ride="carouse">
+        <div
+          id="carouselExampleIndicators"
+          class="carousel slide col-md-8"
+          data-bs-ride="carouse"
+        >
           <div class="carousel-indicators">
             <!-- 第一個主圖的指標不用程式化，其餘其他圖片的指標用迴圈帶資料 -->
             <button
@@ -225,16 +242,15 @@ export default {
                   </div>
                   <p
                     class="text-white"
-                    style="
-                      text-shadow:
-                        2px 2px 4px #000,
-                        -2px -2px 4px #000;
-                    "
+                    style="text-shadow: 2px 2px 4px #000, -2px -2px 4px #000"
                   >
                     feature
                   </p>
                 </div>
-                <img class="f-panzoom__content w-100 h-100 mx-auto" :src="product_item.imageUrl" />
+                <img
+                  class="f-panzoom__content w-100 h-100 mx-auto"
+                  :src="product_item.imageUrl"
+                />
               </div>
             </div>
             <!--  -->
@@ -367,33 +383,54 @@ export default {
                 -
               </button>
               <span>{{ qty }}</span>
-              <button style="height: 40px" @click="qty++" class="btn btn-outline-secondary py-0">
+              <button
+                style="height: 40px"
+                @click="qty++"
+                class="btn btn-outline-secondary py-0"
+              >
                 +
               </button>
             </div>
             <!--  -->
-            <i
-              v-if="favoriteIds.indexOf(product_item.id) !== -1"
-              @click="updateFavorite(product_item.id)"
-              class="fa-solid fa-heart fa-beat-fade text-danger fs-3"
-            ></i>
-            <i
-              v-else
-              @click="updateFavorite(product_item.id)"
-              class="fa-solid fa-heart-crack fa-shake text-secondary fs-3"
-            ></i>
+            <div class="position-relative">
+              <i
+                v-if="favoriteIds.indexOf(product_item.id) !== -1"
+                @click="updateFavorite(product_item.id)"
+                class="fa-solid fa-heart fa-beat-fade text-danger fs-3"
+              ></i>
+              <i
+                v-else
+                @click="updateFavorite(product_item.id)"
+                class="fa-solid fa-heart-crack fa-shake text-secondary fs-3"
+                @mouseenter="toggleHeart(true)"
+                @mouseleave="toggleHeart(false)"
+                :class="{ 'text-white': isHeart }"
+              ></i>
+              <i
+                v-if="isHeart"
+                class="fa-solid fa-heart fa-beat-fade text-danger fs-3 position-absolute"
+              ></i>
+            </div>
+            <!-- :class="{isHeart?'':''}" -->
           </div>
           <!--  -->
-          <div class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1"
+          >
             <button
               class="btn-outline-primary btn"
               @click="addToCart(product_item.id, qty, (isBuy = false))"
-              :class="{ 'btn btn-outline-primary': product_item.id === statusBtn.loadingItem }"
+              :class="{
+                'btn btn-outline-primary': product_item.id === statusBtn.loadingItem,
+              }"
               :disabled="product_item.id === statusBtn.loadingItem"
             >
               ADD TO CART
             </button>
-            <button class="btn btn-danger" @click="addToCart(product_item.id, qty, (isBuy = true))">
+            <button
+              class="btn btn-danger"
+              @click="addToCart(product_item.id, qty, (isBuy = true))"
+            >
               BUY NOW
             </button>
           </div>
@@ -403,7 +440,9 @@ export default {
             <el-tag class="fs-6" type="warning" size="small" effect="plain" round
               >Free shipping</el-tag
             >
-            <el-tag class="fs-6" type="info" size="small" effect="plain" round>Store pickup</el-tag>
+            <el-tag class="fs-6" type="info" size="small" effect="plain" round
+              >Store pickup</el-tag
+            >
             <el-tag class="fs-6" type="danger" size="small" effect="plain" round
               >Fast delivery</el-tag
             >
@@ -417,6 +456,7 @@ export default {
           <hr />
           <p v-html="product_item.content"></p>
           <!--  -->
+
           <h3 class="mt-7">COMMENT</h3>
           <hr />
           <div
@@ -509,9 +549,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@import '@fancyapps/ui/dist/fancybox/fancybox.css';
-@import '@fancyapps/ui/dist/panzoom/panzoom.css';
-@import '@fancyapps/ui/dist/panzoom/panzoom.pins.css';
+@import "@fancyapps/ui/dist/fancybox/fancybox.css";
+@import "@fancyapps/ui/dist/panzoom/panzoom.css";
+@import "@fancyapps/ui/dist/panzoom/panzoom.pins.css";
 
 * {
   // background-color: #78e08f;
@@ -601,7 +641,7 @@ export default {
 }
 
 .slanted-div::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 32%;
@@ -697,5 +737,13 @@ export default {
 // 如何在productItem元件中，使用class去隱藏productsList的元素
 .products_sort {
   display: none !important;
+}
+
+.fa-beat-fade.position-absolute {
+  left: 0px;
+  pointer-events: none;
+}
+.fa-heart-crack,.fa-beat-fade {
+  cursor: pointer;
 }
 </style>

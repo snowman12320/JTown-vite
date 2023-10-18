@@ -145,7 +145,7 @@ export default {
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             關閉
           </button>
-          <button type="button" class="btn btn-primary" @click="setPaid()">更新付款</button>
+          <button type="button" class="btn btn-nbaBlue" @click="setPaid()">更新付款</button>
         </div>
       </div>
     </div>

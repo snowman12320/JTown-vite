@@ -192,7 +192,7 @@ export default {
         <button
           @click="openDelOrderModal((item = { title: 'ALL' }))"
           type="button"
-          class="btn btn-danger flex-shrink-0"
+          class="btn btn-nbaRed flex-shrink-0"
         >
           Delete ALL
         </button>
@@ -279,7 +279,7 @@ export default {
           <td class="d-md-table-cell d-none">
             <div class="form-check form-switch">
               <input
-                class="form-check-input"
+                class="form-check-input "
                 type="checkbox"
                 :id="`paidSwitch${item.id}`"
                 v-model="item.is_paid"
@@ -293,10 +293,10 @@ export default {
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item)">
+              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
                 檢視
               </button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelOrderModal(item)">
+              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelOrderModal(item)">
                 刪除
               </button>
             </div>

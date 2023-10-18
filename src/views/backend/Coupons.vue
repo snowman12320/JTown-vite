@@ -96,7 +96,7 @@ export default {
   <div class="w-100">
     <Loading :active="isLoading" />
     <div class="text-end mt-4">
-      <button class="btn btn-primary" @click="openCouponModal(true)">建立新的優惠券</button>
+      <button class="btn btn-nbaBlue" @click="openCouponModal(true)">新增優惠券</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -119,10 +119,10 @@ export default {
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openCouponModal(false, item)">
+              <button class="btn btn-outline-nbaBlue btn-sm" @click="openCouponModal(false, item)">
                 編輯
               </button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelCouponModal(item)">
+              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelCouponModal(item)">
                 刪除
               </button>
             </div>

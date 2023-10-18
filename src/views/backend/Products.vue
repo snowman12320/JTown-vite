@@ -107,7 +107,7 @@ export default {
   <div class="w-100">
     <Loading :active="isLoading" />
     <div class="text-end mt-3">
-      <button class="btn btn-primary" type="button" @click="openModal(true)">增加一個產品</button>
+      <button class="btn btn-nbaBlue" type="button" @click="openModal(true)">新增產品</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -137,10 +137,10 @@ export default {
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item)">
+              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
                 編輯
               </button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">
+              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelProductModal(item)">
                 刪除
               </button>
             </div>
@@ -151,11 +151,7 @@ export default {
     <!-- props傳遞總頁數 emit傳出目前頁數 -->
     <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
     <!-- 更新資料，先帶原始資料進去元件，元件內修改後，再透過emit傳遞觸發函式和資料出來 -->
-    <ProductModal
-      ref="productModal"
-      :product="tempProduct"
-      @update-product="updateProduct"
-    ></ProductModal>
+    <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
     <!--  -->
     <DelModal :item="tempProduct" ref="delModal" @del-item="delProduct" />
   </div>

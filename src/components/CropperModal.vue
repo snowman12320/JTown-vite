@@ -1,54 +1,54 @@
 <script>
-import { VueCropper } from 'vue-cropper'
-import 'vue-cropper/dist/index.css'
+import { VueCropper } from "vue-cropper";
+import "vue-cropper/dist/index.css";
 
 export default {
   components: { VueCropper },
   data() {
     return {
       model: false,
-      modelSrc: '',
+      modelSrc: "",
       crap: false,
       previews: {},
       lists: [
         {
-          img: 'https://avatars2.githubusercontent.com/u/15681693?s=460&v=4'
-        }
+          img: "https://avatars2.githubusercontent.com/u/15681693?s=460&v=4",
+        },
       ],
       option: {
-        img: '', // 套件示範的格式
+        img: "", // 套件示範的格式
         // img: 'https://storage.googleapis.com/vue-course-api.appspot.com/william-api/1690362062055.jpg?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=DuRa%2FaTvXVYlqq5DlHjjAzhQ95PcMs3IuJA0iqm0Ma1%2BcEMeyFvmsh3%2FwxGSpe8Z11D32ZlQbr8i8czcj3HRgeWpCxkuNzBYQJhJAJZ40X%2FLm81ddIkktUtRWf7Dqz1UQtZnyItnklxeKqM4%2Bzj2Bc5kujHowfPz%2BZeo95i6fH46ZYv1L6FHVXVm5AsxP4UBYUQagPCNemrsCTA9md9Aj21r%2BKUtIlvE9GnqhNp2U8QPZLV%2BWzuZnC9DTgfI%2B%2Fv9wQipEf0fhMVWb%2FYs%2BWc5PQOKfenkNPTDOOb3cVg8ALRxo27QADbfkfpZhIwDoKHrWH3BkxDFeclL4B1OYVWXlw%3D%3D',
         // img: this.tempImg,
         size: 1,
         full: false,
-        outputType: 'png',
+        outputType: "png",
         canMove: true,
         fixedBox: false,
         original: false,
         canMoveBox: true,
         autoCrop: true,
         // 只有自动截图开启 宽度高度才生效 / 不要超過 .cut 的大小
-        autoCropWidth: 350,
-        autoCropHeight: 340,
+        autoCropWidth: 200,
+        autoCropHeight: 200,
         centerBox: true,
         high: true,
-        max: 99999
+        max: 99999,
       },
       show: true,
       fixed: false,
       fixedNumber: [75, 34],
       //
-      isLoading: false
-    }
+      isLoading: false,
+    };
   },
   props: {
     tempImg: {
       //! 需用物件接收，用陣列會空的，若傳tempProduct.imageUrl可能要用字串 > 錯誤 > 需保留才能傳進來覆蓋的圖片位置資料
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   created() {
     // console.log(this.tempImg);
@@ -88,28 +88,28 @@ export default {
     // ? 嘗試轉檔
     convertImgLinkToBlob(imageUrl) {
       return new Promise((resolve) => {
-        const xhr = new XMLHttpRequest()
-        xhr.open('GET', imageUrl, true)
-        xhr.responseType = 'blob'
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", imageUrl, true);
+        xhr.responseType = "blob";
         xhr.onload = function () {
           if (xhr.status === 200) {
-            resolve(xhr.response)
+            resolve(xhr.response);
           } else {
-            resolve(null)
+            resolve(null);
           }
-        }
-        xhr.send()
-      })
+        };
+        xhr.send();
+      });
     },
     downloadAndUploadImage(url) {
       this.axios({
         url,
-        responseType: 'arraybuffer'
+        responseType: "arraybuffer",
       })
         .then((response) => {
-          const imageBuffer = Buffer.from(response.data, 'binary')
+          const imageBuffer = Buffer.from(response.data, "binary");
           // 在此处进行上传到Vue Cropper套件支持的位置的代码，例如上传到云存储服务
-          console.log(imageBuffer)
+          console.log(imageBuffer);
           // 上传成功后，获取图片的URL
           // const uploadedImageUrl = 'https://example.com/uploaded-image.jpg';
           // 将uploadedImageUrl赋值给img2
@@ -117,157 +117,157 @@ export default {
           // 现在可以在Vue Cropper套件中使用img2进行图像编辑
         })
         .catch((error) => {
-          console.error('Error:', error)
-        })
+          console.error("Error:", error);
+        });
     },
     changeImg() {
-      this.option.img = this.lists[~~(Math.random() * this.lists.length)].img
+      this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
     },
     startCrop() {
       // start
-      this.crap = true
-      this.$refs.cropper.startCrop()
+      this.crap = true;
+      this.$refs.cropper.startCrop();
     },
     stopCrop() {
       //  stop
-      this.crap = false
-      this.$refs.cropper.stopCrop()
+      this.crap = false;
+      this.$refs.cropper.stopCrop();
     },
     clearCrop() {
       // clear
-      this.$refs.cropper.clearCrop()
+      this.$refs.cropper.clearCrop();
     },
     refreshCrop() {
       // clear
-      this.$refs.cropper.refresh()
+      this.$refs.cropper.refresh();
     },
     changeScale(num) {
-      num = num || 1
-      this.$refs.cropper.changeScale(num)
+      num = num || 1;
+      this.$refs.cropper.changeScale(num);
     },
     rotateLeft() {
-      this.$refs.cropper.rotateLeft()
+      this.$refs.cropper.rotateLeft();
     },
     rotateRight() {
-      this.$refs.cropper.rotateRight()
+      this.$refs.cropper.rotateRight();
     },
     // ?輸出後，帶出base64並上傳
     finish(type) {
-      this.isLoading = true
+      this.isLoading = true;
       // 输出
       // var test = window.open('about:blank')
       // test.document.body.innerHTML = '图片生成中..'
-      if (type === 'blob') {
+      if (type === "blob") {
         // console.log(this.$refs.cropper);
         this.$refs.cropper.getCropBlob((data) => {
           // console.log(data);// blob
-          const newImg = new File([data], 'croppered.jpg')
+          const newImg = new File([data], "croppered.jpg");
           // console.log(newImg);// file
           //  參考上傳圖片做法
           // 要轉formdata
-          const formData = new FormData() //! 放迴圈中才會每次獨立出來
-          formData.append('file-to-upload', newImg)
+          const formData = new FormData(); //! 放迴圈中才會每次獨立出來
+          formData.append("file-to-upload", newImg);
           const url = `${import.meta.env.VITE_APP_API}api/${
             import.meta.env.VITE_APP_PATH
-          }/admin/upload`
+          }/admin/upload`;
           this.$http.post(url, formData).then((res) => {
             if (res.data.success) {
-              const finishCropper = this.tempImg
-              finishCropper.url = res.data.imageUrl
-              this.$emit('confirm-cropper', finishCropper)
-              this.isLoading = false
+              const finishCropper = this.tempImg;
+              finishCropper.url = res.data.imageUrl;
+              this.$emit("confirm-cropper", finishCropper);
+              this.isLoading = false;
             }
-          })
+          });
           //
           // const img = window.URL.createObjectURL(data);
           // this.model = true;
           // this.modelSrc = img;
-        })
+        });
       } else {
         this.$refs.cropper.getCropData((data) => {
-          this.model = true
-          this.modelSrc = data
-        })
+          this.model = true;
+          this.modelSrc = data;
+        });
       }
     },
     // 实时预览函数
     realTime(data) {
-      this.previews = data
+      this.previews = data;
       // console.log(data);
     },
     finish2(type) {
       this.$refs.cropper2.getCropData((data) => {
-        this.model = true
-        this.modelSrc = data
-      })
+        this.model = true;
+        this.modelSrc = data;
+      });
     },
     finish3(type) {
       this.$refs.cropper3.getCropData((data) => {
-        this.model = true
-        this.modelSrc = data
-      })
+        this.model = true;
+        this.modelSrc = data;
+      });
     },
     down(type) {
       // event.preventDefault()
-      const aLink = document.createElement('a')
-      aLink.download = 'demo'
+      const aLink = document.createElement("a");
+      aLink.download = "demo";
       // 输出
-      if (type === 'blob') {
+      if (type === "blob") {
         this.$refs.cropper.getCropBlob((data) => {
-          this.downImg = window.URL.createObjectURL(data)
-          aLink.href = window.URL.createObjectURL(data)
-          aLink.click()
-        })
+          this.downImg = window.URL.createObjectURL(data);
+          aLink.href = window.URL.createObjectURL(data);
+          aLink.click();
+        });
       } else {
         this.$refs.cropper.getCropData((data) => {
-          this.downImg = data
-          aLink.href = data
-          aLink.click()
-        })
+          this.downImg = data;
+          aLink.href = data;
+          aLink.click();
+        });
       }
     },
     // ? 需轉成這種檔案 > 這邊只是上船並讀取在裁切框 > 確認紐會再去抓裁切後的去覆蓋舊的
     uploadImg(e, num) {
       // 上传图片
       // this.option.img
-      const file = e.target.files[0]
+      const file = e.target.files[0];
       // console.log('file', typeof (file), file);
       //
       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-        alert('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种')
-        return false
+        alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
+        return false;
       }
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        let data
-        if (typeof e.target.result === 'object') {
+        let data;
+        if (typeof e.target.result === "object") {
           // 把Array Buffer转化为blob 如果是base64不需要
-          data = window.URL.createObjectURL(new Blob([e.target.result]))
+          data = window.URL.createObjectURL(new Blob([e.target.result]));
         } else {
-          data = e.target.result
+          data = e.target.result;
         }
         if (num === 1) {
-          this.option.img = data
+          this.option.img = data;
         } else if (num === 2) {
-          this.example2.img = data
+          this.example2.img = data;
         }
-      }
+      };
       // 转化为base64
       // reader.readAsDataURL(file)
       // 转化为blob
-      reader.readAsArrayBuffer(file)
+      reader.readAsArrayBuffer(file);
     },
     imgLoad(msg) {
       // console.log(msg);
     },
     cropMoving(data) {
       // console.log(data, '截图框当前坐标');
-    }
+    },
   },
   mounted: function () {
     // console.log(window['vue-cropper']);
-  }
-}
+  },
+};
 </script>
 
 <template>
@@ -306,7 +306,7 @@ export default {
           width: previews.w + 'px',
           height: previews.h + 'px',
           overflow: 'hidden',
-          margin: '5px'
+          margin: '5px',
         }"
       >
         <div :style="previews.div">
@@ -335,8 +335,8 @@ export default {
       <button @click="rotateRight" class="btn_2">rotateRight</button>
       <!-- <button @click="finish('base64')" class="btn_2">preview(base64)</button> -->
       <!-- <button @click="finish('blob')" class="btn_2">preview(blob)</button> -->
-      <a @click="down('base64')" class="btn_2">download(base64)</a>
-      <a @click="down('blob')" class="btn_2">download(blob)</a>
+      <!-- <a @click="down('base64')" class="btn_2">download(base64)</a> -->
+      <!-- <a @click="down('blob')" class="btn_2">download(blob)</a> -->
       <!-- <a @click="() => option.img = ''" class="btn_2">清除图片</a> -->
       <div style="display: block; width: 100%">
         <div class="m-5 d-grid gap-3">
@@ -420,8 +420,8 @@ export default {
 }
 
 .cut {
-  width: 500px;
-  height: 500px;
+  width: 300px;
+  height: 300px;
   margin: 30px;
 }
 
@@ -478,8 +478,8 @@ code.language-html {
   background-color: #333;
   color: #fff;
   overflow-x: auto;
-  font-family: Consolas, Monaco, Droid, Sans, Mono, Source, Code, Pro, Menlo, Lucida, Sans, Type,
-    Writer, Ubuntu, Mono;
+  font-family: Consolas, Monaco, Droid, Sans, Mono, Source, Code, Pro, Menlo, Lucida, Sans,
+    Type, Writer, Ubuntu, Mono;
   border-radius: 5px;
   white-space: pre;
 }
@@ -543,7 +543,7 @@ code.language-html {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
 }
 
 .model img {
@@ -551,9 +551,7 @@ code.language-html {
   margin: auto;
   max-width: 80%;
   user-select: none;
-  background-position:
-    0px 0px,
-    10px 10px;
+  background-position: 0px 0px, 10px 10px;
   background-size: 20px 20px;
   background-image: linear-gradient(
       45deg,

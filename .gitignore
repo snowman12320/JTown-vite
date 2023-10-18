@@ -28,4 +28,4 @@ coverage
 *.sw?
 
 #note
-/note
+# /note

@@ -110,55 +110,32 @@ export default {
 <template>
   <div>
     <Loading :active="isLoading_big"></Loading>
-    <div
-      id="Ranking"
-      class="d-flex justify-content-center align-items-center text-dark pt-5 position-relative"
-      style="margin-top: 104px !important"
-    >
+    <div id="Ranking" class="d-flex justify-content-center align-items-center text-dark pt-5 position-relative"
+      style="margin-top: 104px !important">
       <h2 class="d-md-block d-none text-pickBlack">PLAYER</h2>
-      <img
-        src="@/assets/image/nbaWeb/Lovepik_com-401319703-basketball.png"
-        height="50"
-        alt="storylogo"
-      />
+      <img src="@/assets/image/nbaWeb/Lovepik_com-401319703-basketball.png" height="50" alt="storylogo" />
       <h2 class="d-md-block d-none text-pickBlack">STORY</h2>
       <!--  -->
-      <nav
-        class="w-100 position-md-fixed position-absolute start-0 end-0 px-7"
-        style="top: 20%"
-        aria-label="Page navigation example"
-      >
+      <nav class="w-100 position-md-fixed position-absolute start-0 end-0 px-7" style="top: 20%"
+        aria-label="Page navigation example">
         <ul class="pagination w-100 d-flex justify-content-between">
           <li class="page-item" :class="{ disabled: isNotPrev }">
-            <a
-              class="page-link"
-              :class="{ disabled: isNotPrev }"
-              :disabled="isNotPrev"
-              @click.prevent="storyIndex--"
-              href="#"
-            >
+            <a class="page-link" :class="{ disabled: isNotPrev }" :disabled="isNotPrev" @click.prevent="storyIndex--"
+              href="#">
               <i class="fa fa-caret-left" aria-hidden="true"></i> Prev
             </a>
           </li>
           <li class="page-item" :class="{ disabled: isNotNext }">
-            <a
-              class="page-link"
-              :class="{ disabled: isNotNext }"
-              :disabled="isNotNext"
-              @click.prevent="storyIndex++"
-              href="#"
-            >
-              Next <i class="fa fa-caret-right" aria-hidden="true"></i
-            ></a>
+            <a class="page-link" :class="{ disabled: isNotNext }" :disabled="isNotNext" @click.prevent="storyIndex++"
+              href="#">
+              Next <i class="fa fa-caret-right" aria-hidden="true"></i></a>
           </li>
         </ul>
       </nav>
     </div>
     <div class="container-xxl my-3">
       <p class="fs-6 text-secondary text-center mb-5">how to become the NBA all star player?</p>
-      <main
-        class="row row-cols-1 row-cols-xl-2 mx-md-2 g-xl-5 position-relative flex-xl-row flex-column-reverse"
-      >
+      <main class="row row-cols-1 row-cols-xl-2 mx-md-2 g-xl-5 position-relative flex-xl-row flex-column-reverse">
         <article class="col col-xl-8 mx-auto mb-xl-5">
           <div class="card shadow">
             <div class="card-body">
@@ -179,29 +156,13 @@ export default {
         <aside class="col col-xl-4 sticky-xl-top align-self-start" style="z-index: 5; top: 100px">
           <div class="small_card">
             <div class="card mb-5 text-center text-xl-start">
-              <img
-                data-num="001"
-                :src="story.imageUrl"
-                height="424"
-                class="of-cover w-100 op-top position-absolute pt-3"
-                alt="..."
-              />
-              <img
-                src="@/assets/image/nbaWeb/CYOKWOiUoAIJGu4.png"
-                class="allstaritem_back img-fluid op-center of-cover"
-                alt="CYOKWOiUoAIJGu4"
-              />
-              <button
-                @click.prevent="handleClick"
-                class="card-body fs-6"
-                v-html="story.content"
-              ></button>
-              <a
-                type="button"
-                @click.prevent="getMerchandise()"
-                class="btn btn-nbaBlue rounded-pill fs-4 btnRwd mx-auto mb-4"
-                >Visit Merchandise</a
-              >
+              <img data-num="001" :src="story.imageUrl" height="250" class="of-cover w-100 op-top position-absolute pt-3"
+                alt="..." />
+              <img src="@/assets/image/nbaWeb/CYOKWOiUoAIJGu4.png" class="allstaritem_back img-fluid op-center of-cover"
+                alt="CYOKWOiUoAIJGu4" />
+              <button @click.prevent="handleClick" class="card-body fs-6" v-html="story.content"></button>
+              <a type="button" @click.prevent="getMerchandise()"
+                class="btn btn-nbaBlue rounded-pill fs-4 btnRwd mx-auto mb-4">Visit Merchandise</a>
             </div>
           </div>
         </aside>
@@ -212,9 +173,16 @@ export default {
 
 <style scoped lang="scss">
 * {
+
   // background-color: #aaa;
   .page-link:focus {
     background: transparent !important;
+  }
+}
+
+.container-xxl p  {
+  a {
+    color: #0253a5 !important;
   }
 }
 

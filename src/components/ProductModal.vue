@@ -1,88 +1,48 @@
 <template>
   <div>
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-      ref="modal"
-    >
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+      ref="modal">
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
               <span>新增產品</span>
             </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col-sm-4">
                 <div class="mb-3">
                   <label for="image" class="form-label">輸入主圖片網址：</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="image"
-                    v-model="tempProduct.imageUrl"
-                    placeholder="請輸入圖片連結"
-                  />
+                  <input type="text" class="form-control" id="image" v-model="tempProduct.imageUrl"
+                    placeholder="請輸入圖片連結" />
                 </div>
                 <div class="mb-3">
-                  <label for="customFile" class="form-label"
-                    >或 上傳主圖片：
+                  <label for="customFile" class="form-label">或 上傳主圖片：
                     <i v-show="main_photo" class="fas fa-spinner fa-spin"></i>
                   </label>
                   <!--  -->
-                  <input
-                    type="file"
-                    id="customFile"
-                    class="form-control"
-                    ref="fileInput"
-                    @change="uploadFile"
-                  />
+                  <input type="file" id="customFile" class="form-control" ref="fileInput" @change="uploadFile" />
                 </div>
                 <div class="w-100 border" style="height: 300px">
-                  <img
-                    class="h-100 w-100 of-cover op-top"
-                    :src="tempProduct.imageUrl"
-                    :alt="tempProduct.title"
-                  />
+                  <img class="h-100 w-100 of-cover op-top" :src="tempProduct.imageUrl" :alt="tempProduct.title" />
                 </div>
                 <!--  -->
                 <!-- 延伸技巧，多圖 -->
                 <div class="mt-5">
-                  <label for="customFile" class="form-label pb-2"
-                    >上傳其他圖片：
+                  <label for="customFile" class="form-label pb-2">上傳其他圖片：
                     <i v-show="other_photo" class="fas fa-spinner fa-spin"></i>
                   </label>
                 </div>
                 <!--  -->
-                <input
-                  type="text"
-                  class="form-control"
-                  id="image"
-                  v-model.lazy="tempImagesUrl"
-                  placeholder="請輸入圖片連結"
-                />
+                <input type="text" class="form-control" id="image" v-model.lazy="tempImagesUrl" placeholder="請輸入圖片連結" />
                 <!-- 多檔上傳/原本寫法 -->
                 <div class="mt-3">
                   <label for="other_photo" class="btn btn-outline-primary btn-sm d-block w-100">
-                    <input
-                      multiple
-                      id="other_photo"
-                      type="file"
-                      class="form-control d-none"
-                      ref="fileInput_more"
-                      @change="uploadFile_more"
-                    />
+                    <input multiple id="other_photo" type="file" class="form-control d-none" ref="fileInput_more"
+                      @change="uploadFile_more" />
                     Click to upload
                   </label>
                   <div class="text-center text-secondary" style="font-size: 8px">
@@ -93,58 +53,29 @@
                 <!--  多檔圖片 ＋ 拖拉移動順序 -->
                 <div class="     ">
                   <!-- <div>{{ drag ? 'dragging' : 'drag done' }}</div> -->
-                  <draggable
-                    style="margin: 10px"
-                    v-model="tempProduct.imagesUrl"
-                    group="group1"
-                    @start="drag = true"
-                    @end="drag = false"
-                    item-key="id"
-                    chosen-class="chosen"
-                    animation="300"
-                  >
+                  <draggable style="margin: 10px" v-model="tempProduct.imagesUrl" group="group1" @start="drag = true"
+                    @end="drag = false" item-key="id" chosen-class="chosen" animation="300">
                     <template #item="{ element }">
                       <div class="position-relative item">
-                        <div
-                          class="d-flex gap-2 border justify-content-between align-items-end rounded-3 p-2"
-                        >
-                          <div
-                            class="flex-shrink-0 position-relative modal_img"
-                            style="height: 70px; width: 70px"
-                          >
-                            <img
-                              class="h-100 w-100 of-cover op-top"
-                              :src="element.url"
-                              :alt="element.name"
-                            />
+                        <div class="d-flex gap-2 border justify-content-between align-items-end rounded-3 p-2">
+                          <div class="flex-shrink-0 position-relative modal_img" style="height: 70px; width: 70px">
+                            <img class="h-100 w-100 of-cover op-top" :src="element.url" :alt="element.name" />
                             <div
                               class="position-absolute top-0 start-0 bottom-0 w-100 h-100 d-flex justify-content-center align-items-center end-0 img_wrap d-none gap-2"
-                              style="backdrop: blur(5px)"
-                            >
-                              <i
-                                @click.self="openModal(element)"
-                                class="bi bi-pencil-square fs-3 text-white"
-                              ></i>
+                              style="backdrop: blur(5px)">
+                              <i @click.self="openModal(element)" class="bi bi-pencil-square fs-3 text-white"></i>
                             </div>
                           </div>
                           <div class="overflow-hidden">
                             <small class="multiline-ellipsis">{{ element.name }}</small>
-                            <input
-                              type="text"
-                              class="form-control form-control fs-6 h-50"
-                              style="font-size: 1px"
-                              v-model="element.url"
-                              placeholder="請輸入連結"
-                            />
+                            <input type="text" class="form-control form-control fs-6 h-50" style="font-size: 1px"
+                              v-model="element.url" placeholder="請輸入連結" />
                           </div>
                         </div>
-                        <i
-                          @click.stop="
-                            tempProduct.imagesUrl.splice(tempProduct.imagesUrl.indexOf(element), 1)
-                          "
-                          class="bi bi-x-circle fs-6 p-1 text-danger position-absolute top-0 end-0"
-                          style="cursor: pointer"
-                        ></i>
+                        <i @click.stop="
+                          tempProduct.imagesUrl.splice(tempProduct.imagesUrl.indexOf(element), 1)
+                          " class="bi bi-x-circle fs-6 p-1 text-danger position-absolute top-0 end-0"
+                          style="cursor: pointer"></i>
                       </div>
                     </template>
                   </draggable>
@@ -154,100 +85,50 @@
               <div class="col-sm-8">
                 <div class="mb-3">
                   <label for="title" class="form-label">標題</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="title"
-                    v-model="tempProduct.title"
-                    placeholder="請輸入標題"
-                  />
+                  <input type="text" class="form-control" id="title" v-model="tempProduct.title" placeholder="請輸入標題" />
                 </div>
                 <div class="row gx-2">
                   <div class="mb-3 col-md-6">
                     <label for="category" class="form-label">分類</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="category"
-                      v-model="tempProduct.category"
-                      placeholder="請輸入分類"
-                    />
+                    <input type="text" class="form-control" id="category" v-model="tempProduct.category"
+                      placeholder="請輸入分類" />
                   </div>
                   <div class="mb-3 col-md-6">
                     <label for="price" class="form-label">單位</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="unit"
-                      v-model="tempProduct.unit"
-                      placeholder="請輸入單位"
-                    />
+                    <input type="text" class="form-control" id="unit" v-model="tempProduct.unit" placeholder="請輸入單位" />
                   </div>
                 </div>
                 <div class="row gx-2">
                   <div class="mb-3 col-md-6">
                     <label for="origin_price" class="form-label">原價</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="origin_price"
-                      v-model.number="tempProduct.origin_price"
-                      placeholder="請輸入原價"
-                    />
+                    <input type="number" class="form-control" id="origin_price" v-model.number="tempProduct.origin_price"
+                      placeholder="請輸入原價" />
                   </div>
                   <div class="mb-3 col-md-6">
                     <label for="price" class="form-label">售價</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="price"
-                      v-model.number="tempProduct.price"
-                      placeholder="請輸入售價"
-                    />
+                    <input type="number" class="form-control" id="price" v-model.number="tempProduct.price"
+                      placeholder="請輸入售價" />
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label">運送方式</label>
-                  <multiselect
-                    v-model="value"
-                    tag-placeholder="Add this as new tag"
-                    placeholder="Search or add a tag"
-                    label="name"
-                    track-by="code"
-                    :options="options"
-                    :multiple="true"
-                    :taggable="true"
-                    @tag="addTag"
-                  >
+                  <multiselect v-model="value" tag-placeholder="Add this as new tag" placeholder="Search or add a tag"
+                    label="name" track-by="code" :options="options" :multiple="true" :taggable="true" @tag="addTag">
                   </multiselect>
                 </div>
                 <hr />
                 <div class="mb-3">
                   <label for="description" class="form-label">產品細節</label>
-                  <ckeditor
-                    :editor="editor"
-                    v-model="tempProduct.description"
-                    :config="editorConfig"
-                  ></ckeditor>
+                  <ckeditor :editor="editor" v-model="tempProduct.description" :config="editorConfig"></ckeditor>
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label">說明內容</label>
-                  <ckeditor
-                    :editor="editor"
-                    v-model="tempProduct.content"
-                    :config="editorConfig"
-                  ></ckeditor>
+                  <ckeditor :editor="editor" v-model="tempProduct.content" :config="editorConfig"></ckeditor>
                 </div>
                 <div class="mb-3">
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      v-model="tempProduct.is_enabled"
-                      :true-value="1"
-                      :false-value="0"
-                      id="is_enabled"
-                    />
+                    <input class="form-check-input" type="checkbox" v-model="tempProduct.is_enabled" :true-value="1"
+                      :false-value="0" id="is_enabled" />
                     <label class="form-check-label" for="is_enabled"> 是否啟用 </label>
                   </div>
                 </div>
@@ -255,27 +136,16 @@
             </div>
           </div>
           <!--  v-click-away="onClickAway" -->
-          <CropperModal
-            @confirm-cropper="updateImages"
-            @close="openModal"
-            v-if="isCropper"
-            class="cropperModal_open"
-            :class="{ cropperModal_close: !isCropper }"
-            :tempImg="tempImg"
-            v-click-away="onClickAway"
-          >
+          <CropperModal @confirm-cropper="updateImages" @close="openModal" v-if="isCropper" class="cropperModal_open"
+            :class="{ cropperModal_close: !isCropper }" :tempImg="tempImg" v-click-away="onClickAway">
           </CropperModal>
           <!--  -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <button type="button" class="btn btn-outline-nbaRed" data-bs-dismiss="modal">
               取消
             </button>
             <!-- 向外傳遞需觸發的函式和傳遞資料 -->
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="$emit('update-product', tempProduct)"
-            >
+            <button type="button" class="btn btn-nbaBlue" @click="$emit('update-product', tempProduct)">
               確認
             </button>
           </div>
@@ -482,12 +352,12 @@ export default {
   position: fixed;
   top: 5% !important;
   left: 50%;
-  box-shadow: 10px 15px 50px 50px rgba(0, 145, 255, 0.269);
+  box-shadow: 10px 15px 50px 50px #eee;
   z-index: 999;
   transform: scale(1) translateX(-50%);
   transition: all 300ms;
-  height: 800px !important;
-  overflow-y: scroll;
+  height: 600px !important;
+  overflow-y: auto;
   max-width: 1000px !important;
   background-color: #fff;
   overflow-x: hidden;
@@ -498,7 +368,6 @@ export default {
   top: 0%;
   left: 0%;
   // transform: translate(-50%, -30%);
-  box-shadow: 0px 5px 10px 10px rgba(0, 149, 255, 0.199);
   z-index: 999;
   transform: scale(0);
   // display: none;
@@ -522,7 +391,7 @@ export default {
 
 /*选中样式*/
 .chosen {
-  border: solid 2px #3089dc !important;
+  border: solid 2px #0253a5 !important;
   box-sizing: border-box !important;
   width: 100%;
 }

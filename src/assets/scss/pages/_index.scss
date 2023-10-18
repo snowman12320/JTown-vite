@@ -37,7 +37,7 @@
     color: $nbaBlue;
     padding-top: 10px;
     // text-shadow: 2px 2px 4px white, -2px -2px 4px white;
-        text-shadow: 0px 3px 1px  $black;
+    text-shadow: 0px 3px 1px $black;
     &:hover {
       color: $nbaRed;
     }
@@ -263,11 +263,22 @@
     //   background: $gray-500;
     //   width: 80%;
     //   height: 1px;
-    border-top: 1px $gray-500 solid;
-    padding-top: 10px;
+    // border-top: 1px $gray-500 solid;
+    border-top: 0px;
     border-left: 0px;
     border-right: 0px;
     border-bottom: 0px;
+    padding: 12px 0px;
+    &:hover {
+      color: #0253a5;
+    }
+  }
+
+  hr {
+    height: 2px;
+    width: 100%;
+    background-color: $gray-500;
+    margin: 0;
   }
 }
 @include sellbtn_Rwd;

@@ -113,7 +113,7 @@ export default {
   <div class="w-100">
     <Loading :active="isLoading" />
     <div class="text-end mt-3">
-      <button class="btn btn-primary" type="button" @click="openModal(true, null)">新增文章</button>
+      <button class="btn btn-nbaBlue" type="button" @click="openModal(true, null)">新增文章</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -138,10 +138,10 @@ export default {
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item.id)">
+              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item.id)">
                 編輯
               </button>
-              <button class="btn btn-outline-danger btn-sm" @click="openDelStoryModal(item)">
+              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelStoryModal(item)">
                 刪除
               </button>
             </div>

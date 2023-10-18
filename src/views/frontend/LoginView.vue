@@ -118,50 +118,26 @@ export default {
                 <div class="input-group-prepend">
                   <i class="fas fa-user"></i>
                 </div>
-                <Field
-                  type="text"
-                  name="email"
-                  class="form-control rounded-3"
-                  placeholder="請輸入 Email"
-                  rules="email|required"
-                  :class="{
+                <Field type="text" name="email" class="form-control rounded-3" placeholder="請輸入 Email"
+                  rules="email|required" :class="{
                     'is-invalid': errors['email'],
                     'is-valid': !errors['email'] && Boolean(user.username)
-                  }"
-                  autofocus
-                  v-model="user.username"
-                ></Field>
-                <error-message
-                  name="email"
-                  class="invalid-feedback ms-5"
-                  style="text-shadow: 0 2px 5px #fff"
-                ></error-message>
+                  }" autofocus v-model="user.username"></Field>
+                <error-message name="email" class="invalid-feedback ms-5"
+                  style="text-shadow: 0 2px 5px #fff"></error-message>
               </div>
 
               <div class="input-group form-group mt-4">
                 <div class="input-group-prepend">
                   <i class="fas fa-key"></i>
                 </div>
-                <Field
-                  type="password"
-                  name="密碼"
-                  id="password"
-                  class="form-control rounded-3"
-                  placeholder="password"
-                  required
-                  v-model="user.password"
-                  maxlength="20"
-                  :rules="validatePassword"
-                  :class="{
+                <Field type="password" name="密碼" id="password" class="form-control rounded-3" placeholder="password"
+                  required v-model="user.password" maxlength="20" :rules="validatePassword" :class="{
                     'is-invalid': errors['密碼'],
                     'is-valid': !errors['密碼'] && Boolean(user.password)
-                  }"
-                ></Field>
-                <error-message
-                  name="密碼"
-                  class="invalid-feedback ms-5"
-                  style="text-shadow: 0 2px 5px #fff"
-                ></error-message>
+                  }"></Field>
+                <error-message name="密碼" class="invalid-feedback ms-5"
+                  style="text-shadow: 0 2px 5px #fff"></error-message>
               </div>
               <!--  -->
               <div class="mt-2 d-flex gap-1 align-items-center justify-content-end me-2">
@@ -185,7 +161,7 @@ export default {
                 title="Registration is not yet available... but would you like to use VIP to test it?"
               > -->
               <!-- <template #reference> -->
-              <el-button style="text-shadow: 0 2px 5px black">Sign Up</el-button>
+              <el-button style="">Sign Up</el-button>
               <!-- </template> -->
               <!-- </el-popconfirm> -->
             </div>
@@ -206,7 +182,7 @@ export default {
   background-position: 50% 80%;
   background-repeat: no-repeat;
   background-image: url('@/assets/image/nbaWeb/jusdevoyage-hJOHlZjW9FQ-unsplash.jpg');
-  min-height: 100vh;
+  min-height: 110vh;
   max-width: 100vw;
   align-content: center;
   display: flex;
@@ -278,8 +254,9 @@ input:focus {
 
 .el-button {
   background: transparent;
-  color: dodgerblue;
-  padding: 0px;
+  color: white;
+  text-shadow: 0 2px 5px black;
+  padding: 10px
 }
 
 .el-popper.is-customized {

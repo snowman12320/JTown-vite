@@ -2,31 +2,31 @@
 export default {
   data() {
     return {
-      storyList: []
-    }
+      storyList: [],
+    };
   },
   created() {
-    this.getStoryList()
+    this.getStoryList();
   },
   methods: {
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/articles/?page=${page}`
-      this.isLoading = true
+      }/articles/?page=${page}`;
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
-        this.isLoading = false
+        this.isLoading = false;
         if (res.data.success) {
-          this.storyList = res.data.articles.filter((story) => story.isPublic)
+          this.storyList = res.data.articles.filter((story) => story.isPublic);
         }
-      })
+      });
     },
     getStory(id) {
       //! 只取一個
-      this.$router.push(`/story/item/${id}`)
-    }
-  }
-}
+      this.$router.push(`/story/item/${id}`);
+    },
+  },
+};
 </script>
 
 <template>
@@ -66,6 +66,7 @@ export default {
           <div class="card-body">
             <h3 class="card-title fw-bold fs-6">{{ item.title }}</h3>
             <p class="card-text fs-6 multiline-ellipsis" v-html="item.description"></p>
+            <hr />
             <button
               class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
             >
@@ -86,7 +87,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .single-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -111,13 +112,20 @@ export default {
   transform: translateY(-5px);
   background-color: #0253a5;
   color: white;
+
   &:hover {
     box-shadow: 0 6px 1px black;
     transform: translateY(-8px);
+    background-color: #cc2b31;
   }
+
   &:focus {
     box-shadow: 0 3px 1px black;
     transform: translateY(0px);
   }
+}
+
+.text-secondary {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

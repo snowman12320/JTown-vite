@@ -118,52 +118,28 @@ export default {
 
 <template>
   <!-- Modal -->
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-    ref="modal"
-  >
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    ref="modal">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title" id="exampleModalLabel">
             <span>新增文章</span>
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-4">
               <div class="mb-3">
                 <label for="image" class="form-label">輸入圖片網址</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="image"
-                  v-model="tempStory.imageUrl"
-                  placeholder="請輸入圖片連結"
-                />
+                <input type="text" class="form-control" id="image" v-model="tempStory.imageUrl" placeholder="請輸入圖片連結" />
               </div>
               <div class="mb-3">
-                <label for="customFile" class="form-label"
-                  >或 上傳圖片
+                <label for="customFile" class="form-label">或 上傳圖片
                   <i :class="{ 'd-none': !Loading_small }" class="fas fa-spinner fa-spin"></i>
                 </label>
-                <input
-                  type="file"
-                  id="customFile"
-                  class="form-control"
-                  ref="fileInput"
-                  @change="uploadFile"
-                />
+                <input type="file" id="customFile" class="form-control" ref="fileInput" @change="uploadFile" />
               </div>
               <img class="of-cover op-top w-100" style="300px" :src="tempStory.imageUrl" :alt="tempStory.name" />
             </div>
@@ -176,94 +152,35 @@ export default {
                 <!-- 放在底下會失去功能 -->
                 <div class="d-flex flex-column flex-md-row align-items-start gap-1">
                   <p>新增日期</p>
-                  <el-date-picker
-                    v-model="create_at"
-                    type="datetime"
-                    placeholder="Select date and time"
-                    :shortcuts="shortcuts"
-                  />
+                  <el-date-picker v-model="create_at" type="datetime" placeholder="Select date and time"
+                    :shortcuts="shortcuts" />
                 </div>
-                <div class="d-flex flex-column flex-md-row gap-1">
-                  <p>新增標籤</p>
-                  <el-tag
-                    v-for="tag in dynamicTags"
-                    :key="tag"
-                    class="mx-1"
-                    closable
-                    :disable-transitions="false"
-                    @close="handleClose(tag)"
-                  >
-                    {{ tag }}
-                  </el-tag>
-                  <el-input
-                    v-if="inputVisible"
-                    ref="InputRef"
-                    v-model="inputValue"
-                    class="ms-1"
-                    style="width: 100px"
-                    size="small"
-                    @keyup.enter="handleInputConfirm"
-                    @blur="handleInputConfirm"
-                  />
-                  <el-button
-                    v-else
-                    class="button-new-tag ml-1"
-                    size="small"
-                    @click.stop="showInput"
-                  >
-                    + New Tag
-                  </el-button>
-                </div>
+
                 <!--  -->
                 <div>
                   <label for="title" class="form-label">標題</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="title"
-                    v-model="tempStory.title"
-                    placeholder="請輸入標題"
-                  />
+                  <input type="text" class="form-control" id="title" v-model="tempStory.title" placeholder="請輸入標題" />
                 </div>
                 <div class="row gx-2">
                   <div class="mb-3 col-md-6">
                     <label for="category" class="form-label">作者</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="category"
-                      v-model="tempStory.author"
-                      placeholder="請輸入分類"
-                    />
+                    <input type="text" class="form-control" id="category" v-model="tempStory.author"
+                      placeholder="請輸入分類" />
                   </div>
                 </div>
                 <div>
                   <label for="editor1" class="form-label">文章描述</label>
-                  <ckeditor
-                    :editor="editor"
-                    v-model="tempStory.description"
-                    :config="editorConfig"
-                  ></ckeditor>
+                  <ckeditor :editor="editor" v-model="tempStory.description" :config="editorConfig"></ckeditor>
                 </div>
                 <div>
                   <label for="content" class="form-label">球員內容</label>
-                  <ckeditor
-                    :editor="editor"
-                    v-model="tempStory.content"
-                    :config="editorConfig"
-                  ></ckeditor>
+                  <ckeditor :editor="editor" v-model="tempStory.content" :config="editorConfig"></ckeditor>
                 </div>
                 <hr />
                 <div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      v-model="tempStory.isPublic"
-                      :true-value="true"
-                      :false-value="false"
-                      id="isPublic"
-                    />
+                    <input class="form-check-input" type="checkbox" v-model="tempStory.isPublic" :true-value="true"
+                      :false-value="false" id="isPublic" />
                     <label class="form-check-label" for="isPublic"> 是否啟用 </label>
                   </div>
                 </div>
@@ -277,7 +194,7 @@ export default {
             取消
           </button>
           <!-- 向外傳遞需觸發的函式和傳遞資料 -->
-          <button type="button" class="btn btn-primary" @click="$emit('update-story', tempStory)">
+          <button type="button" class="btn btn-nbaBlue" @click="$emit('update-story', tempStory)">
             確認
           </button>
           <!--  -->
@@ -325,6 +242,7 @@ export default {
 }
 
 .image-style {
+
   .image-style-side,
   .image-style-align-left,
   .image-style-align-center,
@@ -354,7 +272,7 @@ export default {
 }
 
 // 影片
-.media > div {
+.media>div {
   width: 100%;
 }
 </style>

@@ -1,18 +1,18 @@
 <script>
-import Pagination from '@/components/Pagination.vue'
+import Pagination from "@/components/Pagination.vue";
 
 export default {
   components: {
-    Pagination
+    Pagination,
   },
   data() {
     return {
       storyList: [],
-      pagination: {}
-    }
+      pagination: {},
+    };
   },
   created() {
-    this.getStoryList()
+    this.getStoryList();
   },
   mounted() {
     // this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法 > 最上層的視圖層就有判斷了
@@ -25,23 +25,23 @@ export default {
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/articles/?page=${page}`
-      this.isLoading = true
+      }/articles/?page=${page}`;
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
-        this.isLoading = false
+        this.isLoading = false;
         if (res.data.success) {
           // This code will create a new array  this.storyList  that contains only the items from  res.data.articles  where  isPublic  is  true .
-          this.storyList = res.data.articles.filter((story) => story.isPublic)
-          this.pagination = res.data.pagination
+          this.storyList = res.data.articles.filter((story) => story.isPublic);
+          this.pagination = res.data.pagination;
         }
-      })
+      });
     },
     getStory(id) {
       //! 只取一個文章
-      this.$router.push(`/story/item/${id}`)
-    }
-  }
-}
+      this.$router.push(`/story/item/${id}`);
+    },
+  },
+};
 </script>
 
 <template>
@@ -78,8 +78,8 @@ export default {
             <div data-num="001" class="img_back img_back_kobe"></div>
             <div class="card-body">
               <h3 class="card-title fw-bold fs-6">{{ item.title }}</h3>
-              <!-- {{ '我是啟用狀態：' + item.isPublic }} -->
               <p class="card-text fs-6 multiline-ellipsis" v-html="item.description"></p>
+              <hr />
               <button
                 class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
               >
@@ -95,7 +95,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .single-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -110,10 +110,15 @@ export default {
   overflow: hidden;
   /*  有寬度才能多行  */
   width: 100%;
+
   p {
     a {
       color: #000 !important;
     }
   }
+}
+
+.text-secondary {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

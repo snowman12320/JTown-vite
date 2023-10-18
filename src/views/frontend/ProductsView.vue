@@ -12,7 +12,6 @@ export default {
     FullFooter,
     ToastMessages
   },
-
   mounted() {
     this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
   },
@@ -26,11 +25,11 @@ export default {
 </script>
 
 <template>
-  <di class="wrap">
+  <div class="wrap">
     <Loading :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <ToastMessages></ToastMessages>
     <router-view />
     <FullFooter></FullFooter>
-  </di>
+  </div>
 </template>

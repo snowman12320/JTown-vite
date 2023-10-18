@@ -24,6 +24,7 @@ export default defineStore('loginStore', {
             if (localStorage.getItem('VIP')) this.isLogin = true
           } else {
             this.isLogin = true
+            console.log('checkLoginStatus', this.isLogin)
           }
         })
         .catch((error) => {

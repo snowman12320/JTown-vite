@@ -1,16 +1,16 @@
 <script>
-import cartStore from '@/stores/cartStore.js'
-import favoriteStore from '@/stores/favoriteStore'
-import productStore from '@/stores/productStore'
-import { mapActions, mapState } from 'pinia'
-import loginStore from '@/stores/loginStore'
+import cartStore from "@/stores/cartStore.js";
+import favoriteStore from "@/stores/favoriteStore";
+import productStore from "@/stores/productStore";
+import { mapActions, mapState } from "pinia";
+import loginStore from "@/stores/loginStore";
 
 export default {
   data() {
     return {
       isLoading_small: false, //列表載入
       statusBtn_car: {
-        loadingItem: ''
+        loadingItem: "",
       },
       //
       products: [], // 原始資料
@@ -21,132 +21,136 @@ export default {
       //
       productsList_hight: 0,
       //
-      selectSort: '0', //名稱價格排序 (不用與其他元件共用狀態，故保留)
+      selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
       setClass: false,
       //
       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
-      productSize_list: '',
-      productSize_item: '',
+      productSize_list: "",
+      productSize_item: "",
       //
-      addToCart_item_id: null
-    }
+      addToCart_item_id: null,
+    };
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
-  props: ['childClass'], //* 傳入用一串class包起來的變數，來改變子元件樣式
+  props: ["childClass"], //* 傳入用一串class包起來的變數，來改變子元件樣式
   mounted() {
-    this.productsList_hight = this.$refs.productsList_hight.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
-    window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
+    this.productsList_hight = this.$refs.productsList_hight.offsetHeight; //! 在mounted定義會是零，但不定義會在其他頁報錯
+    window.addEventListener("scroll", this.handleScroll); //* 監聽滾動事件
   },
   created() {
     // console.clear()
-    this.getProducts()
-    this.getFiltered() //! 取得全域搜尋資料
+    this.getProducts();
+    this.getFiltered(); //! 取得全域搜尋資料
   },
   watch: {
     toast: {
       handler() {
-        this.$toast(this.toast.res, this.toast.info)
+        this.$toast(this.toast.res, this.toast.info);
       },
-      deep: true
+      deep: true,
     },
     notLogin(newVal) {
       if (newVal) {
-        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        this.$swal.fire("Please", " Sign in or Sign up first.", "warning");
         // this.$router.push('/login')
       }
     },
     productSize_list() {
-      this.addToCart(this.addToCart_item_id, 1, false)
-    }
+      this.addToCart(this.addToCart_item_id, 1, false);
+    },
   },
   computed: {
-    ...mapState(cartStore, ['isLoading']), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
+    ...mapState(cartStore, ["isLoading"]), //* statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
     ...mapState(favoriteStore, [
-      'statusBtn',
-      'filteredProducts',
-      'favoriteIds',
-      'toast',
-      'notLogin'
+      "statusBtn",
+      "filteredProducts",
+      "favoriteIds",
+      "toast",
+      "notLogin",
     ]),
-    ...mapState(productStore, ['cacheSearch', 'cacheCategory', 'filterCheck']),
-    ...mapState(loginStore, ['isLogin']),
+    ...mapState(productStore, ["cacheSearch", "cacheCategory", "filterCheck"]),
+    ...mapState(loginStore, ["isLogin"]),
     //
     filteredData() {
-      let filteredData = []
+      let filteredData = [];
       if (
-        !this.$route.path.includes('products-content') &&
-        !this.$route.path.includes('products-item')
+        !this.$route.path.includes("products-content") &&
+        !this.$route.path.includes("products-item")
       ) {
-        filteredData = this.products
+        filteredData = this.products;
       } else {
         // 名稱搜尋或分類搜尋
         filteredData = this.Filtered.filter(
           (item) =>
             (!this.cacheSearch || item.title.toLowerCase().includes(this.cacheSearch)) &&
             (!this.cacheCategory ||
-              item.category.toLowerCase().includes(this.cacheCategory.trim().toLowerCase()))
-        )
+              item.category
+                .toLowerCase()
+                .includes(this.cacheCategory.trim().toLowerCase()))
+        );
 
         if (filteredData.length === 0) {
-          filteredData = this.products
+          filteredData = this.products;
         }
         // !當無搜尋時就使用第一頁資料，在有搜尋時就使用全部資料，才不會一開始就渲染全部
         if (!this.cacheCategory && !this.cacheSearch) {
-          filteredData = this.products
+          filteredData = this.products;
         }
         // 排序
         const filterFunc = {
           2999: (item) => item.price <= 2999,
           5000: (item) => item.price >= 5000,
-          default: () => true
-        }[this.filterCheck || 'default']
+          default: () => true,
+        }[this.filterCheck || "default"];
 
         const sortFunc = {
           Low: (a, b) => a.price - b.price,
           Height: (a, b) => b.price - a.price,
           AZ: (a, b) => a.title.localeCompare(b.title),
           ZA: (a, b) => b.title.localeCompare(a.title),
-          default: () => 0
-        }[this.selectSort || 'default']
+          default: () => 0,
+        }[this.selectSort || "default"];
 
-        filteredData = filteredData.filter(filterFunc).sort(sortFunc)
+        filteredData = filteredData.filter(filterFunc).sort(sortFunc);
       }
 
-      return filteredData
-    }
+      return filteredData;
+    },
   },
   methods: {
-    ...mapActions(cartStore, ['getCart']),
-    ...mapActions(favoriteStore, ['getFavorite', 'updateFavorite']),
-    ...mapActions(productStore, ['getProduct_item']),
+    ...mapActions(cartStore, ["getCart"]),
+    ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
+    ...mapActions(productStore, ["getProduct_item"]),
     //
     addToCart(id, qty = 1, isBuy) {
       if (!this.isLogin) {
         // ! 在store不會用到this ，共用狀態才會放store
-        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
+        this.$swal.fire("Please", " Sign in or Sign up first.", "warning");
         // this.$router.push('/login')
       } else {
         if (!this.productSize_list && !this.productSize_item) {
-          this.$swal.fire('Please', 'Size must be selected.', 'warning')
+          this.$swal.fire("Please", "Size must be selected.", "warning");
         } else {
-          this.statusBtn_car.loadingItem = id
+          this.statusBtn_car.loadingItem = id;
           //
-          const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+          const url = `${import.meta.env.VITE_APP_API}api/${
+            import.meta.env.VITE_APP_PATH
+          }/cart`;
           const cart = {
             product_id: id,
-            qty
-          }
+            qty,
+          };
           this.$http.post(url, { data: cart }).then(() => {
-            this.getCart()
+            this.getCart();
             //
-            this.statusBtn_car.loadingItem = ''
-            this.$toast('success', 'add to cart.')
+            this.statusBtn_car.loadingItem = "";
+            this.$toast("success", "add to cart.");
             if (isBuy) {
-              this.$router.push('/cart-view/cart-list')
+              this.$router.push("/cart-view/cart-list");
               // *觸發該頁函式，讓下一頁資料更新
-              this.getCart()
+              this.getCart();
             }
-          })
+          });
         }
       }
     },
@@ -155,56 +159,58 @@ export default {
       //! 這邊定義會在切換router時，取不到dom（可生命週期沒有重整吧）
       // this.productsList_hight = this.$refs.productsList_hight.offsetHeight;
       if (window.scrollY > this.productsList_hight - 300) {
-        this.pushProducts()
+        this.pushProducts();
       }
     },
     //
     getFiltered() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/products/all`;
       this.$http.get(api).then((res) => {
         if (res.data.success) {
-          this.Filtered = res.data.products
+          this.Filtered = res.data.products;
         }
-      })
+      });
     },
     //
     getProducts(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/products/?page=${page}`
+      }/products/?page=${page}`;
       this.$http.get(api).then((res) => {
         if (res.data.success) {
-          this.products = res.data.products
-          this.pagination = res.data.pagination
+          this.products = res.data.products;
+          this.pagination = res.data.pagination;
         }
-      })
+      });
     },
     //* 捲動更新
     // 將新數據合併到舊數據時，可以使用 concat 方法代替 new Set，避免重複儲存，也不用push推新的陣列物件進去，這樣會有兩個陣列物件，會無法迴圈
     pushProducts() {
       //! 要用this.isLoading阻擋，避免讀取api間隔，持續捲動導致重複讀取資料
       if (!this.isLoading_small && this.pagination.has_next) {
-        this.isLoading_small = true
-        this.page++
+        this.isLoading_small = true;
+        this.page++;
         const api = `${import.meta.env.VITE_APP_API}api/${
           import.meta.env.VITE_APP_PATH
-        }/products/?page=${this.page}`
+        }/products/?page=${this.page}`;
         this.$http.get(api).then((res) => {
           if (res.data.success) {
-            this.pagination = res.data.pagination
-            this.products = this.products.concat(res.data.products)
+            this.pagination = res.data.pagination;
+            this.products = this.products.concat(res.data.products);
             //! 成功讀取分頁數後，才能關閉載入，進行下次資料儲存，否則會重複儲存
-            this.isLoading_small = false
+            this.isLoading_small = false;
           }
-        })
+        });
       }
     },
     //
     goToProduct(id) {
-      this.getProduct_item(id)
-    }
-  }
-}
+      this.getProduct_item(id);
+    },
+  },
+};
 </script>
 
 <template>
@@ -243,7 +249,9 @@ export default {
               <h5 class="fs-5 text-center" @click="goToProduct(item.id)">
                 {{ item.title }}
               </h5>
-              <h6 class="text-white text-center">$ {{ $filters.currency(item.price) }}</h6>
+              <h6 class="text-white text-center">
+                $ {{ $filters.currency(item.price) }}
+              </h6>
               <!--  -->
               <div
                 class="position-relative border border-white rounded-1 px-2 py-3 d-flex justify-content-around m-2"
@@ -251,7 +259,9 @@ export default {
               >
                 <i
                   @click="updateFavorite(item.id)"
-                  :class="{ 'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1 }"
+                  :class="{
+                    'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1,
+                  }"
                   class="fa fa-heart fs-4"
                 ></i>
                 <!--  -->
@@ -264,7 +274,10 @@ export default {
                   @show="setClass = index"
                   popper-class="product_list_el-popover"
                 >
-                  <div class="d-flex justify-content-center w-100 mx-auto gap-1" style="z-index: 2">
+                  <div
+                    class="d-flex justify-content-center w-100 mx-auto gap-1"
+                    style="z-index: 2"
+                  >
                     <div>
                       <input
                         value="S"
@@ -349,7 +362,10 @@ export default {
                 </el-popover>
                 <!--  -->
                 <div
-                  v-if="statusBtn.loadingItem === item.id || statusBtn_car.loadingItem === item.id"
+                  v-if="
+                    statusBtn.loadingItem === item.id ||
+                    statusBtn_car.loadingItem === item.id
+                  "
                   class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
                 >
                   <div class="spinner-border text-primary" role="status">
@@ -409,6 +425,10 @@ export default {
       transform: scale(1.2);
       border-radius: 3%;
     }
+  }
+
+  .fa-heart:hover {
+    color: #dc3545;
   }
 
   @media (max-width: 768px) {

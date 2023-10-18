@@ -111,7 +111,7 @@ export default {
   /*  有寬度才能多行  */
   width: 100%;
 
-  p {
+ :deep(p) {
     a {
       color: #000 !important;
     }

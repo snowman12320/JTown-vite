@@ -98,10 +98,15 @@ export default {
 .multiline-ellipsis {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   /*  有寬度才能多行  */
   width: 100%;
+  :deep(p) {
+    a {
+      color: #000 !important;
+    }
+  }
 }
 
 .btn_pill {
@@ -116,7 +121,7 @@ export default {
   &:hover {
     box-shadow: 0 6px 1px black;
     transform: translateY(-8px);
-    background-color: #cc2b31;
+    background-color: #0253a5;
   }
 
   &:focus {

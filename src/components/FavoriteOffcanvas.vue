@@ -117,11 +117,11 @@ export default {
             <p class="text-center pt-2 fs-5 mb-0">
               <small
                 class="text-secondary text-decoration-line-through fw-lighter"
-                style="font-size: 5px"
+                style="font-size: 12px"
                 >$ {{ $filters.currency(item.origin_price) }}</small
               >
               $ {{ $filters.currency(item.price) }}
-              <span style="font-size: 5px">/{{ item.unit }}</span>
+              <span style="font-size: 12px">/{{ item.unit }}</span>
             </p>
           </div>
           <button

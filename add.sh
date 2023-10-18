@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd  suggest of UI / dashboard check isLogin "
+git commit -m "fixd  note/ remove out of the .gitignore  "
 sleep 2
 
 git push

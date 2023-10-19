@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd  note/ remove out of the .gitignore  "
+git commit -m "fixd isLgin ing  "
 sleep 2
 
 git push

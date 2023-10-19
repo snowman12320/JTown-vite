@@ -18,6 +18,9 @@ export default {
   },
   mounted() {
     console.log("mounted", this.isLogin);
+    // setTimeout(() => {
+    //   if (!this.isLogin) this.$router.push("/login");
+    // }, 2000);
   },
   computed: {
     ...mapState(loginStore, ["isLogin"]),
@@ -25,8 +28,9 @@ export default {
   watch: {
     //! 1. pinia 的store ，在created 和 mounted 和 computed 之後載入 ( 重整後也會再重載入 )，用非同步也沒用，要用watch監聽數值改變後去去觸發判斷
     //! 2. async created() await this.checkLoginStatus(); 也要，因為要等這個api跑完，之後的有關admin的api才有資料
-    isLogin(newIsLogin) {
+    isLogin(newIsLogin, oldIsLogin) {
       console.log("watch");
+      console.log(newIsLogin, oldIsLogin);
       if (newIsLogin) {
         this.checkIsLogin();
       }
@@ -35,7 +39,8 @@ export default {
   methods: {
     ...mapActions(loginStore, ["checkLoginStatus"]),
     checkIsLogin() {
-      if (!this.isLogin) this.$router.push("/login");
+      // if (!this.isLogin) this.$router.push("/login");
+      if (this.isLogin) history.back();
       if (localStorage.getItem("VIP")) {
         this.$swal.fire(
           "WELCOME VIP",

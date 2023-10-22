@@ -23,7 +23,7 @@ export default {
       <h2 class="text-pickBlack">PRODUCTS</h2>
     </div>
     <div class="container-xxl">
-      <main class="row g-md-5">
+      <main class="row g-md-5 px-3">
         <ProductsSide></ProductsSide>
         <section class="col-lg-10 mb-5">
           <ProductsList></ProductsList>

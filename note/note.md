@@ -70,3 +70,44 @@ this.cacheSearch = this.$route.params.search
                     + New Tag
                   </el-button>
                 </div>
+
+////////////////////////////////////////////productSide//////////////////////////////////////////////
+<!-- <div>
+  <label>
+    <input type="checkbox" v-model="filterCheck['999']" /> $999 or less
+  </label>
+  <label>
+    <input type="checkbox" v-model="filterCheck['2999']" /> $2999 or less
+  </label>
+  <label>
+    <input type="checkbox" v-model="filterCheck['5000']" /> $5000 or more
+  </label>
+</div>
+{{ filterCheck }} -->
+
+ filterCheck: {
+      deep: true,
+      handler(val) {
+        this.setFilterCheck(val);
+        // console.log("Deep watch:", val);
+      },
+    },
+////////////////////////////////////////////productList//////////////////////////////////////////////
+// filterCheck: {
+//   999: false,
+//   2999: false,
+//   5000: false,
+// },
+
+// filterRanges() {
+//   return {
+//     999: (item) => item.price < 999,
+//     2999: (item) => item.price < 2999,
+//     5000: (item) => item.price > 5000,
+//   };
+// },
+// const filterFunc = (item) => {
+//   return Object.keys(this.filterCheck).every((price) => {
+//     return !this.filterCheck[price] || this.filterRanges[price](item);
+//   });
+// };

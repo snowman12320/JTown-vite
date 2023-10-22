@@ -33,6 +33,14 @@ export default {
   <div>
     <!-- 銷售排行 -->
     <div class="my-8 py-5">
+      <!--  -->
+      <p
+        class=""
+        :class="Boolean($attrs.customClass) ? `${$attrs.customClass}` : 'false'"
+      >
+        {{ $attrs.customClass }}
+      </p>
+      <!--  -->
       <div id="Ranking" class="d-flex justify-content-center align-items-center">
         <h2 class="text-pickBlack">PLAYER</h2>
         <img

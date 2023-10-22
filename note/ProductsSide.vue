@@ -25,11 +25,9 @@ export default {
   watch: {
     cacheSearch(val) {
       this.setCacheSearch(val);
-      this.notSelectAllRadios();
     },
     cacheCategory(val) {
       this.setCategory(val);
-      this.notSelectAllRadios();
     },
     filterCheck(val) {
       this.setFilterCheck(val);
@@ -55,11 +53,6 @@ export default {
           }
         });
       });
-    },
-    notSelectAllRadios() {
-      document
-        .querySelectorAll('input[type="radio"][name="filterCheck"]')
-        .forEach((radio) => (radio.checked = false));
     },
   },
 };
@@ -131,8 +124,8 @@ export default {
             name="filterCheck"
             id="999"
             value="999"
+            v-text="'< 999'"
           />
-          {{ "&lt; 999" }}
         </label>
       </div>
       <div class="form-check">
@@ -164,11 +157,3 @@ export default {
     </div>
   </aside>
 </template>
-
-<style lang="scss" scoped>
-.form-check-input:checked {
-  background-color: #0353a5;
-  border-color: #0353a5;
-  box-shadow: none;
-}
-</style>

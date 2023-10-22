@@ -51,8 +51,21 @@ export default {
     },
     notLogin(newVal) {
       if (newVal) {
-        this.$swal.fire("Please", " Sign in or Sign up first.", "warning");
-        // this.$router.push('/login')
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          });
       }
     },
     productSize_list() {
@@ -71,6 +84,7 @@ export default {
     ...mapState(productStore, ["cacheSearch", "cacheCategory", "filterCheck"]),
     ...mapState(loginStore, ["isLogin"]),
     //
+
     filteredData() {
       let filteredData = [];
       if (
@@ -96,9 +110,10 @@ export default {
         if (!this.cacheCategory && !this.cacheSearch) {
           filteredData = this.products;
         }
-        // 排序
+
         const filterFunc = {
-          2999: (item) => item.price <= 2999,
+          999: (item) => item.price < 999,
+          2999: (item) => item.price >= 999 && item.price <= 2999,
           5000: (item) => item.price >= 5000,
           default: () => true,
         }[this.filterCheck || "default"];
@@ -125,8 +140,21 @@ export default {
     addToCart(id, qty = 1, isBuy) {
       if (!this.isLogin) {
         // ! 在store不會用到this ，共用狀態才會放store
-        this.$swal.fire("Please", " Sign in or Sign up first.", "warning");
-        // this.$router.push('/login')
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          }); // this.$router.push('/login')
       } else {
         if (!this.productSize_list && !this.productSize_item) {
           this.$swal.fire("Please", "Size must be selected.", "warning");
@@ -220,7 +248,7 @@ export default {
       <label for="Sort" class="form-label mb-0">Sort by：</label>
       <select
         v-model="selectSort"
-        class="form-select form-select-lg rounded-0 p-1 fs-6"
+        class="form-select form-select-lg rounded-3 px-1 py-2 fs-6"
         style="width: 250px"
         id="Sort"
       >
@@ -232,159 +260,164 @@ export default {
       </select>
     </div>
     <hr class="py-3" />
-    <div class="row row-cols-2 row-cols-lg-5 g-4 mb-7" ref="productsList_hight">
-      <div v-for="(item, index) in filteredData" :key="item.id">
-        <div class="col overflow-hidden">
-          <div
-            class="card w-100 position-relation newproduct_img"
-            :class="{ 'overflow-hidden': setClass === index }"
-            data-num="1"
-          >
+    <div v-if="filteredData.length > 0">
+      <div class="row row-cols-2 row-cols-lg-5 g-2 g-md-4 mb-7" ref="productsList_hight">
+        <div v-for="(item, index) in filteredData" :key="item.id">
+          <div class="col overflow-hidden">
             <div
-              class="newproduct_cloth p-1"
-              ref="newproduct_cloth"
-              :class="{ newproduct_cloth_set: setClass === index }"
+              class="card w-100 position-relation newproduct_img"
+              :class="{ 'overflow-hidden': setClass === index }"
+              data-num="1"
             >
-              <h6 class="fw-light" style="font-size: 10px">{{ item.category }}</h6>
-              <h5 class="fs-5 text-center" @click="goToProduct(item.id)">
-                {{ item.title }}
-              </h5>
-              <h6 class="text-white text-center">
-                $ {{ $filters.currency(item.price) }}
-              </h6>
-              <!--  -->
               <div
-                class="position-relative border border-white rounded-1 px-2 py-3 d-flex justify-content-around m-2"
-                style="backdrop-filter: blur(5px)"
+                class="newproduct_cloth p-1"
+                ref="newproduct_cloth"
+                :class="{ newproduct_cloth_set: setClass === index }"
               >
-                <i
-                  @click="updateFavorite(item.id)"
-                  :class="{
-                    'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1,
-                  }"
-                  class="fa fa-heart fs-4"
-                ></i>
-                <!--  -->
-                <el-popover
-                  placement="top"
-                  title="SIZE："
-                  :width="200"
-                  trigger="click"
-                  @hide="setClass = false"
-                  @show="setClass = index"
-                  popper-class="product_list_el-popover"
-                >
-                  <div
-                    class="d-flex justify-content-center w-100 mx-auto gap-1"
-                    style="z-index: 2"
-                  >
-                    <div>
-                      <input
-                        value="S"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_S"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'S' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_S"
-                      >
-                        S
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        value="M"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_M"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'M' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_M"
-                      >
-                        M
-                      </label>
-                    </div>
-                    <div>
-                      <input
-                        value="L"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_L"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'L' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_L"
-                      >
-                        L
-                      </label>
-                    </div>
-                    <div class="slanted-div">
-                      <input
-                        disabled
-                        value="XL"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_XL"
-                      />
-                      <label
-                        style="cursor: not-allowed"
-                        disabled
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_XL"
-                      >
-                        xL
-                      </label>
-                    </div>
-                  </div>
-                  <template #reference>
-                    <!-- @click="addToCart(item.id, qty, (isBuy = false))" 改成點擊加入購物車開啟選單 然後點擊尺寸就加入購物車 -->
-                    <i
-                      @click="addToCart_item_id = item.id"
-                      class="fa fa-cart-plus text-white fs-4"
-                    ></i>
-                  </template>
-                </el-popover>
+                <h6 class="fw-light" style="font-size: 10px">{{ item.category }}</h6>
+                <h5 class="fs-5 text-center" @click="goToProduct(item.id)">
+                  {{ item.title }}
+                </h5>
+                <h6 class="text-white text-center">
+                  $ {{ $filters.currency(item.price) }}
+                </h6>
                 <!--  -->
                 <div
-                  v-if="
-                    statusBtn.loadingItem === item.id ||
-                    statusBtn_car.loadingItem === item.id
-                  "
-                  class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
+                  class="position-relative border border-white rounded-3 px-2 py-3 d-flex justify-content-around m-2"
+                  style="backdrop-filter: blur(5px)"
                 >
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                  <i
+                    @click="updateFavorite(item.id)"
+                    :class="{
+                      'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1,
+                    }"
+                    class="fa fa-heart fs-4"
+                  ></i>
+                  <!--  -->
+                  <el-popover
+                    placement="top"
+                    title="SIZE："
+                    :width="200"
+                    trigger="click"
+                    @hide="setClass = false"
+                    @show="setClass = index"
+                    popper-class="product_list_el-popover"
+                  >
+                    <div
+                      class="d-flex justify-content-center w-100 mx-auto gap-1"
+                      style="z-index: 2"
+                    >
+                      <div>
+                        <input
+                          value="S"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_S"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'S' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_S"
+                        >
+                          S
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          value="M"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_M"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'M' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_M"
+                        >
+                          M
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          value="L"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_L"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'L' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_L"
+                        >
+                          L
+                        </label>
+                      </div>
+                      <div class="slanted-div">
+                        <input
+                          disabled
+                          value="XL"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_XL"
+                        />
+                        <label
+                          style="cursor: not-allowed"
+                          disabled
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_XL"
+                        >
+                          xL
+                        </label>
+                      </div>
+                    </div>
+                    <template #reference>
+                      <!-- @click="addToCart(item.id, qty, (isBuy = false))" 改成點擊加入購物車開啟選單 然後點擊尺寸就加入購物車 -->
+                      <i
+                        @click="addToCart_item_id = item.id"
+                        class="fa fa-cart-plus text-white fs-4"
+                      ></i>
+                    </template>
+                  </el-popover>
+                  <!--  -->
+                  <div
+                    v-if="
+                      statusBtn.loadingItem === item.id ||
+                      statusBtn_car.loadingItem === item.id
+                    "
+                    class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
+                  >
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <img
+                data-num="1"
+                height="312"
+                width="312"
+                class="card-img of-cover op-top"
+                :src="item.imageUrl"
+                :alt="item.title"
+              />
             </div>
-            <img
-              data-num="1"
-              height="312"
-              width="312"
-              class="card-img of-cover op-top"
-              :src="item.imageUrl"
-              :alt="item.title"
-            />
           </div>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <p class="text-secondary text-center display-6">Sorry, the product list is empty.</p>
     </div>
     <!--  -->
     <div class="text-center">
@@ -398,6 +431,7 @@ export default {
 <style lang="scss">
 .product_list_el-popover {
   z-index: 2 !important;
+  border-radius: 0.75rem !important;
 }
 
 .product_list {

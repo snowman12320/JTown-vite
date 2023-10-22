@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd isLgin ing  "
+git commit -m "fixd isLginStore / UI   "
 sleep 2
 
 git push

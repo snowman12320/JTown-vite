@@ -304,7 +304,7 @@ export default {
                 />
                 <label
                   style="cursor: pointer"
-                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2 rounded-3"
                   for="S"
                 >
                   S
@@ -321,7 +321,7 @@ export default {
                 />
                 <label
                   style="cursor: pointer"
-                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2 rounded-3"
                   for="M"
                 >
                   M
@@ -338,7 +338,7 @@ export default {
                 />
                 <label
                   style="cursor: pointer"
-                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2 rounded-3"
                   for="L"
                 >
                   L
@@ -357,7 +357,7 @@ export default {
                 <label
                   style="cursor: not-allowed"
                   disabled
-                  class="form-check-label border border-secondary text-secondary px-3 py-2"
+                  class="form-check-label border border-secondary text-secondary px-3 py-2 rounded-3 overflow-hidden"
                   for="XL"
                 >
                   XL
@@ -378,7 +378,7 @@ export default {
                 style="height: 40px"
                 :disabled="qty === 1"
                 @click="qty--"
-                class="btn btn-outline-secondary py-0"
+                class="btn btn-outline-secondary py-0 rounded-3"
               >
                 -
               </button>
@@ -386,7 +386,7 @@ export default {
               <button
                 style="height: 40px"
                 @click="qty++"
-                class="btn btn-outline-secondary py-0"
+                class="btn btn-outline-secondary py-0 rounded-3"
               >
                 +
               </button>
@@ -418,7 +418,7 @@ export default {
             class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1"
           >
             <button
-              class="btn-outline-primary btn"
+              class="btn-outline-primary btn rounded-3"
               @click="addToCart(product_item.id, qty, (isBuy = false))"
               :class="{
                 'btn btn-outline-primary': product_item.id === statusBtn.loadingItem,
@@ -428,7 +428,7 @@ export default {
               ADD TO CART
             </button>
             <button
-              class="btn btn-danger"
+              class="btn btn-danger rounded-3"
               @click="addToCart(product_item.id, qty, (isBuy = true))"
             >
               BUY NOW
@@ -436,14 +436,29 @@ export default {
           </div>
           <!--  -->
           <hr class="w-100 mx-auto" />
-          <div class="my-3 d-flex gap-3 w-100 flex-wrap mx-auto">
-            <el-tag class="fs-6" type="warning" size="small" effect="plain" round
+          <div class="my-3 d-flex gap-2 w-100 flex-wrap mx-auto">
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="warning"
+              size="small"
+              effect="plain"
+              round
               >Free shipping</el-tag
             >
-            <el-tag class="fs-6" type="info" size="small" effect="plain" round
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="info"
+              size="small"
+              effect="plain"
+              round
               >Store pickup</el-tag
             >
-            <el-tag class="fs-6" type="danger" size="small" effect="plain" round
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="danger"
+              size="small"
+              effect="plain"
+              round
               >Fast delivery</el-tag
             >
           </div>
@@ -527,7 +542,7 @@ export default {
               </h2>
               <div
                 id="panelsStayOpen-collapseOne"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body text-start">
@@ -617,18 +632,9 @@ export default {
   color: black;
 }
 
-.accordion-item:last-of-type {
-  border-bottom-right-radius: 0px !important;
-  border-bottom-left-radius: 0px !important;
-}
-
-.accordion-item:first-of-type {
-  border-top-left-radius: 0px !important;
-  border-top-right-radius: 0px !important;
-}
-
 .accordion {
   --bs-accordion-btn-active-icon: var(--bs-accordion-btn-icon);
+  border-radius: 0.75em !important;
 }
 
 .form-check input:checked + label {
@@ -643,11 +649,10 @@ export default {
 .slanted-div::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 32%;
+  top: 6%;
+  right: 34%;
   width: 1%;
-  /* bottom: 0; */
-  height: 100%;
+  height: 78%;
   transform: skew(130deg);
   background-color: #000;
 }
@@ -691,6 +696,7 @@ export default {
   bottom: -15px;
   color: rgba(148, 115, 115, 0.882);
   font-size: 10px;
+  border-radius: 0.75em;
 }
 
 .msg_time_send {
@@ -705,7 +711,7 @@ export default {
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 10px;
-  border-radius: 25px;
+  border-radius: 0.75em;
   border: 1px solid #82ccdd;
   // background-color: #82ccdd;
   padding: 10px;
@@ -713,7 +719,7 @@ export default {
 }
 
 .type_msg {
-  height: 100px !important;
+  min-height: 100px !important;
   overflow-y: auto;
   border-radius: 15px 15px 15px 15px !important;
 }
@@ -743,7 +749,8 @@ export default {
   left: 0px;
   pointer-events: none;
 }
-.fa-heart-crack,.fa-beat-fade {
+.fa-heart-crack,
+.fa-beat-fade {
   cursor: pointer;
 }
 </style>

@@ -1,76 +1,102 @@
 <script>
-import CartOffcanvas from '@/components/CartOffcanvas.vue'
-import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue'
-import Collapse from 'bootstrap/js/dist/collapse'
+import CartOffcanvas from "@/components/CartOffcanvas.vue";
+import FavoriteOffcanvas from "@/components/FavoriteOffcanvas.vue";
+import Collapse from "bootstrap/js/dist/collapse";
 
-import favoriteStore from '@/stores/favoriteStore'
-import cartStore from '@/stores/cartStore'
-import loginStore from '@/stores/loginStore'
-import { mapState } from 'pinia'
+import favoriteStore from "@/stores/favoriteStore";
+import cartStore from "@/stores/cartStore";
+import loginStore from "@/stores/loginStore";
+import { mapState } from "pinia";
 
 export default {
   components: {
     CartOffcanvas,
-    FavoriteOffcanvas
+    FavoriteOffcanvas,
   },
   data() {
     return {
       nav: 0, //* 初始化 nav 值 atTop: false };
       atTop: true, //* 動態導覽列
       collapse: null,
-      collapse_none: true
-    }
+      collapse_none: true,
+    };
   },
   mounted() {
-    this.nav = this.$refs.header.offsetHeight //* 在 mounted 階段獲取 header 的高度
-    window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
-    this.collapse = new Collapse(this.$refs.collapse) //* 繼承一個彈窗，並取得dom去操作
+    this.nav = this.$refs.header.offsetHeight; //* 在 mounted 階段獲取 header 的高度
+    window.addEventListener("scroll", this.handleScroll); //* 監聽滾動事件
+    this.collapse = new Collapse(this.$refs.collapse); //* 繼承一個彈窗，並取得dom去操作
     setTimeout(() => {
       // ? 不知道為啥繼承collapase後就會自動開啟手機板導覽列，故設定自動關閉
-      this.collapse_hide() //* 在 mounted 后触发 collapse_hide 方法
-    }, 500)
+      this.collapse_hide(); //* 在 mounted 后触发 collapse_hide 方法
+    }, 500);
   },
   computed: {
-    ...mapState(favoriteStore, ['favoriteIds']),
-    ...mapState(cartStore, ['carts']),
-    ...mapState(loginStore, ['isLogin'])
+    ...mapState(favoriteStore, ["favoriteIds"]),
+    ...mapState(cartStore, ["carts"]),
+    ...mapState(loginStore, ["isLogin"]),
   },
   methods: {
     collapse_toggle() {
-      this.collapse_none = false
-      this.collapse.toggle()
+      this.collapse_none = false;
+      this.collapse.toggle();
     },
     collapse_hide() {
-      this.collapse_none = false
-      this.collapse.hide()
+      this.collapse_none = false;
+      this.collapse.hide();
     },
     //
     handleScroll() {
-      this.atTop = !(window.scrollY > this.nav + 10) //* 使用this.nav進行操作
+      this.atTop = !(window.scrollY > this.nav + 10); //* 使用this.nav進行操作
     },
     //
     //* 透過名稱取操作元件的函式
     openOffcanvas() {
       //! 避免開啟畫布，會一直重新判斷登入
       if (!this.isLogin) {
-        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
-        this.$router.push('/login')
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          });
       } else {
-        const cartCp = this.$refs.offcanvas
-        cartCp.showOffcanvas()
+        const cartCp = this.$refs.offcanvas;
+        cartCp.showOffcanvas();
       }
     },
     openFavoriteOffcanvas() {
       if (!this.isLogin) {
-        this.$swal.fire('Please', ' Sign in or Sign up first.', 'warning')
-        this.$router.push('/login')
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          });
       } else {
-        const favoriteCp = this.$refs.favorite
-        favoriteCp.showOffcanvas()
+        const favoriteCp = this.$refs.favorite;
+        favoriteCp.showOffcanvas();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>
@@ -80,7 +106,7 @@ export default {
       style="z-index: 10"
       ref="header"
       :class="{
-        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop
+        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop,
       }"
     >
       <div
@@ -94,7 +120,10 @@ export default {
           >
             JerseyTown
           </p>
-          <h1 class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
+          <h1
+            class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale"
+            :class="{ 'opacity-0': !atTop }"
+          >
             JTown
           </h1>
         </router-link>
@@ -141,7 +170,7 @@ export default {
                 class="fs-6 px-3 rounded-pill text-white"
               >
                 <button class="btn btn-nbaBlue text-white rounded-pill mt-lg-2 nav_pill">
-                  {{ isLogin ? 'Log out' : 'Login' }}
+                  {{ isLogin ? "Log out" : "Login" }}
                 </button>
               </router-link>
             </li>
@@ -154,18 +183,33 @@ export default {
                 <span
                   v-if="favoriteIds.length && isLogin"
                   class="position-absolute text-white"
-                  style="top: 24%; left: 45%; font-size: 18px"
+                  style="
+                    top: 24%;
+                    left: 45%;
+                    font-size: 18px;
+                    font-family: Tahoma, Geneva, Verdana, sans-serif;
+                  "
                   >{{ favoriteIds.length }}</span
                 >
               </button>
             </li>
             <li>
-              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative">
-                <i class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"></i>
+              <button
+                @click="openOffcanvas"
+                class="bg-transparent border-0 position-relative"
+              >
+                <i
+                  class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"
+                ></i>
                 <span
                   v-if="carts.length && isLogin"
                   class="position-absolute text-white"
-                  style="top: 19%; left: 43%; font-size: 16px"
+                  style="
+                    top: 17%;
+                    left: 43%;
+                    font-size: 16px;
+                    font-family: Tahoma, Geneva, Verdana, sans-serif;
+                  "
                   >{{ carts.length }}</span
                 >
               </button>

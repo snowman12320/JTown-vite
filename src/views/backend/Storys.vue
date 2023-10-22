@@ -1,16 +1,16 @@
 <script>
-import StoryModal from '@/components/StoryModal.vue'
-import Pagination from '@/components/Pagination.vue'
-import DelModal from '@/components/DelModal.vue'
+import StoryModal from "@/components/StoryModal.vue";
+import Pagination from "@/components/Pagination.vue";
+import DelModal from "@/components/DelModal.vue";
 
-import { mapActions } from 'pinia'
-import messageStore from '@/stores/messageStore'
+import { mapActions } from "pinia";
+import messageStore from "@/stores/messageStore";
 
 export default {
   components: {
     StoryModal,
     DelModal,
-    Pagination
+    Pagination,
   },
   data() {
     return {
@@ -18,102 +18,106 @@ export default {
       pagination: {}, //* 頁數資料
       tempStory: {}, //* 暫存區
       isNew: false, //* 判斷有無資料
-      isLoading: false //* 載入效果開關
-    }
+      isLoading: false, //* 載入效果開關
+    };
   },
   created() {
     // console.clear()
-    this.getStoryList()
+    this.getStoryList();
   },
   methods: {
-    ...mapActions(messageStore, ['pushMessage']),
+    ...mapActions(messageStore, ["pushMessage"]),
     // 產品後台 取得遠端資料
     // !透過頁數取得資料
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/articles/?page=${page}`
-      this.isLoading = true
+      }/admin/articles/?page=${page}`;
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
-        this.isLoading = false
+        this.isLoading = false;
         if (res.data.success) {
-          this.storyList = res.data.articles
-          this.pagination = res.data.pagination
+          this.storyList = res.data.articles;
+          this.pagination = res.data.pagination;
         }
-      })
+      });
     },
     //! 新增時會帶一個true，編輯時會帶false和資料
     openModal(isNew, id) {
       if (isNew) {
-        this.tempStory = {}
+        this.tempStory = {};
       } else {
-        this.isLoading = true
+        this.isLoading = true;
         // !story 的 content 沒有在彈窗正確顯示是因為取得文章列表並沒有 content 這筆資料
         const api = `${import.meta.env.VITE_APP_API}api/${
           import.meta.env.VITE_APP_PATH
-        }/admin/article/${id}`
+        }/admin/article/${id}`;
         this.$http.get(api).then((res) => {
           if (res.data.success) {
-            this.tempStory = res.data.article
-            this.isLoading = false
+            this.tempStory = res.data.article;
+            this.isLoading = false;
           }
-        })
+        });
       }
-      this.isNew = isNew
-      const storyCp = this.$refs.storyModal
-      storyCp.showModal()
+      this.isNew = isNew;
+      const storyCp = this.$refs.storyModal;
+      storyCp.showModal();
     },
     //* 以下進行新增或編輯，使用不同ＡＰＩ
     updateStory(item) {
-      this.tempStory = item
+      this.tempStory = item;
       // 新增
-      let api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article`
-      let httpMethod = 'post'
+      let api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/article`;
+      let httpMethod = "post";
       // 編輯
       if (!this.isNew) {
-        api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/admin/article/${
-          item.id
-        }`
-        httpMethod = 'put'
+        api = `${import.meta.env.VITE_APP_API}api/${
+          import.meta.env.VITE_APP_PATH
+        }/admin/article/${item.id}`;
+        httpMethod = "put";
       }
-      const storyCp = this.$refs.storyModal
+      const storyCp = this.$refs.storyModal;
       this.$http[httpMethod](api, { data: this.tempStory }).then((response) => {
-        storyCp.hideModal()
+        storyCp.hideModal();
         if (response.data.success) {
-          this.getStoryList()
-          this.pushMessage(response, '更新')
+          this.getStoryList();
+          this.pushMessage(response, "更新");
         } else {
-          this.pushMessage(response, '更新')
+          this.pushMessage(response, "更新");
         }
-      })
+      });
     },
     // 開啟刪除 Modal
     openDelStoryModal(item) {
-      this.tempStory = { ...item }
-      const delComponent = this.$refs.delModal
-      delComponent.showModal()
+      this.tempStory = { ...item };
+      const delComponent = this.$refs.delModal;
+      delComponent.showModal();
     },
     delStory() {
       // !塞入要刪除的ＩＤ
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/article/${this.tempStory.id}`
+      }/admin/article/${this.tempStory.id}`;
       this.$http.delete(url).then((response) => {
-        this.pushMessage(response, response.data.message)
-        const delComponent = this.$refs.delModal
-        delComponent.hideModal()
-        this.getStoryList()
-      })
-    }
-  }
-}
+        this.pushMessage(response, response.data.message);
+        const delComponent = this.$refs.delModal;
+        delComponent.hideModal();
+        this.getStoryList();
+      });
+    },
+  },
+};
 </script>
 
 <template>
   <div class="w-100">
     <Loading :active="isLoading" />
     <div class="text-end mt-3">
-      <button class="btn btn-nbaBlue" type="button" @click="openModal(true, null)">新增文章</button>
+      <button class="btn btn-nbaBlue" type="button" @click="openModal(true, null)">
+        新增文章
+      </button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -128,20 +132,31 @@ export default {
       </thead>
       <tbody>
         <tr v-for="item in storyList" :key="item.id">
-          <td class="d-md-table-cell d-none">{{ $filters.dateAndTime(item.create_at) }}</td>
+          <td class="d-md-table-cell d-none">
+            {{ $filters.dateAndTime(item.create_at) }}
+          </td>
           <td>{{ item.title }}</td>
           <td class="d-md-table-cell d-none">{{ item.author }}</td>
-          <td class="d-md-inline-block d-none multiline-ellipsis" v-html="item.description"></td>
+          <td
+            class="d-md-inline-block d-none multiline-ellipsis overflow-hidden"
+            v-html="item.description"
+          ></td>
           <td class="d-md-table-cell d-none">
             <span class="text-success" v-if="item.isPublic">啟用</span>
             <span class="text-muted" v-else>未啟用</span>
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item.id)">
+              <button
+                class="btn btn-outline-nbaBlue btn-sm"
+                @click="openModal(false, item.id)"
+              >
                 編輯
               </button>
-              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelStoryModal(item)">
+              <button
+                class="btn btn-outline-nbaRed btn-sm"
+                @click="openDelStoryModal(item)"
+              >
                 刪除
               </button>
             </div>
@@ -152,7 +167,11 @@ export default {
     <!-- props傳遞總頁數 emit傳出目前頁數 -->
     <Pagination :pages="pagination" @emit-pages="getStoryList"></Pagination>
     <!-- 更新資料，先帶原始資料進去元件，元件內修改後，再透過emit傳遞觸發函式和資料出來 -->
-    <StoryModal ref="storyModal" :story="tempStory" @update-story="updateStory"></StoryModal>
+    <StoryModal
+      ref="storyModal"
+      :story="tempStory"
+      @update-story="updateStory"
+    ></StoryModal>
     <!--  -->
     <DelModal :item="tempStory" ref="delModal" @del-item="delStory" />
   </div>
@@ -191,6 +210,15 @@ tr:hover {
   * {
     color: rgba(0, 0, 0, 0.692) !important;
     font-size: 16px !important;
+  }
+}
+
+.el-button {
+  color: white;
+  z-index: 9998;
+  &.is-text {
+    color: white;
+    z-index: 9998;
   }
 }
 </style>

@@ -1,4 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+// import { loginStore } from '@/stores/loginStore' // Import your Pinia store
+
 import HomeView from '@/views/frontend/HomeView.vue'
 import ErrorView from '@/views/ErrorView.vue'
 
@@ -100,5 +102,27 @@ const router = createRouter({
   ],
   linkActiveClass: 'active'
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.path.startsWith('/dashboard'))) {
+//     const loginStore = loginStore() // Initialize your Pinia store
+//     // Call the checkLoginStatus function from your Pinia store
+//     loginStore
+//       .checkLoginStatus()
+//       .then((isLogin) => {
+//         if (isLogin) {
+//           // If logged in, allow navigation to the requested route
+//           next()
+//         } else {
+//           // If not logged in, redirect to the login page or another route
+//           next('/login')
+//         }
+//       })
+//       .catch((error) => {
+//         console.error('Error checking login status:', error)
+//         next('/error') // Handle errors by redirecting to an error route
+//       })
+//   }
+// })
 
 export default router

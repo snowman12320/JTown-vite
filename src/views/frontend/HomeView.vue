@@ -1,82 +1,91 @@
 <script>
-import FrontNavbar from '@/components/FrontNavbar.vue'
-import HomeCarousel from '@/components/HomeCarousel.vue'
-import HomeStory from '@/components/HomeStory.vue'
-import FullFooter from '@/components/FullFooter.vue'
+import FrontNavbar from "@/components/FrontNavbar.vue";
+import HomeCarousel from "@/components/HomeCarousel.vue";
+import HomeStory from "@/components/HomeStory.vue";
+import FullFooter from "@/components/FullFooter.vue";
 
-import loginStore from '@/stores/loginStore.js'
-import { mapActions, mapState } from 'pinia'
+import loginStore from "@/stores/loginStore.js";
+import { mapActions, mapState } from "pinia";
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     FrontNavbar,
     HomeCarousel,
     HomeStory,
-    FullFooter
+    FullFooter,
   },
   data() {
     return {
       isCouponAlert: true,
       duration: 0,
-      timerElement: '00 D 00 H 00 M 00.0 S',
+      timerElement: "00 D 00 H 00 M 00.0 S",
       value: Date.now() + 1000 * 60 * 60 * 7, //* 實際開發時用API取到期日
-      centerDialogVisible: true
-    }
+      centerDialogVisible: true,
+    };
   },
   mounted() {
-    this.countdownTimer()
+    this.countdownTimer();
     // 監聽scroll事件 > 可能要改watch 比較前後值
-    window.addEventListener('scroll', () => {
+    window.addEventListener("scroll", () => {
       // 如果畫面捲軸停止捲動，將centerDialogVisible設置為true
       if (window.scrollY === 0) {
         // 在畫面停留3秒後將centerDialogVisible設置為true
         setTimeout(() => {
-          this.centerDialogVisible = !this.centerDialogVisible
-        }, 10000)
+          this.centerDialogVisible = !this.centerDialogVisible;
+        }, 10000);
       }
     }),
-      this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
+      this.checkLoginStatus(); // 在组件挂载时调用检查登录状态的方法
   },
   computed: {
-    ...mapState(loginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ["isLoading", "isLogin"]),
   },
   methods: {
-    ...mapActions(loginStore, ['checkLoginStatus']),
+    ...mapActions(loginStore, ["checkLoginStatus"]),
     pad(n, s) {
-      s = s || 2
-      return ('00000' + n).slice(-s)
+      s = s || 2;
+      return ("00000" + n).slice(-s);
     },
     setTimerElement() {
-      const now = new Date()
+      const now = new Date();
       //* 實際開發可用優惠券到期日
-      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2, 0, 0, 0)
-      this.duration = midnight.getTime() - now.getTime()
+      const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 2,
+        0,
+        0,
+        0
+      );
+      this.duration = midnight.getTime() - now.getTime();
 
       if (this.duration > 0) {
-        const e = this.duration
-        const ms = e % 1000
-        const s = Math.floor((e / 1000) % 60)
-        const m = Math.floor((e / (1000 * 60)) % 60)
-        const h = Math.floor((e / (1000 * 60 * 60)) % 24)
-        const d = Math.floor(e / (1000 * 60 * 60 * 24))
+        const e = this.duration;
+        const ms = e % 1000;
+        const s = Math.floor((e / 1000) % 60);
+        const m = Math.floor((e / (1000 * 60)) % 60);
+        const h = Math.floor((e / (1000 * 60 * 60)) % 24);
+        const d = Math.floor(e / (1000 * 60 * 60 * 24));
 
         this.timerElement = `Last chance to get 10% UP OFF  - \n EXTENDED UNTIL： ${this.pad(
           d
-        )} Day ${this.pad(h)} h ${this.pad(m)} m ${this.pad(s)}.${Math.floor(ms / 100)} s`
+        )} Day ${this.pad(h)} h ${this.pad(m)} m ${this.pad(s)}.${Math.floor(
+          ms / 100
+        )} s`;
       } else {
-        this.timerElement = 'SORRY TIME UP!NEXT TIME BE QUICKLY' + '00 Day 00 h 00 m 00.0 s'
+        this.timerElement =
+          "SORRY TIME UP!NEXT TIME BE QUICKLY" + "00 Day 00 h 00 m 00.0 s";
       }
     },
     countdownTimer() {
-      this.setTimerElement() // 初始化倒计时
-
+      this.setTimerElement(); // 初始化倒计时
       setInterval(() => {
-        this.setTimerElement()
-      }, 100) // 每0.1秒更新一次倒计时
-    }
-  }
-}
+        this.setTimerElement();
+      }, 100); // 每0.1秒更新一次倒计时
+    },
+  },
+};
 </script>
 
 <template>
@@ -85,7 +94,7 @@ export default {
     <FrontNavbar></FrontNavbar>
     <HomeCarousel></HomeCarousel>
     <div class="container-xxl">
-      <HomeStory></HomeStory>
+      <HomeStory customClass="text-nbaBlue" ></HomeStory>
     </div>
     <FullFooter></FullFooter>
   </div>
@@ -93,7 +102,7 @@ export default {
 
 // ! scoped 會讓子元件吃不到
 <style lang="scss">
-@import '@/assets/scss/helpers/function.scss';
+@import "@/assets/scss/helpers/function.scss";
 
 .el-alert_home {
   position: absolute !important;

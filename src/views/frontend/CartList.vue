@@ -174,6 +174,7 @@ export default {
       const CartCp = this.$refs.CartModal;
       CartCp.hideModal();
       document.querySelector('[name="termCheck"]').checked = true;
+      this.termCheck(true);
     }
   }
 };
@@ -577,6 +578,7 @@ export default {
                       :disabled="!isLookOver"
                       :rules="termCheck"
                       required
+                      checked
                       id="termCheck"
                       name="termCheck"
                       :value="true"

@@ -17,6 +17,7 @@ export default {
       return true;
     },
     termCheck(value) {
+      console.log(value);
       if (!value) {
         return '請閱讀並將卷軸拉至底部，決定是否勾選同意';
       }

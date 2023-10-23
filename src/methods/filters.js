@@ -15,7 +15,7 @@ export function date(time) {
 export function dateAndTime(time) {
   return new Date(time * 1000).toLocaleString();
 }
-// 日期轉秒數 (傳入日期輸入欄)
+// 日期 轉 秒數 (傳入日期輸入欄)
 // 只有日期 2023-11-11 轉 以秒为单位的时间戳 1699660800
 export function dateToSeconds(date) {
   // 底層邏輯

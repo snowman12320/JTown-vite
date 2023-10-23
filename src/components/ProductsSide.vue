@@ -12,7 +12,7 @@ export default {
         loadingItem: "",
       },
       uniqueCategories: [],
-      options: [], //*下拉選單的選項
+      options: [], //下拉選單的選項
       //
       cacheSearch: "",
       cacheCategory: "",
@@ -115,7 +115,6 @@ export default {
           {{ item }}
         </label>
       </li>
-      <!-- 篩選 -->
     </ul>
     <hr class="py-2" />
     <div
@@ -149,16 +148,16 @@ export default {
         </label>
       </div>
       <div class="form-check">
-        <label class="form-check-label" for="5000">
+        <label class="form-check-label" for="3000">
           <input
             type="radio"
             class="form-check-input"
             v-model="filterCheck"
             name="filterCheck"
-            id="5000"
-            value="5000"
+            id="3000"
+            value="3000"
           />
-          5000 +
+          3000 +
         </label>
       </div>
     </div>

@@ -42,7 +42,6 @@
           ></iframe>
         </div>
         <div class="carousel-item" data-bs-interval="100000">
-          <!-- 加寬度100%不錯位跑版 -->
           <img
             src="@/assets/image/nbaWeb/john-villablanca-_7EXgSQ98ew-unsplash.jpg"
             class="of-cover op-top w-100"

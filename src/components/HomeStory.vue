@@ -22,7 +22,6 @@ export default {
       });
     },
     getStory(id) {
-      //! 只取一個
       this.$router.push(`/story/item/${id}`);
     },
   },
@@ -31,16 +30,7 @@ export default {
 
 <template>
   <div>
-    <!-- 銷售排行 -->
     <div class="my-8 py-5">
-      <!--  -->
-      <p
-        class=""
-        :class="Boolean($attrs.customClass) ? `${$attrs.customClass}` : 'false'"
-      >
-        {{ $attrs.customClass }}
-      </p>
-      <!--  -->
       <div id="Ranking" class="d-flex justify-content-center align-items-center">
         <h2 class="text-pickBlack">PLAYER</h2>
         <img
@@ -52,7 +42,6 @@ export default {
       </div>
       <p class="fs-6 text-secondary text-center mb-5">Who is your favorite NBA player?</p>
     </div>
-    <!-- 目前的排版會感覺上下都沒有對齊，可先避免過多的水平間距調整 -->
     <section class="row row-cols-1 row-cols-lg-3 rank_card mx-2">
       <div
         class="col mb-5 mt-7 mb-lg-0"
@@ -108,7 +97,6 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  /*  有寬度才能多行  */
   width: 100%;
   :deep(p) {
     a {

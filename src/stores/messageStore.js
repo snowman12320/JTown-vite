@@ -18,7 +18,7 @@ export default defineStore('message', {
         }
         this.messages.push(this.message)
       } else {
-        // 這是res中的message，api預設的一些錯誤訊息
+        //* 這是res中的message，api預設的一些錯誤訊息
         const message = typeof res.data.message === 'string' ? [res.data.message] : res.data.message
         this.message = {
           style: 'danger',

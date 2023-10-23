@@ -1,9 +1,9 @@
 <script>
-import CartModal from '@/components/CartModal.vue'
-import validatorMixin from '@/mixins/validatorMixin'
+import CartModal from '@/components/CartModal.vue';
+import validatorMixin from '@/mixins/validatorMixin';
 
-import cartStore from '@/stores/cartStore.js'
-import { mapActions, mapState } from 'pinia'
+import cartStore from '@/stores/cartStore.js';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   mixins: [validatorMixin],
@@ -45,30 +45,30 @@ export default {
         }
       },
       isLookOver: false
-    }
+    };
   },
   created() {
-    // console.clear()
+    console.clear();
     //
     if (!this.isLogin) {
-      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'))
-      this.getCoupons()
+      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'));
+      this.getCoupons();
     }
     //* 判斷有無折扣馬 然後自動addCouponCode()送出折扣馬 這樣才有折扣趴數資料
     if (localStorage.getItem('local-couponCode')) {
-      this.couponCode = localStorage.getItem('local-couponCode')
+      this.couponCode = localStorage.getItem('local-couponCode');
     }
     //
-    this.addCouponCode() //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
-    this.getCart()
+    this.addCouponCode(); //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
+    this.getCart();
   },
   watch: {
     couponCode() {
       if (!localStorage.getItem('local-couponCode')) {
-        localStorage.setItem('local-couponCode', this.couponCode)
+        localStorage.setItem('local-couponCode', this.couponCode);
       }
-      localStorage.setItem('local-couponCode', this.couponCode)
-      this.addCouponCode()
+      localStorage.setItem('local-couponCode', this.couponCode);
+      this.addCouponCode();
     }
   },
   computed: {
@@ -80,67 +80,67 @@ export default {
     getCouponPercent() {
       if (this.couponCode !== 'default') {
         if (this.$route.path.includes('cart-list')) {
-          const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`
+          const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`;
           this.$http.get(api).then((res) => {
-            this.couponPercent = res.data.data.carts[0].coupon.percent
-          })
+            this.couponPercent = res.data.data.carts[0].coupon.percent;
+          });
         }
       }
     },
     delCart(item) {
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
         item.id
-      }`
+      }`;
       this.$http.delete(url).then(() => {
-        this.$toast('success', 'delete ' + `"${item.product.title}"`)
-        this.updateCart(item)
-      })
+        this.$toast('success', 'delete ' + `"${item.product.title}"`);
+        this.updateCart(item);
+      });
       if (this.carts.length === 0) {
-        this.getCart()
+        this.getCart();
       }
     },
     //
     getProduct(id) {
-      this.$router.push(`/products-view/products-item/${id}`)
+      this.$router.push(`/products-view/products-item/${id}`);
     },
     //
     getCoupons() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/coupons`
+      }/admin/coupons`;
       this.$http.get(url).then((res) => {
         if (res.data.success) {
-          this.options = res.data.coupons.filter((coupon) => coupon.is_enabled === 1)
+          this.options = res.data.coupons.filter((coupon) => coupon.is_enabled === 1);
         }
-      })
+      });
     },
     addCouponCode() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`;
       const coupon = {
         code: this.couponCode
-      }
+      };
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
-          this.getCouponPercent()
-          this.getCart()
-          this.$toast('success', 'Add Coupon')
+          this.getCouponPercent();
+          this.getCart();
+          this.$toast('success', 'Add Coupon');
         } else {
-          localStorage.removeItem('local-couponCode', this.couponCode)
-          this.getCouponPercent()
-          this.getCart()
-          this.$toast('success', 'Cancel coupon')
+          localStorage.removeItem('local-couponCode', this.couponCode);
+          this.getCouponPercent();
+          this.getCart();
+          this.$toast('success', 'Cancel coupon');
           //
-          this.couponCode = 'default'
-          this.couponPercent = ''
-          localStorage.setItem('local-couponCode', this.couponCode)
+          this.couponCode = 'default';
+          this.couponPercent = '';
+          localStorage.setItem('local-couponCode', this.couponCode);
         }
-      })
+      });
     },
     //
     funcBuyPerson() {
-      this.isBuyPerson = !this.isBuyPerson
+      this.isBuyPerson = !this.isBuyPerson;
       if (this.isBuyPerson) {
-        this.form = { ...this.tempForm }
+        this.form = { ...this.tempForm };
       } else {
         this.form = {
           user: {
@@ -149,35 +149,41 @@ export default {
             tel: '',
             address: ''
           }
-        }
+        };
       }
     },
     createOrder() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`
-      const order = this.form
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`;
+      const order = this.form;
       this.$http.post(url, { data: order }).then((res) => {
-        localStorage.removeItem('local-couponCode', this.couponCode)
-        this.getCart()
-        this.$router.push(`checkout/${res.data.orderId}`)
-      })
+        localStorage.removeItem('local-couponCode', this.couponCode);
+        this.getCart();
+        this.$router.push(`checkout/${res.data.orderId}`);
+      });
     },
     //
     openModal() {
-      const CartCp = this.$refs.CartModal
-      CartCp.showModal()
+      const CartCp = this.$refs.CartModal;
+      CartCp.showModal();
     },
     handleMyScroll() {
-      this.isLookOver = true
+      this.isLookOver = true;
+    },
+    agreeTerm() {
+      //! 關不掉黑幕，用內建屬性標籤關閉
+      const CartCp = this.$refs.CartModal;
+      CartCp.hideModal();
+      document.querySelector('[name="termCheck"]').checked = true;
     }
   }
-}
+};
 </script>
 
 <template>
   <div>
     <Loading :active="isLoading" />
     <div class="row content container mx-auto mt-0">
-      <aside class="col-12 col-lg-4" style="z-index: 1">
+      <aside class="col-12 col-lg-4 mb-3" style="z-index: 1">
         <section
           class="sticky-lg-top border-secondary rounded-3 mb-3 border top-20"
           style="top: 0px"
@@ -567,9 +573,6 @@ export default {
               <li class="list-group-item">
                 <div class="col-12">
                   <div class="mb-3 position-relative">
-                    <!-- 無法顯示錯誤訊息原因是你沒有透過 :class 的方式去判斷 error-message何時該顯示，
-                     另外 Field 後面也要記得利用 v-bind 去綁定 value  -->
-                    <!--  check 打勾後會送出:value="true" ，預設應該是false， 會是沒打勾 會是口空的 -->
                     <Field
                       :disabled="!isLookOver"
                       :rules="termCheck"
@@ -614,7 +617,10 @@ export default {
                       :value="true"
                       type="checkbox"
                       class="form-check-input"
-                      :class="{ 'is-invalid': errors['buyCheck'], 'is-valid': !errors['buyCheck'] }"
+                      :class="{
+                        'is-invalid': errors['buyCheck'],
+                        'is-valid': !errors['buyCheck']
+                      }"
                     >
                     </Field>
                     <error-message
@@ -630,21 +636,20 @@ export default {
                   </div>
                 </div>
               </li>
-              <div class="w-100 my-2 text-center">
-                <button type="submit" class="btn btn-primary w-100" id="_cartCheckout">
-                  立即結帳
-                </button>
-                <router-link to="/products-view/products-content/title" class="text-black"
-                  >繼續購物</router-link
-                >
-              </div>
             </ul>
+            <div class="w-100 my-3 text-center">
+              <button type="submit" class="btn btn-nbaBlue w-100" id="_cartCheckout">
+                立即結帳
+              </button>
+              <router-link to="/products-view/products-content/title" class="text-black"
+                >繼續購物</router-link
+              >
+            </div>
           </section>
         </Form>
       </div>
     </div>
-    <!-- Modal -->
-    <CartModal ref="CartModal" @my-scroll="handleMyScroll"></CartModal>
+    <CartModal ref="CartModal" @my-scroll="handleMyScroll" @agreeTerm="agreeTerm"></CartModal>
   </div>
   <!--  -->
 </template>
@@ -662,5 +667,13 @@ export default {
 .form-check-input.is-valid:checked {
   background-color: blue;
   border-color: blue;
+}
+
+.was-validated .form-check-input:invalid:focus,
+.form-check-input.is-invalid:focus {
+  box-shadow: none;
+}
+.form-control:focus {
+  box-shadow: none;
 }
 </style>

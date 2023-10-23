@@ -15,16 +15,16 @@ export default {
   },
   data() {
     return {
-      nav: 0, //* 初始化 nav 值 atTop: false };
-      atTop: true, //* 動態導覽列
+      nav: 0, 
+      atTop: true, 
       collapse: null,
       collapse_none: true,
     };
   },
   mounted() {
-    this.nav = this.$refs.header.offsetHeight; //* 在 mounted 階段獲取 header 的高度
-    window.addEventListener("scroll", this.handleScroll); //* 監聽滾動事件
-    this.collapse = new Collapse(this.$refs.collapse); //* 繼承一個彈窗，並取得dom去操作
+    this.nav = this.$refs.header.offsetHeight; //! 在 mounted 階段獲取 header 的高度
+    window.addEventListener("scroll", this.handleScroll); 
+    this.collapse = new Collapse(this.$refs.collapse); 
     setTimeout(() => {
       // ? 不知道為啥繼承collapase後就會自動開啟手機板導覽列，故設定自動關閉
       this.collapse_hide(); //* 在 mounted 后触发 collapse_hide 方法
@@ -49,7 +49,6 @@ export default {
       this.atTop = !(window.scrollY > this.nav + 10); //* 使用this.nav進行操作
     },
     //
-    //* 透過名稱取操作元件的函式
     openOffcanvas() {
       //! 避免開啟畫布，會一直重新判斷登入
       if (!this.isLogin) {
@@ -138,15 +137,11 @@ export default {
           v-click-away="collapse_hide"
           :class="{ 'd-none': collapse_none }"
         >
-          <!-- margin-start 自動推到底 好用排版方式 -->
           <ul class="navbar-nav ms-auto text-center">
             <li class="nav-item">
-              <!-- 關於active切換時有加上 但接著就會重新整理又不見 方法：- 1. 直接寫在 HTML 上（建議 -->
-              <!-- router.js 自己會加上 -->
               <router-link to="/" class="nav-link px-4 py-3"> Home </router-link>
             </li>
             <li class="nav-item">
-              <!-- 使用巢狀的父層即可，不然內頁會無active > 失敗，因為路徑就會指到視圖層級而已，需使用路徑判斷 -->
               <router-link
                 to="/story/list"
                 :class="{ active: $route.path.includes('/story') }"
@@ -156,7 +151,6 @@ export default {
               </router-link>
             </li>
             <li class="nav-item">
-              <!-- 可透過$router.path去判斷子層，加上active -->
               <router-link
                 class="nav-link px-4 py-3"
                 to="/products-view/products-content/title"
@@ -218,7 +212,6 @@ export default {
         </div>
       </div>
     </head>
-    <!-- 加入畫布元件，取名使用 -->
     <CartOffcanvas ref="offcanvas"></CartOffcanvas>
     <FavoriteOffcanvas ref="favorite"></FavoriteOffcanvas>
   </div>

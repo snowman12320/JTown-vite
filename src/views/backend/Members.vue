@@ -6,6 +6,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import MemberOrders from '@/components/MemberOrders.vue'
 import MemberSide from '@/components/MemberSide.vue'

@@ -6,42 +6,48 @@ import {
   List,
   User,
   Notebook,
-  SwitchButton,
-} from "@element-plus/icons-vue";
+  SwitchButton
+} from '@element-plus/icons-vue';
 </script>
+
 <script>
 export default {
   data() {
     return {
-      username: "",
+      username: '',
       isCollapse: true,
       random_number: Math.floor(Math.random() * (50 - 1 + 1) + 3),
-      timer: null,
+      timer: null
     };
   },
   created() {
-    if (!localStorage.getItem("username")) {
-      this.$router.push("/login");
+    if (!localStorage.getItem('username')) {
+      this.$router.push('/login');
     } else {
-      const atIndex = JSON.parse(localStorage.getItem("username")).indexOf("@");
-      this.username = JSON.parse(localStorage.getItem("username")).slice(0, atIndex);
+      const atIndex = JSON.parse(localStorage.getItem('username')).indexOf('@');
+      this.username = JSON.parse(localStorage.getItem('username')).slice(0, atIndex);
     }
   },
   methods: {
     logout() {
-      if (localStorage.getItem("VIP")) {
-        localStorage.removeItem("VIP");
+      if (localStorage.getItem('VIP')) {
+        localStorage.removeItem('VIP');
         this.$swal.fire(
-          "SEE YOU SOON VIP",
-          "THANK YOU ! than you can give me some suggestions from the FB links below the website.",
-          "success"
+          'SEE YOU SOON VIP',
+          'THANK YOU ! than you can give me some suggestions from the FB links below the website.',
+          'success'
         );
-        this.$router.push("/login");
+        this.$router.push('/login');
       } else {
         const api = `${import.meta.env.VITE_APP_API}logout`;
         this.$http.post(api, this.user).then((res) => {
           if (res.data.success) {
-            this.$router.push("/login");
+            this.$swal.fire(
+              'SEE YOU SOON',
+              'THANK YOU ! than you can give me some suggestions from the FB links below the website.',
+              'success'
+            );
+            this.$router.push('/login');
           }
         });
       }
@@ -54,8 +60,8 @@ export default {
     cancelTimer() {
       this.isCollapse = true;
       clearTimeout(this.timer);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -112,10 +118,7 @@ export default {
           </template>
         </el-menu-item>
       </router-link>
-      <router-link
-        to="/dashboard/orders"
-        class="text-white w-100 text-center text-decoration-none"
-      >
+      <router-link to="/dashboard/orders" class="text-white w-100 text-center text-decoration-none">
         <el-menu-item index="/dashboard/orders">
           <el-icon>
             <List />
@@ -138,10 +141,7 @@ export default {
           </template>
         </el-menu-item>
       </router-link>
-      <router-link
-        to="/dashboard/storys"
-        class="text-white text-center w-100 text-decoration-none"
-      >
+      <router-link to="/dashboard/storys" class="text-white text-center w-100 text-decoration-none">
         <el-menu-item index="/dashboard/storys">
           <el-icon>
             <Notebook />
@@ -168,7 +168,7 @@ export default {
   </el-menu>
 </template>
 
-<style>
+<style >
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 300px;
 }
@@ -204,5 +204,4 @@ export default {
     display: none;
   }
 }
-
 </style>

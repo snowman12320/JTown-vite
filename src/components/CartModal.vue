@@ -1,25 +1,23 @@
 <script>
-import modalMixin from '@/mixins/modalMixin'
+import modalMixin from '@/mixins/modalMixin';
 export default {
   mixins: [modalMixin],
   data() {
     return {
       modal: {}
-    }
+    };
   },
   methods: {
     handleScroll() {
-      // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
-      // console.log(this.$refs.element.scrollHeight);
       if (
         Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
         this.$refs.element.scrollHeight
       ) {
-        this.$emit('my-scroll')
+        this.$emit('my-scroll');
       }
     }
   }
-}
+};
 </script>
 
 <template>
@@ -32,8 +30,8 @@ export default {
     aria-hidden="true"
   >
     <div
-      class="modal-dialog modal-dialog-scrollable mt-10 mx-auto"
-      style="height: 500px; max-width: 1000px"
+      class="modal-dialog modal-dialog-scrollable  mx-auto"
+      style="max-height: 600px; max-width: 1000px"
     >
       <div class="modal-content">
         <div class="modal-header">
@@ -263,12 +261,18 @@ export default {
             <div>"JTown"@gmail.com）聯絡，我們將儘速為您處理。</div>
           </div>
           <!--  -->
-          <!-- <div class="btn btn-danger d-block text-center mt-5" @click="$emit('my-scroll')">
-            Agree Term
-          </div> -->
+          <div @click="$emit('agreeTerm')">
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              class="btn btn-nbaRed d-block text-center mt-5 mx-auto"
+              aria-label="Close"
+            >
+              Agree Term
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-

@@ -1,4 +1,5 @@
-import Swal from 'sweetalert2';//* 雖是全域，有些用到也需事先引入，如Scss分頁的變數
+//* 雖是全域，有些用到也需事先引入，如Scss分頁的變數
+import Swal from 'sweetalert2';
 
 export default function toast (response = 'success', title = 'update') {
   const Toast = Swal.mixin({

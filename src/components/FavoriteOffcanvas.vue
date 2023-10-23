@@ -6,7 +6,7 @@ import favoriteStore from '@/stores/favoriteStore.js'
 import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
 export default {
-  mixins: [offcanvasMixin], //* 混用獨立的功能
+  mixins: [offcanvasMixin], 
   components: {
     DelModal
   },
@@ -17,7 +17,6 @@ export default {
     }
   },
   created() {
-    // console.clear()
     this.getFavorite()
   },
   computed: {
@@ -35,8 +34,6 @@ export default {
       this.delFavorite_store(id)
       //
       const delCp = this.$refs.delModal
-      // 通过属性选择器获取具有 data-ref="delModal" 属性的 DOM 元素 > 只能取到dom但沒有方法 (不是proxy)
-      // let delCp = document.querySelector('[data-ref="delModal"]')
       delCp.hideModal()
     },
     delFavorites() {
@@ -52,7 +49,7 @@ export default {
             if (result.isConfirmed) {
               this.isLoading = true
               localStorage.setItem('favorite', JSON.stringify([]))
-              this.getFavorite() //* 刷新側邊頁面
+              this.getFavorite() 
               setTimeout(() => {
                 this.$swal.fire('Done delete all!', '', 'success')
                 this.isLoading = false

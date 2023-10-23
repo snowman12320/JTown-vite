@@ -14,14 +14,7 @@ export default {
   created() {
     this.getStoryList();
   },
-  mounted() {
-    // this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法 > 最上層的視圖層就有判斷了
-  },
-  computed: {
-    // ...mapState(loginStore, ['isLoading', 'isLogin']) //*[Vue warn]: Write operation failed: computed property "isLoading" is readonly.
-  },
   methods: {
-    // ...mapActions(loginStore, ['checkLoginStatus']),
     getStoryList(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -30,14 +23,12 @@ export default {
       this.$http.get(api).then((res) => {
         this.isLoading = false;
         if (res.data.success) {
-          // This code will create a new array  this.storyList  that contains only the items from  res.data.articles  where  isPublic  is  true .
           this.storyList = res.data.articles.filter((story) => story.isPublic);
           this.pagination = res.data.pagination;
         }
       });
     },
     getStory(id) {
-      //! 只取一個文章
       this.$router.push(`/story/item/${id}`);
     },
   },
@@ -89,7 +80,6 @@ export default {
           </div>
         </div>
       </section>
-      <!-- props傳遞總頁數 emit傳出目前頁數 -->
       <Pagination :pages="pagination" @emit-pages="getStoryList"></Pagination>
     </div>
   </div>
@@ -108,7 +98,6 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  /*  有寬度才能多行  */
   width: 100%;
 
  :deep(p) {

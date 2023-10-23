@@ -1,10 +1,10 @@
 <script>
-import DelModal from '@/components/DelModal.vue'
-import OrderModal from '@/components/OrderModal.vue'
-import Pagination from '@/components/Pagination.vue'
+import DelModal from '@/components/DelModal.vue';
+import OrderModal from '@/components/OrderModal.vue';
+import Pagination from '@/components/Pagination.vue';
 
-import messageStore from '@/stores/messageStore'
-import { mapActions } from 'pinia'
+import messageStore from '@/stores/messageStore';
+import { mapActions } from 'pinia';
 
 export default {
   components: {
@@ -26,12 +26,12 @@ export default {
       ordersAll: [],
       tempPage: 1,
       selectSort: 'default'
-    }
+    };
   },
   created() {
-    // console.clear()
-    this.getOrders()
-    this.getOrdersAll()
+    console.clear();
+    this.getOrders();
+    this.getOrdersAll();
   },
   computed: {
     filterOrder() {
@@ -40,13 +40,13 @@ export default {
         this.filterPaid.includes('default') &&
         this.selectSort.includes('default')
       ) {
-        return this.orders
+        return this.orders;
       } else {
         //! 無法先排序 > 因為上面擋住了！！！( Irregular whitespace not allowed  no-irregular-whitespace)
         return this.ordersAll
           .filter((order) => this.filterOrderByIdAndDate(order))
           .filter(this.getFilterPaid())
-          .sort(this.getSelectSort())
+          .sort(this.getSelectSort());
       }
     }
   },
@@ -57,116 +57,116 @@ export default {
       return (
         order.id.toLowerCase().includes(this.search.toLowerCase().trim()) ||
         this.$filters.date(order.create_at).match(this.search.trim())
-      )
+      );
     },
     getFilterPaid() {
       const filterPaidOptions = {
         unpaid: (item) => item.is_paid === false,
         default: () => true
-      }
-      return filterPaidOptions[this.filterPaid || 'default']
+      };
+      return filterPaidOptions[this.filterPaid || 'default'];
     },
     getSelectSort() {
       // https://blog.csdn.net/Fairyasd/article/details/125502752
       // https://blog.csdn.net/m0_57253767/article/details/126871697
       const sortFunc = {
-        // ? 都是秒數但要*1000才能，YYYY格式不行
+        //! 都是秒數但要*1000才能，YYYY格式不行
         // Low: (a, b) => new Date(a.create_at * 1000).toISOString().split('T')[0] > new Date(b.create_at * 1000).toISOString().split('T')[0] ? 1 : -1,
         // Height: (a, b) => new Date(b.create_at).getTime() - new Date(a.create_at).getTime(),
         Low: (a, b) => new Date(a.create_at * 1000) - new Date(b.create_at * 1000), //* 低>高 升冪 (create_at = 1689688205)
         Height: (a, b) => new Date(b.create_at * 1000) - new Date(a.create_at * 1000),
         default: () => 0
-      }
-      return sortFunc[this.selectSort || 'default']
+      };
+      return sortFunc[this.selectSort || 'default'];
     },
     getOrders(currentPage = 1) {
-      this.currentPage = currentPage
+      this.currentPage = currentPage;
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/orders?page=${currentPage}`
-      this.isLoading = true
+      }/admin/orders?page=${currentPage}`;
+      this.isLoading = true;
       this.$http.get(url, this.tempProduct).then((res) => {
-        this.orders = res.data.orders
-        this.pagination = res.data.pagination
-        this.isLoading = false
-      })
+        this.orders = res.data.orders;
+        this.pagination = res.data.pagination;
+        this.isLoading = false;
+      });
     },
     openModal(isNew, item) {
-      this.tempOrder = { ...item }
-      this.isNew = isNew
-      const orderComponent = this.$refs.orderModal
-      orderComponent.showModal()
+      this.tempOrder = { ...item };
+      this.isNew = isNew;
+      const orderComponent = this.$refs.orderModal;
+      orderComponent.showModal();
     },
     openDelOrderModal(item) {
-      this.tempOrder = { ...item }
-      if (!item.title) this.tempOrder.title = this.tempOrder.id
-      const delComponent = this.$refs.delModal
-      delComponent.showModal()
+      this.tempOrder = { ...item };
+      if (!item.title) this.tempOrder.title = this.tempOrder.id;
+      const delComponent = this.$refs.delModal;
+      delComponent.showModal();
     },
     updatePaid(item) {
-      this.isLoading = true
+      this.isLoading = true;
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/order/${item.id}`
+      }/admin/order/${item.id}`;
       const paid = {
         is_paid: item.is_paid
-      }
+      };
       this.$http.put(api, { data: paid }).then((res) => {
-        this.getOrders(this.currentPage)
+        this.getOrders(this.currentPage);
         //
-        const orderComponent = this.$refs.orderModal
-        orderComponent.hideModal()
-        this.isLoading = false
-        this.pushMessage(res, '更新付款狀態')
-      })
+        const orderComponent = this.$refs.orderModal;
+        orderComponent.hideModal();
+        this.isLoading = false;
+        this.pushMessage(res, '更新付款狀態');
+      });
     },
     delOrder() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/order/${this.tempOrder.id}`
-      this.isLoading = true
+      }/admin/order/${this.tempOrder.id}`;
+      this.isLoading = true;
       this.$http.delete(url).then((res) => {
-        const delComponent = this.$refs.delModal
-        delComponent.hideModal()
-        this.getOrders(this.currentPage)
-        this.pushMessage(res, 'delete')
-      })
+        const delComponent = this.$refs.delModal;
+        delComponent.hideModal();
+        this.getOrders(this.currentPage);
+        this.pushMessage(res, 'delete');
+      });
     },
     getOrdersAll() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/orders?page=${this.tempPage}`
+      }/admin/orders?page=${this.tempPage}`;
       this.$http.get(url, this.tempProduct).then((res) => {
-        this.ordersAll = this.ordersAll.concat(res.data.orders) // 將每一頁的資料加入到 orders 陣列中
+        this.ordersAll = this.ordersAll.concat(res.data.orders); // 將每一頁的資料加入到 orders 陣列中
         if (this.tempPage < this.pagination.total_pages) {
           // 如果當前頁數小於最後一頁，繼續取得下一頁的資料
-          this.tempPage++
-          this.getOrdersAll()
+          this.tempPage++;
+          this.getOrdersAll();
         } else {
-          // 須返回某個數值，不然會噴錯
+          //! 須返回某個數值，不然會噴錯
           console.info(
             'getOrdersAll,random success',
             new Date(this.ordersAll[11].create_at * 1000).toISOString().split('T')[0]
-          )
+          );
           // console.log('getOrdersAll,random success', new Date(new Date(this.ordersAll[11].create_at * 1000).toISOString().split('T')[0]).getTime());
         }
-      })
+      });
     },
     delAllOrder() {
       // !避免誤刪
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/order/allll`
-      this.isLoading = true
+      }/admin/order/allll`;
+      this.isLoading = true;
       this.$http.delete(url).then((res) => {
-        const delComponent = this.$refs.delModal
-        delComponent.hideModal()
-        this.getOrders(this.currentPage)
-        this.pushMessage(res, 'delete all')
-      })
+        const delComponent = this.$refs.delModal;
+        delComponent.hideModal();
+        this.getOrders(this.currentPage);
+        this.pushMessage(res, 'delete all');
+      });
     }
   }
-}
+};
 </script>
 
 <template>
@@ -221,7 +221,9 @@ export default {
                 <label
                   class="form-check-label"
                   for="1"
-                  :class="{ ' text-primary': selectSort === 'Low' || selectSort === 'default' }"
+                  :class="{
+                    ' text-primary': selectSort === 'Low' || selectSort === 'default'
+                  }"
                 >
                   <i class="bi bi-caret-up-fill"></i>
                 </label>
@@ -239,7 +241,9 @@ export default {
                 <label
                   class="form-check-label"
                   for="2"
-                  :class="{ ' text-primary': selectSort === 'Height' || selectSort === 'default' }"
+                  :class="{
+                    ' text-primary': selectSort === 'Height' || selectSort === 'default'
+                  }"
                 >
                   <i class="bi bi-caret-down-fill"></i>
                 </label>
@@ -261,7 +265,9 @@ export default {
           :key="key"
           :class="{ 'text-secondary': !item.is_paid }"
         >
-          <td class="d-md-table-cell d-none">{{ $filters.dateAndTime(item.create_at) }}</td>
+          <td class="d-md-table-cell d-none">
+            {{ $filters.dateAndTime(item.create_at) }}
+          </td>
           <td class="">{{ item.id }}</td>
           <td class="d-md-table-cell d-none">{{ item.user.name }}</td>
           <td class="d-md-table-cell d-none">
@@ -279,7 +285,7 @@ export default {
           <td class="d-md-table-cell d-none">
             <div class="form-check form-switch">
               <input
-                class="form-check-input "
+                class="form-check-input"
                 type="checkbox"
                 :id="`paidSwitch${item.id}`"
                 v-model="item.is_paid"

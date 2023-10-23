@@ -13,7 +13,7 @@ export default {
     ToastMessages
   },
   mounted() {
-    this.checkLoginStatus() // 在组件挂载时调用检查登录状态的方法
+    this.checkLoginStatus()
   },
   computed: {
     ...mapState(loginStore, ['isLoading', 'isLogin'])

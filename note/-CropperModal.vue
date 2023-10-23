@@ -16,7 +16,9 @@ export default {
         },
       ],
       option: {
-        img: "", 
+        img: "", // 套件示範的格式
+        // img: 'https://storage.googleapis.com/vue-course-api.appspot.com/william-api/1690362062055.jpg?GoogleAccessId=firebase-adminsdk-zzty7%40vue-course-api.iam.gserviceaccount.com&Expires=1742169600&Signature=DuRa%2FaTvXVYlqq5DlHjjAzhQ95PcMs3IuJA0iqm0Ma1%2BcEMeyFvmsh3%2FwxGSpe8Z11D32ZlQbr8i8czcj3HRgeWpCxkuNzBYQJhJAJZ40X%2FLm81ddIkktUtRWf7Dqz1UQtZnyItnklxeKqM4%2Bzj2Bc5kujHowfPz%2BZeo95i6fH46ZYv1L6FHVXVm5AsxP4UBYUQagPCNemrsCTA9md9Aj21r%2BKUtIlvE9GnqhNp2U8QPZLV%2BWzuZnC9DTgfI%2B%2Fv9wQipEf0fhMVWb%2FYs%2BWc5PQOKfenkNPTDOOb3cVg8ALRxo27QADbfkfpZhIwDoKHrWH3BkxDFeclL4B1OYVWXlw%3D%3D',
+        // img: this.tempImg,
         size: 1,
         full: false,
         outputType: "png",
@@ -25,6 +27,7 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
+        // 只有自动截图开启 宽度高度才生效 / 不要超過 .cut 的大小
         autoCropWidth: 200,
         autoCropHeight: 200,
         centerBox: true,
@@ -46,6 +49,40 @@ export default {
         return {};
       },
     },
+  },
+  created() {
+    // console.log(this.tempImg);
+  },
+  watch: {
+    // tempImg () { //! props傳進來需監聽，才能取到值
+    // console.log('tempImg', this.tempImg.url);
+    // this.option.img = this.tempImg.url;
+    //
+    // const imageUrl = this.tempImg.url;
+    // 嘗試一 嘗試方向：將雲端的圖片轉成，裁切套件可以使用的圖類型（下方的 uploadImg() 的方法），然後裁切完接著，finish()方法將base64轉檔再上傳
+    // const imageUrl = 'https://storage.googleapis.com/vue-course-api.appspot.com/william-api/1690362062055.jpg';
+    // const imageUrl = this.tempImg.url;
+    // fetch(imageUrl)// Failed to fetch
+    //   .then(response => response.blob())
+    //   .then(blob => {
+    //     const reader = new FileReader();
+    //     reader.onloadend = () => {
+    //       const base64data = reader.result;
+    //       this.option.img = base64data;
+    //       console.log('base64 data', base64data);
+    //     // Use the base64 data here
+    //     };
+    //     reader.readAsDataURL(blob);
+    //   });
+    // 嘗試二
+    // this.convertImgLinkToBlob(imageUrl).then((blob) => {
+    //   // 處理轉換後的blob數據格式
+    //   // 在這裡你可以將blob數據傳遞給其他函數或進行其他操作
+    //   console.log(blob);// null
+    // });
+    // 嘗試三 下載下來再上傳 > 好像需要在後端設置CORS頭，並確保API正確配置等等的設置 > vue.config.js 也有做一些嘗試
+    // this.downloadAndUploadImage(imageUrl); //Network Error
+    // }
   },
   methods: {
     // ? 嘗試轉檔
@@ -71,6 +108,13 @@ export default {
       })
         .then((response) => {
           const imageBuffer = Buffer.from(response.data, "binary");
+          // 在此处进行上传到Vue Cropper套件支持的位置的代码，例如上传到云存储服务
+          console.log(imageBuffer);
+          // 上传成功后，获取图片的URL
+          // const uploadedImageUrl = 'https://example.com/uploaded-image.jpg';
+          // 将uploadedImageUrl赋值给img2
+          // this.img2 = uploadedImageUrl;
+          // 现在可以在Vue Cropper套件中使用img2进行图像编辑
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -111,6 +155,8 @@ export default {
     finish(type) {
       this.isLoading = true;
       // 输出
+      // var test = window.open('about:blank')
+      // test.document.body.innerHTML = '图片生成中..'
       if (type === "blob") {
         // console.log(this.$refs.cropper);
         this.$refs.cropper.getCropBlob((data) => {
@@ -132,6 +178,10 @@ export default {
               this.isLoading = false;
             }
           });
+          //
+          // const img = window.URL.createObjectURL(data);
+          // this.model = true;
+          // this.modelSrc = img;
         });
       } else {
         this.$refs.cropper.getCropData((data) => {
@@ -207,6 +257,15 @@ export default {
       // 转化为blob
       reader.readAsArrayBuffer(file);
     },
+    imgLoad(msg) {
+      // console.log(msg);
+    },
+    cropMoving(data) {
+      // console.log(data, '截图框当前坐标');
+    },
+  },
+  mounted: function () {
+    // console.log(window['vue-cropper']);
   },
 };
 </script>

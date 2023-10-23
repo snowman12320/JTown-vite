@@ -23,7 +23,7 @@ export default {
     config: Object
   },
   created() {
-    // console.clear()
+    console.clear()
     this.getCoupons()
   },
   methods: {
@@ -94,7 +94,7 @@ export default {
 
 <template>
   <div class="w-100">
-    <Loading :active="isLoading" />
+    <Loading :active="isLoading" ></Loading>
     <div class="text-end mt-4">
       <button class="btn btn-nbaBlue" @click="openCouponModal(true)">新增優惠券</button>
     </div>
@@ -135,7 +135,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 tr:nth-child(even) {
   background-color: #eee;
 }

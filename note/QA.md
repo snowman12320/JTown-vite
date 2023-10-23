@@ -92,6 +92,7 @@ at Header.vue:8:5
 > 套件冷門的都會噴錯
 > prductModal 兩個套件引入內部檔案都有問題
 > https://github.com/SortableJS/vue.draggable.next
+> 版本號的問題 包含node版本、本身版本跟cli版要一樣
 
 ## 選項式改成組合式的建議路徑
 

@@ -6,7 +6,7 @@ import cartStore from '../stores/cartStore.js'
 import productStore from '../stores/productStore'
 import { mapActions, mapState } from 'pinia'
 export default {
-  mixins: [offcanvasMixin], //* 混用獨立的功能
+  mixins: [offcanvasMixin], 
   components: {
     DelModal
   },
@@ -26,7 +26,6 @@ export default {
     }
   },
   created() {
-    // console.clear()
     this.getCart()
   },
   computed: {
@@ -47,7 +46,6 @@ export default {
       delCp.showModal()
     },
     delCart() {
-      // !塞入要刪除的ＩＤ
       const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
         this.tempCart.id
       }`

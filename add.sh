@@ -7,14 +7,14 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "revert note 1 "
+git commit -m "revert note success"
 sleep 2
 
 git push
 
 
 
-# 刪 /note
+# 刪 /note or 開 .gitignore
 # 直接開 present 分支
 # git add .
 # git commit -m 'present homework'

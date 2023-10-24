@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "revert note success"
+git commit -m "first cypress test"
 sleep 2
 
 git push

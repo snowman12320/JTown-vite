@@ -13,8 +13,7 @@ export default {
     BackNavbar
   },
   async created() {
-    // await this.checkLoginStatusInDashboard();
-    this.checkLogin();
+    await this.checkLoginStatusInDashboard();
   },
   methods: {
     ...mapActions(loginStore, ['checkLoginStatusInDashboard'])

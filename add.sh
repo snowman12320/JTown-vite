@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "fixd last three   "
+git commit -m "present homework "
 sleep 2
 
 git push

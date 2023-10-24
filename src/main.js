@@ -72,27 +72,6 @@ app.mixin({
     }
   }
 });
-app.mixin({
-  methods: {
-    checkLogin() {
-      const token = document.cookie.replace(
-        /(?:(?:^|.*;\s*)JTownToken\s*=\s*([^;]*).*$)|^.*$/,
-        '$1'
-      );
-      axios.defaults.headers.common.Authorization = token;
-      const api = `${import.meta.env.VITE_APP_API}api/user/check`;
-
-      axios.post(api, this.user).then((res) => {
-        if (!res.data.success) {
-          this.isLogin = false;
-          this.$router.push('/login');
-        } else {
-          this.isLogin = true;
-        }
-      });
-    }
-  }
-});
 
 //! Mount the app to the DOM and initialize any additional functionality:
 app.mount('#app');

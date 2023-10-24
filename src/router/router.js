@@ -50,9 +50,6 @@ const router = createRouter({
     {
       path: '/dashboard',
       component: () => import('@/views/backend/Dashboard.vue'),
-      // beforeEnter(to, from, next) {
-      //   this.checkLogin.call(next);
-      // },
       children: [
         {
           path: 'products',
@@ -98,9 +95,10 @@ const router = createRouter({
     {
       path: '/:catchAll(.*)',
       redirect: '/error'
-    }
+    },
   ],
   linkActiveClass: 'active'
 });
+
 
 export default router;

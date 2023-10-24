@@ -39,6 +39,7 @@ Q:關於判斷登入或登出
 Q：關於上述 ，使用router beforeEnter
 我vue router官網，有看到router的beforeEach和beforeEnter函式，應該可以用beforeEnter來針對 /dashboard判斷是否登入，
 我有全域註冊mixin判斷，/dashboard的beforeEnter觸發，但沒作用，不知道哪裡錯誤
+> beforeEach就可以 (但要用在元件函式判斷是叫 beforeRouterEnter)
 
 Q：關於購物車結帳驗證
 為什麼明明有打勾，卻不能驗證通過，一定要手動打勾才能

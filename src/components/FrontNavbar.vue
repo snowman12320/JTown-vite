@@ -1,39 +1,39 @@
 <script>
-import CartOffcanvas from "@/components/CartOffcanvas.vue";
-import FavoriteOffcanvas from "@/components/FavoriteOffcanvas.vue";
-import Collapse from "bootstrap/js/dist/collapse";
+import CartOffcanvas from '@/components/CartOffcanvas.vue';
+import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue';
+import Collapse from 'bootstrap/js/dist/collapse';
 
-import favoriteStore from "@/stores/favoriteStore";
-import cartStore from "@/stores/cartStore";
-import loginStore from "@/stores/loginStore";
-import { mapState } from "pinia";
+import favoriteStore from '@/stores/favoriteStore';
+import cartStore from '@/stores/cartStore';
+import loginStore from '@/stores/loginStore';
+import { mapState } from 'pinia';
 
 export default {
   components: {
     CartOffcanvas,
-    FavoriteOffcanvas,
+    FavoriteOffcanvas
   },
   data() {
     return {
-      nav: 0, 
-      atTop: true, 
+      nav: 0,
+      atTop: true,
       collapse: null,
-      collapse_none: true,
+      collapse_none: true
     };
   },
   mounted() {
     this.nav = this.$refs.header.offsetHeight; //! 在 mounted 階段獲取 header 的高度
-    window.addEventListener("scroll", this.handleScroll); 
-    this.collapse = new Collapse(this.$refs.collapse); 
+    window.addEventListener('scroll', this.handleScroll);
+    this.collapse = new Collapse(this.$refs.collapse);
     setTimeout(() => {
       // ? 不知道為啥繼承collapase後就會自動開啟手機板導覽列，故設定自動關閉
       this.collapse_hide(); //* 在 mounted 后触发 collapse_hide 方法
     }, 500);
   },
   computed: {
-    ...mapState(favoriteStore, ["favoriteIds"]),
-    ...mapState(cartStore, ["carts"]),
-    ...mapState(loginStore, ["isLogin"]),
+    ...mapState(favoriteStore, ['favoriteIds']),
+    ...mapState(cartStore, ['carts']),
+    ...mapState(loginStore, ['isLogin'])
   },
   methods: {
     collapse_toggle() {
@@ -54,17 +54,17 @@ export default {
       if (!this.isLogin) {
         this.$swal
           .fire({
-            title: "Login or Sign up first.",
-            icon: "warning",
+            title: 'Login or Sign up first.',
+            icon: 'warning',
             showCloseButton: false,
             showCancelButton: false,
             focusConfirm: true,
-            confirmButtonText: "Login",
-            confirmButtonAriaLabel: "Thumbs up, great!",
+            confirmButtonText: 'Login',
+            confirmButtonAriaLabel: 'Thumbs up, great!'
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$router.push("/login");
+              this.$router.push('/login');
             }
           });
       } else {
@@ -76,25 +76,25 @@ export default {
       if (!this.isLogin) {
         this.$swal
           .fire({
-            title: "Login or Sign up first.",
-            icon: "warning",
+            title: 'Login or Sign up first.',
+            icon: 'warning',
             showCloseButton: false,
             showCancelButton: false,
             focusConfirm: true,
-            confirmButtonText: "Login",
-            confirmButtonAriaLabel: "Thumbs up, great!",
+            confirmButtonText: 'Login',
+            confirmButtonAriaLabel: 'Thumbs up, great!'
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$router.push("/login");
+              this.$router.push('/login');
             }
           });
       } else {
         const favoriteCp = this.$refs.favorite;
         favoriteCp.showOffcanvas();
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -105,7 +105,7 @@ export default {
       style="z-index: 10"
       ref="header"
       :class="{
-        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop,
+        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop
       }"
     >
       <div
@@ -119,10 +119,7 @@ export default {
           >
             JerseyTown
           </p>
-          <h1
-            class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale"
-            :class="{ 'opacity-0': !atTop }"
-          >
+          <h1 class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
             JTown
           </h1>
         </router-link>
@@ -163,8 +160,12 @@ export default {
                 :to="isLogin ? '/dashboard/products' : '/login'"
                 class="fs-6 px-3 rounded-pill text-white"
               >
-                <button class="btn btn-nbaBlue text-white rounded-pill mt-lg-2 nav_pill">
-                  {{ isLogin ? "Log out" : "Login" }}
+                <button
+                  type="button"
+                  id="login"
+                  class="btn btn-nbaBlue text-white rounded-pill mt-lg-2 nav_pill"
+                >
+                  {{ isLogin ? 'Log out' : 'Login' }}
                 </button>
               </router-link>
             </li>
@@ -188,13 +189,8 @@ export default {
               </button>
             </li>
             <li>
-              <button
-                @click="openOffcanvas"
-                class="bg-transparent border-0 position-relative"
-              >
-                <i
-                  class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"
-                ></i>
+              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative">
+                <i class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"></i>
                 <span
                   v-if="carts.length && isLogin"
                   class="position-absolute text-white"

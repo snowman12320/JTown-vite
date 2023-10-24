@@ -28,6 +28,9 @@ coverage
 *.sw?
 
 /note
+
 cypress.config.js
-cypress
-__tests__
+
+cypress/
+
+__tests__/

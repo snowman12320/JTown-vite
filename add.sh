@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "test gitignore by del remote before "
+git commit -m "revert note 1 "
 sleep 2
 
 git push

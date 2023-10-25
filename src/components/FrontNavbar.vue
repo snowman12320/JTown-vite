@@ -21,6 +21,9 @@ export default {
       collapse_none: true
     };
   },
+  created() {
+    this.checkLoginStatus();
+  },
   mounted() {
     this.nav = this.$refs.header.offsetHeight; //! 在 mounted 階段獲取 header 的高度
     window.addEventListener('scroll', this.handleScroll);
@@ -33,7 +36,7 @@ export default {
   computed: {
     ...mapState(favoriteStore, ['favoriteIds']),
     ...mapState(cartStore, ['carts']),
-    ...mapState(loginStore, ['isLogin'])
+    ...mapState(loginStore, ['isLogin', 'checkLoginStatus'])
   },
   methods: {
     collapse_toggle() {

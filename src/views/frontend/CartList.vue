@@ -44,7 +44,8 @@ export default {
           address: '台灣省'
         }
       },
-      isLookOver: false
+      isLookOver: false,
+      isTermChecked: false
     };
   },
   created() {
@@ -59,7 +60,9 @@ export default {
       this.couponCode = localStorage.getItem('local-couponCode');
     }
     //
-    this.addCouponCode(); //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
+    if (this.carts.length > 0) {
+      this.addCouponCode(); //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
+    }
     this.getCart();
   },
   watch: {
@@ -170,11 +173,11 @@ export default {
       this.isLookOver = true;
     },
     agreeTerm() {
-      //! 關不掉黑幕，用內建屬性標籤關閉
+      //! 關不掉黑幕，用BS內建屬性標籤關閉
       const CartCp = this.$refs.CartModal;
       CartCp.hideModal();
+      this.isTermChecked = true;
       document.querySelector('[name="termCheck"]').checked = true;
-      this.termCheck(true);
     }
   }
 };
@@ -212,7 +215,13 @@ export default {
               <li class="list-group-item d-flex justify-content-between pb-0">
                 <p>優惠折抵</p>
                 <p class="text-end">
-                  <span :class="couponCode !== 'default' ? 'd-block text-danger' : 'd-none'">
+                  <span
+                    :class="
+                      couponCode !== 'default' && carts.length > 0
+                        ? 'd-block text-danger'
+                        : 'd-none'
+                    "
+                  >
                     <i
                       @click="addCouponCode((couponCode = 'default'))"
                       class="bi bi-x-lg"
@@ -324,7 +333,7 @@ export default {
             <span class="ms-auto">購物車 共計 {{ sumFinalQty }} 項商品</span>
           </div>
         </section>
-        <Form id="cartForm" @submit="createOrder" v-slot="{ errors }">
+        <Form v-if="carts.length > 0" id="cartForm" @submit="createOrder" v-slot="{ errors }">
           <h2 class="mt-3">會員專區</h2>
           <section>
             <ul class="list-group">
@@ -578,10 +587,9 @@ export default {
                       :disabled="!isLookOver"
                       :rules="termCheck"
                       required
-                      checked
                       id="termCheck"
                       name="termCheck"
-                      :value="true"
+                      v-model="isTermChecked"
                       type="checkbox"
                       class="form-check-input"
                       :class="{
@@ -597,7 +605,9 @@ export default {
                       style="bottom: -18px"
                     ></error-message>
                     <label for="termCheck">
-                      <span data-translate-keys="agree-terms" data-translate-html="true">同意</span>
+                      <span data-translate-keys="agree-terms" data-translate-html="true"
+                        >同意
+                      </span>
                       <button
                         type="button"
                         class="text-decoration-underline text-nbaBlue border-0 bg-white"
@@ -651,7 +661,11 @@ export default {
         </Form>
       </div>
     </div>
-    <CartModal ref="CartModal" @my-scroll="handleMyScroll" @agreeTerm="agreeTerm"></CartModal>
+    <CartModal
+      ref="CartModal"
+      @my-scroll="handleMyScroll"
+      @toggle:agreeTerm="agreeTerm"
+    ></CartModal>
   </div>
   <!--  -->
 </template>

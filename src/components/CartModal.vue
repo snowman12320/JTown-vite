@@ -261,7 +261,7 @@ export default {
             <div>"JTown"@gmail.com）聯絡，我們將儘速為您處理。</div>
           </div>
           <!--  -->
-          <div @click="$emit('agreeTerm')">
+          <div @click="$emit('toggle:agreeTerm')">
             <button
               type="button"
               data-bs-dismiss="modal"

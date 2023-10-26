@@ -236,3 +236,4 @@ import FrontNavbar from '@/components/FrontNavbar.vue';
   {{ $attrs.customClass }}
 </p>
 //類似 父層 控制 子層樣式 productItem.vue
+

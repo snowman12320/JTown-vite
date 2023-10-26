@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "done cypress test then vitest soon"
+git commit -m "create vitest soon"
 sleep 2
 
 git push

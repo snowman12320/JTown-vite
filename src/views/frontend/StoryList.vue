@@ -1,14 +1,15 @@
 <script>
-import Pagination from "@/components/Pagination.vue";
+import Pagination from '@/components/Pagination.vue';
 
 export default {
+  name: ['StoryList'],
   components: {
-    Pagination,
+    Pagination
   },
   data() {
     return {
       storyList: [],
-      pagination: {},
+      pagination: {}
     };
   },
   created() {
@@ -19,6 +20,8 @@ export default {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/articles/?page=${page}`;
+      console.log(api);
+
       this.isLoading = true;
       this.$http.get(api).then((res) => {
         this.isLoading = false;
@@ -30,8 +33,8 @@ export default {
     },
     getStory(id) {
       this.$router.push(`/story/item/${id}`);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -100,7 +103,7 @@ export default {
   overflow: hidden;
   width: 100%;
 
- :deep(p) {
+  :deep(p) {
     a {
       color: #000 !important;
     }
@@ -108,6 +111,6 @@ export default {
 }
 
 .text-secondary {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

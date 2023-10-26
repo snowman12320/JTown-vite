@@ -1,8 +1,9 @@
 <script>
 export default {
+  name: ['HomeStory'],
   data() {
     return {
-      storyList: [],
+      storyList: []
     };
   },
   created() {
@@ -23,8 +24,8 @@ export default {
     },
     getStory(id) {
       this.$router.push(`/story/item/${id}`);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -127,6 +128,6 @@ export default {
 }
 
 .text-secondary {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

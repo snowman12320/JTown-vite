@@ -47,7 +47,9 @@ export default {
   mounted() {
     //* 只能放一個圖
     this.container = this.$refs.myPanzoom;
-    this.panzoom = new Panzoom(this.container, this.options, { Pins });
+    if (this.panzoom) {
+      this.panzoom = new Panzoom(this.container, this.options, { Pins });
+    }
   },
   created() {
     console.clear();
@@ -375,6 +377,7 @@ export default {
                 style="height: 40px"
                 @click="qty++"
                 class="btn btn-outline-secondary py-0 rounded-3"
+                id="plus"
               >
                 +
               </button>

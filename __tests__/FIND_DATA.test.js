@@ -1,38 +1,70 @@
-import { test, describe, expect, vi } from 'vitest';
+/**
+ * @vitest-environment jsdom
+ */
+// globals: true,
+// import { test, describe, expect, it, beforeEach } from 'vitest';
+//
 import { mount } from '@vue/test-utils';
+// import { createVitest } from '@vitest/vitest';
+import { setActivePinia, createPinia } from 'pinia';
+// import { currency } from '../src/methods/filters';
 
-import App from '../src/App.vue';
-import FullFooter from '../src/components/FullFooter.vue';
-import StoryList from '../src/views/frontend/StoryList.vue';
+// import App from '../src/App.vue';
+import FullFooter from '@/components/FullFooter.vue';
+// import CartList from '../src/views/frontend/CartList.vue';
+// import ProductsList from '../src/components/ProductsList.vue';
+import ProductsItem from '../src/views/frontend/ProductsItem.vue';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 describe('findComponent', () => {
-  // const wrapper = mount(App);
-  const wrapper = mount(App, {
-    global: {
-      components: {
-        StoryList
-      }
-    }
-  });
-
-  test('元件是否存在於畫面上', () => {
-    expect(wrapper.findComponent(StoryList).exists()).toBe(true);
+  beforeEach(() => {
+    // creates a fresh pinia and makes it active
+    // so it's automatically picked up by any useStore() call
+    // without having to pass it to it: `useStore(pinia)`
+    setActivePinia(createPinia());
   });
 
   test('FullFooter', () => {
     const wrapper = mount(FullFooter);
-    wrapper.findComponent({ name: 'FullFooter' });
+    wrapper.findComponent(FullFooter);
     expect(wrapper.text()).toContain('2023');
   });
 
-  test('StoryList', () => {
-    const wrapper = mount(StoryList);
-    wrapper.findComponent({ name: 'StoryList' });
-    expect(wrapper.text()).toContain('STORY');
-  });
+  //? add pinia
+  // test('trigger', () => {
+  //   const wrapper = mount(CartList);
+  //   expect(wrapper.findComponent(CartList).exists()).toBe(true);
+  // });
 
+  //jsdom
+  //cloud.tencent.com/developer/article/2116202`
+  test('should import from the correct path', async () => {
+    expect(ProductsItem).toBeDefined();
+    // const wrapper = mount(ProductsItem);
+    // expect(wrapper.find('#plus').exists()).toBe(true);
+    // await wrapper.find('#plus').trigger('click');
+  });
+  // expect(wrapper.find('span').text()).toBe('Count: 1');
+
+  // const wrapper = mount(App, {
+  //   global: {
+  //     components: {
+  //       StoryList
+  //     }
+  //   }
+  // });
+
+  // const wrapper = mount(StoryList);
+  // test('元件是否存在於畫面上', () => {
+  //   expect(wrapper.findComponent(StoryList).exists()).toBe(true);
+  // });
+
+  // test('StoryList', () => {
+  //   const wrapper = mount(StoryList);
+  //   wrapper.findComponent({ name: 'StoryList' });
+  //   expect(wrapper.text()).toContain('STORY');
+  // });
   // const getStory = vi.spyOn(axios, 'get');
   // getStory.mockReturnValue({
   //   data: [
@@ -79,3 +111,5 @@ describe('findComponent', () => {
   //   expect(getStory).toHaveBeenCalledTimes(1);
   // });
 });
+
+// createVitest().run();

@@ -12,6 +12,8 @@ export default {
   },
   mounted () {
     //* 物件繼承並綁定地址，然後存到物件中實體化
-    this.offcanvas = new Offcanvas(this.$refs.offcanvas);
+    if (this.$refs.offcanvas) {
+      this.offcanvas = new Offcanvas(this.$refs.offcanvas);
+    }
   }
 };

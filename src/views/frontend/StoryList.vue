@@ -20,7 +20,6 @@ export default {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
       }/articles/?page=${page}`;
-      console.log(api);
 
       this.isLoading = true;
       this.$http.get(api).then((res) => {

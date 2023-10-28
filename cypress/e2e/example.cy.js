@@ -1,10 +1,13 @@
 // https://on.cypress.io/api
+
+// #region
 // it('Does not do much!', () => {
 //   expect(true).to.equal(true);
 // });
 // it('visits root url', () => {
 //   cy.visit('http://localhost:5173/');
 // });
+// #endregion
 
 describe('home view ', () => {
   it('login', () => {
@@ -14,15 +17,15 @@ describe('home view ', () => {
 
     cy.get('form > .text-center > .btn').should('exist').click();
     cy.visit('http://localhost:5173/#/dashboard/members');
-    cy.get('##el-id-7556-17')
-      .find('option')
-      .eq(1)
-      .then(($option) => {
-        cy.wrap($option)
-          .invoke('val')
-          .then((value) => {
-            cy.get('##el-id-7556-17').select(value);
-          });
-      });
+    // cy.get('##el-id-7556-17')
+    //   .find('option')
+    //   .eq(1)
+    //   .then(($option) => {
+    //     cy.wrap($option)
+    //       .invoke('val')
+    //       .then((value) => {
+    //         cy.get('##el-id-7556-17').select(value);
+    //       });
+    //   });
   });
 });

@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "first cypress test"
+git commit -m "temp git pull .gitingnore file"
 sleep 2
 
 git push

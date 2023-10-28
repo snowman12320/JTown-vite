@@ -67,3 +67,13 @@ https://www.wfublog.com/2017/11/web-wysiwyg-text-editor-ckeditor.html
 https://ithelp.ithome.com.tw/articles/10198816
 
 測試用影片https://www.youtube.com/watch?v=_vFuDQ_6Xt8
+
+ #  ///////////////////////////////////////////////#region//////////////////////////////////////////////
+// #region
+// it('Does not do much!', () => {
+//   expect(true).to.equal(true);
+// });
+// it('visits root url', () => {
+//   cy.visit('http://localhost:5173/');
+// });
+// #endregion

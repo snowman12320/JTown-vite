@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "temp git pull .gitingnore file"
+git commit -m "test vitest in home 2"
 sleep 2
 
 git push

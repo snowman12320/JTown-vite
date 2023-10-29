@@ -1,8 +1,9 @@
-import { fileURLToPath, URL } from 'node:url'
+///pinia.vuejs.org/zh/cookbook/testing.html
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import VueDevTools from 'vite-plugin-vue-devtools'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import VueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig({
   plugins: [VueDevTools(), vue()],
@@ -11,5 +12,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true
   }
-})
+});

@@ -1,16 +1,17 @@
 <script>
 export default {
+  name: ['FullFooter'],
   data() {
     return {
       isHover: false
-    }
+    };
   },
   methods: {
     updateHover() {
-      this.isHover = !this.isHover
+      this.isHover = !this.isHover;
     }
   }
-}
+};
 </script>
 
 <template>

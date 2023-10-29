@@ -18,19 +18,20 @@ export default defineStore('cartStore', {
   }),
   getters: {},
   actions: {
-    getCart() {
+    async getCart() {
       this.isLoading = true;
       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`;
-      axios.get(api).then((res) => {
+      await axios.get(api).then((res) => {
         this.carts = res.data.data.carts;
         //! 需先歸零，必需在這計算
         this.sumTotal = 0;
         this.sumFinalQty = 0;
-        this.carts.forEach((item) => {
-          this.sumTotal += item.total;
-          this.sumFinalQty += item.qty;
-        });
-        //
+        if (this.carts && this.carts.length > 0) {
+          this.carts.forEach((item) => {
+            this.sumTotal += item.total;
+            this.sumFinalQty += item.qty;
+          });
+        }
         this.isLoading = false;
       });
     },

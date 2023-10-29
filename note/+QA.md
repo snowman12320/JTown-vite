@@ -332,3 +332,13 @@ https://courses.hexschool.com/courses/vue-20211/lectures/43730457
 
 ## md 
 +++ http://itmyhome.com/markdown/article/syntax/images.html
+
+## 點擊立即結帳會出現，上述提到的勾選，無勾選的驗證錯誤提示，但已透過程式，選取checkbox並勾選
+```
+termCheck() {
+      if (!this.isTermChecked) {
+        return '請閱讀並將卷軸拉至底部，決定是否勾選同意';
+      }
+      return true;
+},
+```

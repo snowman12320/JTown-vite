@@ -161,8 +161,8 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading_big"></Loading>
-    <Loading :active="isLoading_productStore"></Loading>
+    <LoadingMask :active="isLoading_big" />
+    <LoadingMask :active="isLoading_productStore" />
     <!--  -->
     <div class="container-xl">
       <nav aria-label="breadcrumb" class="mt-10">

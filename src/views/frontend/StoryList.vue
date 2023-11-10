@@ -39,7 +39,7 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <div class="my-8 pt-6">
       <div id="Ranking" class="d-flex justify-content-center align-items-center">
         <h2 class="text-pickBlack">PLAYER</h2>

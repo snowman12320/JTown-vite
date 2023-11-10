@@ -1,6 +1,5 @@
 <template>
   <div class="position-relative">
-    <!-- video banner -->
     <div
       id="carouselExampleIndicators"
       class="carousel slide carousel-fade"
@@ -66,7 +65,7 @@
       >
         <span
           class="carousel-control-prev-icon"
-          style="width: 100px; height: 100px"
+          style="width: 100px; height: 50px"
           aria-hidden="true"
         ></span>
         <span class="visually-hidden">Previous</span>
@@ -79,7 +78,7 @@
       >
         <span
           class="carousel-control-next-icon"
-          style="width: 100px; height: 100px"
+          style="width: 100px; height: 50px"
           aria-hidden="true"
         ></span>
         <span class="visually-hidden">Next</span>

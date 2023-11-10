@@ -230,7 +230,7 @@ export default {
      */
     selectLabel: {
       type: String,
-      default: "Press enter to select",
+      default: "",
     },
     /**
      * String to show when pointing to an option
@@ -705,6 +705,7 @@ fieldset[disabled] .multiselect {
   border-bottom-right-radius: 5px;
   z-index: 50;
   -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
 }
 
 .multiselect__content {

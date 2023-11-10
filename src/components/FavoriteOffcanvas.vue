@@ -79,7 +79,7 @@ export default {
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <Loading :active="isLoading" />
+      <LoadingMask :active="isLoading" />
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
           <i class="fa fa-check-circle text-nbaRed" aria-hidden="true"></i> MY COLLECT

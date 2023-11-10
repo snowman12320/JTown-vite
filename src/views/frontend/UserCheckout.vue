@@ -44,7 +44,7 @@ export default {
 
 <template>
   <div class="user_check">
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <div class="row content container mx-auto mt-3">
       <section class="mx-auto header">
         <div class="d-flex justify-content-center my-5">
@@ -53,11 +53,11 @@ export default {
             src="@/assets/image/nbaWeb/1588928235basketball-fire-logo-silhouette-freesvg.org.svg"
             alt="fire-logo"
           />
-          <img height="130" src="@/assets/image/nbaWeb/1506074059.svg" alt="1506074059" />
+          <img height="130" src="@/assets/image/nbaWeb/1506074059.svg" alt="shakeHand" />
           <img
             height="130"
             src="@/assets/image/nbaWeb/05284b30a1fda6bcdc09420b5c1e7127.svg"
-            alt="05284b30a1fda6bcdc09420b5c1e7127"
+            alt="jerseyIcon"
           />
         </div>
         <p class="text-center">訂單已完成！</p>

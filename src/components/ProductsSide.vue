@@ -83,7 +83,7 @@ export default {
       ></multiselect>
     </div>
     <ul
-      class="list-unstyled d-flex flex-lg-column flex-row flex-wrap justify-content-center my-3"
+      class="list-unstyled d-flex flex-column flex-wrap justify-content-center align-items-center my-3"
     >
       <li class="mx-4 mx-md-0">
         <input
@@ -118,7 +118,7 @@ export default {
     </ul>
     <hr class="py-2" />
     <div
-      class="d-flex flex-md-column flex-row gap-3 align-items-center align-items-lg-start justify-content-center"
+      class="d-flex flex-column  gap-3 align-items-center align-items-lg-start justify-content-center"
     >
       <h2 class="fs-6">PRICE：</h2>
       <div class="form-check">

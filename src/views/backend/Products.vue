@@ -105,7 +105,7 @@ export default {
 
 <template>
   <div class="w-100">
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <div class="text-end mt-3">
       <button class="btn btn-nbaBlue" type="button" @click="openModal(true)">新增產品</button>
     </div>

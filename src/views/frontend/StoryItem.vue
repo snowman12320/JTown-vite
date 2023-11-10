@@ -106,7 +106,7 @@ export default {
 
 <template>
     <div>
-        <Loading :active="isLoading_big"></Loading>
+        <LoadingMask :active="isLoading_big" />
         <div
             id="Ranking"
             class="d-flex justify-content-center align-items-center text-dark pt-5 position-relative"

@@ -25,7 +25,7 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <router-view />
     <FullFooter></FullFooter>

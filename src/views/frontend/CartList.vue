@@ -185,7 +185,7 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <div class="row content container mx-auto mt-0">
       <aside class="col-12 col-lg-4 mb-3" style="z-index: 1">
         <section
@@ -333,7 +333,7 @@ export default {
             <span class="ms-auto">購物車 共計 {{ sumFinalQty }} 項商品</span>
           </div>
         </section>
-        <Form v-if="carts.length > 0" id="cartForm" @submit="createOrder" v-slot="{ errors }">
+        <FormValidate v-if="carts.length > 0" id="cartForm" @submit="createOrder" v-slot="{ errors }">
           <h2 class="mt-3">會員專區</h2>
           <section>
             <ul class="list-group">
@@ -496,7 +496,7 @@ export default {
                     </label>
                     <div class="d-flex flex-column d-none p-1 pb-0">
                       <label for="email">信箱：</label>
-                      <Field
+                      <FieldValidate
                         id="email"
                         name="email"
                         type="email"
@@ -508,11 +508,11 @@ export default {
                           'is-valid': !errors['email'] && form.user.email
                         }"
                         v-model="form.user.email"
-                      ></Field>
+                      ></FieldValidate>
                       <error-message name="email" class="invalid-feedback"></error-message>
                       <!-- ! name要對到錯誤標籤的name / error['跟name一樣'] / :rule="自訂規則函式或vee內建" / -->
                       <label for="name">姓名：</label>
-                      <Field
+                      <FieldValidate
                         require
                         type="text"
                         name="姓名"
@@ -527,11 +527,11 @@ export default {
                         }"
                         v-model="form.user.name"
                       >
-                      </Field>
+                      </FieldValidate>
                       <error-message name="姓名" class="invalid-feedback"></error-message>
                       <!--  -->
                       <label for="tel">手機：</label>
-                      <Field
+                      <FieldValidate
                         type="tel"
                         name="手機"
                         id="tel"
@@ -545,12 +545,12 @@ export default {
                         }"
                         v-model="form.user.tel"
                       >
-                      </Field>
+                      </FieldValidate>
                       <error-message name="手機" class="invalid-feedback"></error-message>
                       <!--  -->
                       <p>*取貨通知將以此電話聯繫</p>
                       <label for="address">地址：</label>
-                      <Field
+                      <FieldValidate
                         require
                         type="text"
                         name="地址"
@@ -564,7 +564,7 @@ export default {
                         }"
                         v-model="form.user.address"
                       >
-                      </Field>
+                      </FieldValidate>
                       <error-message name="地址" class="invalid-feedback"></error-message>
                       <!--  -->
                     </div>
@@ -583,7 +583,7 @@ export default {
               <li class="list-group-item">
                 <div class="col-12">
                   <div class="mb-3 position-relative">
-                    <Field
+                    <FieldValidate
                       :disabled="!isLookOver"
                       :rules="termCheck"
                       required
@@ -598,7 +598,7 @@ export default {
                         'opacity-50': !isLookOver
                       }"
                     >
-                    </Field>
+                    </FieldValidate>
                     <error-message
                       name="termCheck"
                       class="ms-3 invalid-feedback position-absolute"
@@ -621,7 +621,7 @@ export default {
                   </div>
                   <!--  -->
                   <div class="mb-3 position-relative">
-                    <Field
+                    <FieldValidate
                       :rules="buyCheck"
                       required
                       id="buyCheck"
@@ -634,7 +634,7 @@ export default {
                         'is-valid': !errors['buyCheck']
                       }"
                     >
-                    </Field>
+                    </FieldValidate>
                     <error-message
                       name="buyCheck"
                       class="ms-3 invalid-feedback position-absolute"
@@ -658,7 +658,7 @@ export default {
               >
             </div>
           </section>
-        </Form>
+        </FormValidate>
       </div>
     </div>
     <CartModal

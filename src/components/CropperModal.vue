@@ -214,7 +214,7 @@ export default {
 <template>
   <div>
     <div class="d-flex gap-1 justify-content-center align-items-center">
-      <Loading :active="isLoading" />
+      <LoadingMask :active="isLoading" />
       <div class="cut">
         <vue-cropper
           ref="cropper"

@@ -97,7 +97,7 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <div class="login_bg">
       <div class="d-flex justify-content-center align-items-center h-100">
@@ -109,12 +109,12 @@ export default {
             </div>
           </div>
           <div class="card-body">
-            <Form @submit="signIn" v-slot="{ errors }">
+            <FormValidate @submit="signIn" v-slot="{ errors }">
               <div class="input-group form-group mb-2 position-relative">
                 <div class="input-group-prepend">
                   <i class="fas fa-user"></i>
                 </div>
-                <Field
+                <FieldValidate
                   id="email"
                   type="text"
                   name="email"
@@ -127,7 +127,7 @@ export default {
                   }"
                   autofocus
                   v-model="user.username"
-                ></Field>
+                ></FieldValidate>
                 <error-message
                   name="email"
                   class="invalid-feedback ms-5"
@@ -138,7 +138,7 @@ export default {
                 <div class="input-group-prepend">
                   <i class="fas fa-key"></i>
                 </div>
-                <Field
+                <FieldValidate
                   type="password"
                   name="密碼"
                   id="password"
@@ -152,7 +152,7 @@ export default {
                     'is-invalid': errors['密碼'],
                     'is-valid': !errors['密碼'] && Boolean(user.password)
                   }"
-                ></Field>
+                ></FieldValidate>
                 <error-message
                   name="密碼"
                   class="invalid-feedback ms-5"
@@ -166,7 +166,7 @@ export default {
               <div class="form-group text-center mt-5">
                 <input type="submit" value="Login" class="btn float-right login_btn" />
               </div>
-            </Form>
+            </FormValidate>
           </div>
           <div class="card-footer d-flex justify-content-center align-items-center">
             <div class="d-flex justify-content-center align-items-center links">

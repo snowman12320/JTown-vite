@@ -1,9 +1,9 @@
 <script>
 export default {
-  name: ['HomeStory'],
+  name: ["HomeStory"],
   data() {
     return {
-      storyList: []
+      storyList: [],
     };
   },
   created() {
@@ -24,8 +24,8 @@ export default {
     },
     getStory(id) {
       this.$router.push(`/story/item/${id}`);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -63,7 +63,10 @@ export default {
           <div data-num="001" class="img_back img_back_kobe"></div>
           <div class="card-body">
             <h3 class="card-title fw-bold fs-6">{{ item.title }}</h3>
-            <p class="card-text fs-6 multiline-ellipsis" v-html="item.description"></p>
+            <p
+              class="card-text fs-6 multiline-ellipsis text-secondary"
+              v-html="item.description"
+            ></p>
             <hr />
             <button
               class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
@@ -100,9 +103,15 @@ export default {
   overflow: hidden;
   width: 100%;
   :deep(p) {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     a {
-      color: #000 !important;
+      color: #6c757d !important;
+      font-weight: 400 !important;
     }
+  }
+  :deep(strong) {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+    font-weight: 400;
   }
 }
 
@@ -128,6 +137,7 @@ export default {
 }
 
 .text-secondary {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  p {
+  }
 }
 </style>

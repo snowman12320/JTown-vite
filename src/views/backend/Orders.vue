@@ -171,7 +171,7 @@ export default {
 
 <template>
   <div class="w-100">
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <!--  -->
     <div class="d-flex justify-content-end">
       <div class="mt-3 d-flex flex-column flex-md-row gap-1 flex-nowrap">

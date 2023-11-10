@@ -77,7 +77,7 @@ export default {
 
 <template>
   <div>
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <!--  -->
     <el-autocomplete
       :popper-class="'my-autocomplete'"

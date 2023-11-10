@@ -33,7 +33,7 @@ export default {
 
 <template>
   <div class="rankView">
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <ToastMessages></ToastMessages>
     <p style="margin-top: 104px !important"></p>

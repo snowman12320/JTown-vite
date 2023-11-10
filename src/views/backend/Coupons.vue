@@ -94,7 +94,7 @@ export default {
 
 <template>
   <div class="w-100">
-    <Loading :active="isLoading" ></Loading>
+    <LoadingMask :active="isLoading" />
     <div class="text-end mt-4">
       <button class="btn btn-nbaBlue" @click="openCouponModal(true)">新增優惠券</button>
     </div>

@@ -26,7 +26,7 @@ export default {
 
 <template>
   <div class="wrap">
-    <Loading :active="isLoading" />
+    <LoadingMask :active="isLoading" />
     <FrontNavbar :is-login="isLogin"></FrontNavbar>
     <ToastMessages></ToastMessages>
     <router-view />

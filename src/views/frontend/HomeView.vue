@@ -29,7 +29,7 @@ export default {
 
 <template>
     <div class="position-relative">
-        <Loading :active="isLoading" />
+        <LoadingMask :active="isLoading" />
         <FrontNavbar></FrontNavbar>
         <HomeCarousel></HomeCarousel>
         <div class="container-xxl">

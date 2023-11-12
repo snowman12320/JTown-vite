@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "repair hexschool suggest in NCKU"
+git commit -m "repair hexschool suggest in home"
 sleep 2
 
 git push

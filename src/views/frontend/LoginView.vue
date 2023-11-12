@@ -109,7 +109,7 @@ export default {
             </div>
           </div>
           <div class="card-body">
-            <FormValidate @submit="signIn" v-slot="{ errors }">
+            <FormValidate @submit.prevent="signIn" v-slot="{ errors }">
               <div class="input-group form-group mb-2 position-relative">
                 <div class="input-group-prepend">
                   <i class="fas fa-user"></i>
@@ -128,10 +128,10 @@ export default {
                   autofocus
                   v-model="user.username"
                 ></FieldValidate>
-                <error-message
+                <ErrorMessage
                   name="email"
                   class="invalid-feedback ms-5"
-                ></error-message>
+                ></ErrorMessage>
               </div>
 
               <div class="input-group form-group mt-4">
@@ -153,10 +153,10 @@ export default {
                     'is-valid': !errors['密碼'] && Boolean(user.password)
                   }"
                 ></FieldValidate>
-                <error-message
+                <ErrorMessage
                   name="密碼"
                   class="invalid-feedback ms-5"
-                ></error-message>
+                ></ErrorMessage>
               </div>
               <!--  -->
               <div class="mt-2 d-flex gap-1 align-items-center justify-content-end me-2">

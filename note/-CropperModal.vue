@@ -50,9 +50,6 @@ export default {
       },
     },
   },
-  created() {
-    // console.log(this.tempImg);
-  },
   watch: {
     // tempImg () { //! props傳進來需監聽，才能取到值
     // console.log('tempImg', this.tempImg.url);

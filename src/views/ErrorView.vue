@@ -4,17 +4,17 @@
             <div class="relative">
                 <div class="absolute-center">
                     <div class="heading">Under construction.</div>
-                    <button class="btn-link rounded-pill">Go Back</button>
+                    <button type="button" class="btn-link rounded-pill">Go Back</button>
                 </div>
                 <div class="img">
-                    <img src="https://i.ibb.co/G9DC8S0/404-2.png" alt="Image" />
+                    <img src="https://i.ibb.co/G9DC8S0/404-2.png" alt="404-1" />
                 </div>
             </div>
             <div>
-                <img src="https://i.ibb.co/ck1SGFJ/Group.png" alt="Image" />
+                <img src="https://i.ibb.co/ck1SGFJ/Group.png" alt="404-2" />
             </div>
             <div class="brightness-overlay"></div>
-            <router-link to="/" class="fullscreen-link"></router-link>
+            <RouterLink to="/" class="fullscreen-link"></RouterLink>
         </div>
         <div id="cursor" :style="cursorStyle" class="absolute hidden"></div>
     </main>

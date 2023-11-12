@@ -22,7 +22,6 @@ export default {
     };
   },
   created() {
-    // console.clear()
     this.getStoryList();
   },
   methods: {
@@ -148,12 +147,14 @@ export default {
           <td class="text-center">
             <div class="btn-group">
               <button
+                type="button"
                 class="btn btn-outline-nbaBlue btn-sm"
                 @click="openModal(false, item.id)"
               >
                 編輯
               </button>
               <button
+                type="button"
                 class="btn btn-outline-nbaRed btn-sm"
                 @click="openDelStoryModal(item)"
               >

@@ -1,6 +1,5 @@
 <script>
 import Multiselect from "@/components/Multiselect.vue";
-
 import productStore from "@/stores/productStore";
 import { mapActions } from "pinia";
 
@@ -13,35 +12,41 @@ export default {
       },
       uniqueCategories: [],
       options: [], //下拉選單的選項
-      //
       cacheSearch: "",
       cacheCategory: "",
       filterCheck: "",
+      toggleCollapse: false,
     };
   },
   created() {
     this.getProducts();
   },
+  mounted() {
+    this.toggleCollapse = window.innerWidth > 768 ? true : false;
+  },
   watch: {
     cacheSearch(val) {
+      this.cacheCategory = val.category;
       this.setCacheSearch(val);
       this.notSelectAllRadios();
+      this.setToggleBehavior();
     },
-    cacheCategory(val) {
+    async cacheCategory(val) {
+      //!  this.cacheSearch = ""; // 選分類不能清空搜尋，會讓監聽搜尋又觸發變更分類（資料狀態）
       this.setCategory(val);
       this.notSelectAllRadios();
+      this.setToggleBehavior();
     },
     filterCheck(val) {
       this.setFilterCheck(val);
+      this.setToggleBehavior();
     },
   },
   methods: {
     ...mapActions(productStore, ["setCategory", "setCacheSearch", "setFilterCheck"]),
-    // 下拉選項，帶入商品名稱
     nameWithLang({ title }) {
       return `${title}`;
     },
-    // 取得分類選單
     getProducts() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -61,17 +66,25 @@ export default {
         .querySelectorAll('input[type="radio"][name="filterCheck"]')
         .forEach((radio) => (radio.checked = false));
     },
+    setToggleBehavior() {
+      if (window.innerWidth < 768) {
+        this.toggleCollapse = false;
+        window.scrollTo({
+          top: 200,
+          behavior: "smooth",
+        });
+      }
+    },
   },
 };
 </script>
 
 <template>
   <aside
-    class="col-lg-2 lh-lg aside sticky-lg-top shadow align-self-start py-3 mb-3"
-    style="top: 100px"
+    class="col-lg-2 lh-lg aside sticky-top shadow align-self-start pt-4 pb-2 my-3"
+    style="top: 70px"
   >
-    <!--  -->
-    <div class="my-3">
+    <div class="mb-3 d-flex align-items-center" style="height: 20px">
       <multiselect
         @click="getProducts"
         v-model="cacheSearch"
@@ -81,86 +94,92 @@ export default {
         label="title"
         track-by="title"
       ></multiselect>
+      <i
+        class="bi bi-funnel d-md-none fs-1 ps-2"
+        @click="toggleCollapse = !toggleCollapse"
+      />
     </div>
-    <ul
-      class="list-unstyled d-flex flex-column flex-wrap justify-content-center align-items-center my-3"
-    >
-      <li class="mx-4 mx-md-0">
-        <input
-          ref="all"
-          type="radio"
-          class="d-none"
-          name="side"
-          id="all"
-          value=" "
-          v-model="cacheCategory"
-          :checked="cacheCategory === ''"
-        />
-        <label for="all">
-          <span class="aside_span"> － </span>
-          All
-        </label>
-      </li>
-      <li v-for="(item, index) in uniqueCategories" :key="index">
-        <input
-          type="radio"
-          class="d-none"
-          name="side"
-          :id="index"
-          :value="item"
-          v-model="cacheCategory"
-        />
-        <label :for="index" class="mx-4 mx-md-0">
-          <span class="aside_span"> － </span>
-          {{ item }}
-        </label>
-      </li>
-    </ul>
-    <hr class="py-2" />
-    <div
-      class="d-flex flex-column  gap-3 align-items-center align-items-lg-start justify-content-center"
-    >
-      <h2 class="fs-6">PRICE：</h2>
-      <div class="form-check">
-        <label class="form-check-label" for="999">
+    <main v-show="toggleCollapse">
+      <ul
+        class="list-unstyled d-flex flex-column flex-wrap justify-content-center align-items-center align-items-md-start my-3"
+      >
+        <li class="mx-4 mx-md-0">
+          <input
+            ref="all"
+            type="radio"
+            class="d-none"
+            name="side"
+            id="all"
+            value=" "
+            v-model="cacheCategory"
+            :checked="cacheCategory === ''"
+          />
+          <label for="all">
+            <span class="aside_span"> － </span>
+            All
+          </label>
+        </li>
+        <li v-for="(item, index) in uniqueCategories" :key="index">
           <input
             type="radio"
-            class="form-check-input"
-            v-model="filterCheck"
-            name="filterCheck"
-            id="999"
-            value="999"
+            class="d-none"
+            name="side"
+            :id="index"
+            :value="item"
+            v-model="cacheCategory"
           />
-          {{ "&lt; 999" }}
-        </label>
+          <label :for="index" class="mx-4 mx-md-0">
+            <span class="aside_span"> － </span>
+            {{ item }}
+          </label>
+        </li>
+      </ul>
+      <hr class="py-2" />
+      <div
+        class="d-flex flex-column gap-3 align-items-center align-items-md-start justify-content-center"
+      >
+        <h2 class="fs-6">PRICE：</h2>
+        <div class="form-check">
+          <label class="form-check-label" for="999">
+            <input
+              type="radio"
+              class="form-check-input"
+              v-model="filterCheck"
+              name="filterCheck"
+              id="999"
+              value="999"
+            />
+            {{ "&lt; 999" }}
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label" for="2999">
+            <input
+              type="radio"
+              class="form-check-input"
+              v-model="filterCheck"
+              name="filterCheck"
+              id="2999"
+              value="2999"
+            />
+            999 - 2999
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label" for="3000">
+            <input
+              type="radio"
+              class="form-check-input"
+              v-model="filterCheck"
+              name="filterCheck"
+              id="3000"
+              value="3000"
+            />
+            3000 +
+          </label>
+        </div>
       </div>
-      <div class="form-check">
-        <label class="form-check-label" for="2999">
-          <input
-            type="radio"
-            class="form-check-input"
-            v-model="filterCheck"
-            name="filterCheck"
-            id="2999"
-            value="2999"
-          />
-          999 - 2999
-        </label>
-      </div>
-      <div class="form-check">
-        <label class="form-check-label" for="3000">
-          <input
-            type="radio"
-            class="form-check-input"
-            v-model="filterCheck"
-            name="filterCheck"
-            id="3000"
-            value="3000"
-          />
-          3000 +
-        </label>
-      </div>
-    </div>
+    </main>
   </aside>
 </template>
 

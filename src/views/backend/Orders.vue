@@ -20,8 +20,7 @@ export default {
       isLoading: false,
       tempOrder: {},
       currentPage: 1,
-      //
-      search: '',
+       search: '',
       filterPaid: 'default',
       ordersAll: [],
       tempPage: 1,
@@ -29,7 +28,6 @@ export default {
     };
   },
   created() {
-    console.clear();
     this.getOrders();
     this.getOrdersAll();
   },
@@ -113,8 +111,7 @@ export default {
       };
       this.$http.put(api, { data: paid }).then((res) => {
         this.getOrders(this.currentPage);
-        //
-        const orderComponent = this.$refs.orderModal;
+           const orderComponent = this.$refs.orderModal;
         orderComponent.hideModal();
         this.isLoading = false;
         this.pushMessage(res, '更新付款狀態');
@@ -299,10 +296,10 @@ export default {
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
+              <button type="button" class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
                 檢視
               </button>
-              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelOrderModal(item)">
+              <button type="button" class="btn btn-outline-nbaRed btn-sm" @click="openDelOrderModal(item)">
                 刪除
               </button>
             </div>

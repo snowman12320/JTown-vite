@@ -32,13 +32,11 @@ export default {
           }
         }
       ],
-      //
-      inputValue: '',
+       inputValue: '',
       dynamicTags: ['NBA', 'SPORT', 'NEWS'],
       inputVisible: false,
       InputRef: null,
-      //
-      editor: ClassicEditor,
+       editor: ClassicEditor,
       // editorData: '<p>Content of the editor.</p>', //* 預設內容
       editorConfig: {},
       Loading_small: false
@@ -52,7 +50,6 @@ export default {
       }
     }
   },
-  created() {},
   watch: {
     //* 監聽傳進來的story，並自動存到暫存區
     story() {
@@ -125,7 +122,7 @@ export default {
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           <div class="row">

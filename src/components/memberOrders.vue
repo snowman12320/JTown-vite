@@ -7,8 +7,7 @@ export default {
     return {
       orders: [],
       state: '',
-      //
-      pagination: {},
+       pagination: {},
       isLoading: false,
       order: [],
       paid_date: null,
@@ -18,7 +17,6 @@ export default {
   created() {
     this.getOrders()
   },
-  mounted() {},
   methods: {
     querySearch(queryString) {
       const orders = this.orders
@@ -164,11 +162,11 @@ export default {
         </tbody>
       </table>
       <div class="text-end" v-if="order.is_paid === false">
-        <button class="btn btn-danger">pay now</button>
+        <button type="button" class="btn btn-danger">pay now</button>
       </div>
       <div class="text-end" v-else>
-        <router-link to="/"
-          ><button class="btn btn-outline-primary">get other thing!</button></router-link
+        <RouterLink to="/"
+          ><button type="button" class="btn btn-outline-primary">get other thing!</button></RouterLink
         >
       </div>
     </form>

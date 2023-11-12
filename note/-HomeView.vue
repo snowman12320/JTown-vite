@@ -134,14 +134,14 @@ export default {
                     <el-button class="without" @click="centerDialogVisible = false"
                         >shop without offer</el-button
                     >
-                    <router-link
+                    <RouterLink
                         class="el-button--primary"
                         to="/products-view/products-content/search"
                     >
                         <el-button type="primary" @click="centerDialogVisible = false">
                             ENJOY 20% OFF
                         </el-button>
-                    </router-link>
+                    </RouterLink>
                 </span>
             </template>
         </el-dialog>

@@ -1,16 +1,17 @@
 <script>
-import modalMixin from '@/mixins/modalMixin'
+import modalMixin from "@/mixins/modalMixin";
+
 export default {
   mixins: [modalMixin],
   data() {
     return {
-      modal: ''
-    }
+      modal: "",
+    };
   },
   props: {
-    item: {}
-  }
-}
+    item: {},
+  },
+};
 </script>
 
 <template>
@@ -34,7 +35,7 @@ export default {
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           Whether to delete

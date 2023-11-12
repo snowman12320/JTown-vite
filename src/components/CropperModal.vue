@@ -34,8 +34,7 @@ export default {
       show: true,
       fixed: false,
       fixedNumber: [75, 34],
-      //
-      isLoading: false,
+       isLoading: false,
     };
   },
   props: {
@@ -182,8 +181,7 @@ export default {
       // this.option.img
       const file = e.target.files[0];
       // console.log('file', typeof (file), file);
-      //
-      if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
+       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
         return false;
       }

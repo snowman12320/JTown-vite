@@ -1,15 +1,15 @@
 <script>
-import Pagination from '@/components/Pagination.vue';
+import Pagination from "@/components/Pagination.vue";
 
 export default {
-  name: ['StoryList'],
+  name: ["StoryList"],
   components: {
-    Pagination
+    Pagination,
   },
   data() {
     return {
       storyList: [],
-      pagination: {}
+      pagination: {},
     };
   },
   created() {
@@ -32,8 +32,8 @@ export default {
     },
     getStory(id) {
       this.$router.push(`/story/item/${id}`);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -66,14 +66,15 @@ export default {
               :src="item.imageUrl"
               height="300"
               class="card-img-top of-none op-top position-absolute mt-n5"
-              alt="..."
+              :alt="item.title"
             />
-            <div data-num="001" class="img_back img_back_kobe"></div>
+            <div data-num="001" class="img_back img_back_kobe" />
             <div class="card-body">
               <h3 class="card-title fw-bold fs-6">{{ item.title }}</h3>
-              <p class="card-text fs-6 multiline-ellipsis" v-html="item.description"></p>
+              <p class="card-text fs-6 multiline-ellipsis" v-html="item.description" />
               <hr />
               <button
+                type="button"
                 class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
               >
                 MORE
@@ -82,7 +83,7 @@ export default {
           </div>
         </div>
       </section>
-      <Pagination :pages="pagination" @emit-pages="getStoryList"></Pagination>
+      <Pagination :pages="pagination" @emit-pages="getStoryList" />
     </div>
   </div>
 </template>
@@ -110,6 +111,6 @@ export default {
 }
 
 .text-secondary {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

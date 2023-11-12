@@ -5,6 +5,7 @@ import DelModal from '@/components/DelModal.vue'
 import favoriteStore from '@/stores/favoriteStore.js'
 import productStore from '@/stores/productStore'
 import { mapActions, mapState } from 'pinia'
+
 export default {
   mixins: [offcanvasMixin], 
   components: {
@@ -32,8 +33,7 @@ export default {
     },
     delFavorite(id) {
       this.delFavorite_store(id)
-      //
-      const delCp = this.$refs.delModal
+       const delCp = this.$refs.delModal
       delCp.hideModal()
     },
     delFavorites() {
@@ -98,7 +98,7 @@ export default {
           class="btn-close text-reset fs-5"
           data-bs-dismiss="offcanvas"
           aria-label="Close"
-        ></button>
+        />
       </div>
       <div class="offcanvas-body">
         <div

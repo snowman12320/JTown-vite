@@ -3,43 +3,43 @@ export default {
   data() {
     return {
       order: {
-        user: {}
+        user: {},
       },
-      orderId: '',
+      orderId: "",
       isLoading: false,
-      paid_date: '',
-      create_at: ''
-    }
+      paid_date: "",
+      create_at: "",
+    };
   },
   created() {
-    this.orderId = this.$route.params.orderId
-    this.getOrder()
+    this.orderId = this.$route.params.orderId;
+    this.getOrder();
   },
   methods: {
     getOrder() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${
-        this.orderId
-      }`
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/order/${this.orderId}`;
       this.$http.get(url).then((res) => {
         if (res.data.success) {
-          this.order = res.data.order
-          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString()
-          this.create_at = new Date(this.order.create_at * 1000).toLocaleString()
+          this.order = res.data.order;
+          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString();
+          this.create_at = new Date(this.order.create_at * 1000).toLocaleString();
         }
-      })
+      });
     },
     payOrder() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${
-        this.orderId
-      }`
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/pay/${this.orderId}`;
       this.$http.post(url).then((res) => {
         if (res.data.success) {
-          this.getOrder()
+          this.getOrder();
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <template>
@@ -77,13 +77,17 @@ export default {
               <tr v-for="item in order.products" :key="item.id">
                 <td>{{ item.product.title }}</td>
                 <td>{{ item.qty }}/{{ item.product.unit }}</td>
-                <td class="text-start">$ {{ $filters.currency(Math.round(item.final_total)) }}</td>
+                <td class="text-start">
+                  $ {{ $filters.currency(Math.round(item.final_total)) }}
+                </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
                 <td colspan="2" class="text-end">總計</td>
-                <td class="text-end">$ {{ $filters.currency(Math.round(order.total) + 120) }}</td>
+                <td class="text-end">
+                  $ {{ $filters.currency(Math.round(order.total) + 120) }}
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -125,11 +129,13 @@ export default {
           </tbody>
         </table>
         <div class="text-end" v-if="order.is_paid === false">
-          <button class="btn btn-danger">pay now</button>
+          <button type="button" class="btn btn-danger">pay now</button>
         </div>
         <div class="text-end" v-else>
-          <router-link to="/"
-            ><button class="btn btn-outline-primary">get other thing!</button></router-link
+          <RouterLink to="/"
+            ><button type="button" class="btn btn-outline-primary">
+              get other thing!
+            </button></RouterLink
           >
         </div>
       </form>

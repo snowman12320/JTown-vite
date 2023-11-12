@@ -1,46 +1,40 @@
 <script>
-import ProductsList from '@/components/ProductsList.vue';
+import ProductsList from "@/components/ProductsList.vue";
 //
-import { Pins } from '@fancyapps/ui/dist/panzoom/panzoom.pins.esm';
-import { Panzoom } from '@fancyapps/ui/dist/panzoom/panzoom.esm';
+import { Pins } from "@fancyapps/ui/dist/panzoom/panzoom.pins.esm";
+import { Panzoom } from "@fancyapps/ui/dist/panzoom/panzoom.esm";
 //
-import favoriteStore from '@/stores/favoriteStore';
-import cartStore from '@/stores/cartStore';
-import productStore from '@/stores/productStore';
-import loginStore from '@/stores/loginStore';
-import { mapState, mapActions } from 'pinia';
+import favoriteStore from "@/stores/favoriteStore";
+import cartStore from "@/stores/cartStore";
+import productStore from "@/stores/productStore";
+import loginStore from "@/stores/loginStore";
+import { mapState, mapActions } from "pinia";
 
-import { useToggle } from '@vueuse/core';
+import { useToggle } from "@vueuse/core";
 
 export default {
   components: {
-    ProductsList
+    ProductsList,
   },
   data() {
     return {
       isLoading_big: false,
       statusBtn_car: {
-        loadingItem: ''
+        loadingItem: "",
       },
-      //
       product: {},
-      productId: '',
-      //
+      productId: "",
       qty: 1,
       isBuy: false,
-      //
-      productSize_item: '',
-      //
+      productSize_item: "",
       rateValue: 5,
-      rateComment: 'The product is the best ,I have ever seen !',
-      rateTime: '8: 40 AM, Today',
+      rateComment: "The product is the best ,I have ever seen !",
+      rateTime: "8: 40 AM, Today",
       rateData: [],
-      //
-      childClass: '',
-      //
+      childClass: "",
       container: null,
       options: {},
-      panzoom: null
+      panzoom: null,
     };
   },
   //! mitt
@@ -52,7 +46,6 @@ export default {
     }
   },
   created() {
-    console.clear();
     this.productId = this.$route.params.productId; //! 統一商品唯一的ID(item.id)
     this.getProduct();
     this.getProduct_item(this.productId);
@@ -63,32 +56,34 @@ export default {
     this.changeClass();
   },
   computed: {
-    ...mapState(favoriteStore, ['statusBtn']),
-    ...mapState(favoriteStore, ['isFavorite', 'favoriteIds']),
-    ...mapState(productStore, ['isLoading_productStore', 'product_item']),
-    ...mapState(loginStore, ['isLogin'])
+    ...mapState(favoriteStore, ["statusBtn"]),
+    ...mapState(favoriteStore, ["isFavorite", "favoriteIds"]),
+    ...mapState(productStore, ["isLoading_productStore", "product_item"]),
+    ...mapState(loginStore, ["isLogin"]),
   },
   methods: {
-    ...mapActions(cartStore, ['getCart']),
-    ...mapActions(favoriteStore, ['getFavorite', 'updateFavorite']),
-    ...mapActions(productStore, ['getProduct_item', 'setCategory']),
+    ...mapActions(cartStore, ["getCart"]),
+    ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
+    ...mapActions(productStore, ["getProduct_item", "setCategory"]),
     //
     addToCart(id, qty = 1, isBuy) {
       if (!this.productSize_item) {
-        this.$swal.fire('Please', 'Size must be selected.', 'warning');
+        this.$swal.fire("Please", "Size must be selected.", "warning");
       } else {
         this.isLoading_big = true;
-        const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`;
+        const url = `${import.meta.env.VITE_APP_API}api/${
+          import.meta.env.VITE_APP_PATH
+        }/cart`;
         const cart = {
           product_id: id,
-          qty
+          qty,
         };
         this.$http.post(url, { data: cart }).then(() => {
           this.getCart();
           this.isLoading_big = false;
-          this.$toast('success', 'add to cart.');
+          this.$toast("success", "add to cart.");
           if (isBuy) {
-            this.$router.push('/cart-view/cart-list');
+            this.$router.push("/cart-view/cart-list");
             //! 觸發該頁函式，讓下一頁資料更新
             this.getCart();
           }
@@ -97,12 +92,11 @@ export default {
     },
     //
     getProduct() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${
-        this.productId
-      }`;
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/product/${this.productId}`;
       this.isLoading = true;
       this.isLoading_big = true;
-      //
       this.$http.get(api).then((response) => {
         this.isLoading = false;
         this.isLoading_big = false;
@@ -114,48 +108,47 @@ export default {
     },
     sendComment() {
       if (!this.rateValue || !this.rateComment) {
-        this.$toast('error', 'star and comment required.');
+        this.$toast("error", "star and comment required.");
         return;
       }
       const data = {
         rateValue: this.rateValue,
         rateComment: this.rateComment,
-        rateTime: this.rateTime
+        rateTime: this.rateTime,
       };
-      localStorage.setItem('rateData', JSON.stringify(data));
+      localStorage.setItem("rateData", JSON.stringify(data));
       this.updateComment();
-      //
       const currentDate = new Date();
       const currentHour = currentDate.getHours();
       const currentMinute = currentDate.getMinutes();
-      const currentPeriod = currentHour >= 12 ? 'PM' : 'AM';
+      const currentPeriod = currentHour >= 12 ? "PM" : "AM";
       const formattedHour = currentHour % 12 === 0 ? 12 : currentHour % 12;
-      const formattedMinute = currentMinute.toString().padStart(2, '0');
+      const formattedMinute = currentMinute.toString().padStart(2, "0");
       const formattedTime = `${formattedHour}:${formattedMinute} ${currentPeriod}`;
-      const formattedDate = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+      const formattedDate = currentDate.toLocaleDateString("en-US", { weekday: "long" });
       this.rateTime = `${formattedTime}, ${formattedDate}`;
       this.rateValue = null;
-      this.rateComment = '';
+      this.rateComment = "";
     },
     updateComment() {
       this.isLoading_big = true;
-      this.rateData.unshift(JSON.parse(localStorage.getItem('rateData')));
+      this.rateData.unshift(JSON.parse(localStorage.getItem("rateData")));
       setTimeout(() => {
         this.isLoading_big = false;
-        this.$toast('success', 'add comment');
+        this.$toast("success", "add comment");
       }, 1000);
     },
     changeClass() {
-      this.childClass = 'products_sort';
-    }
+      this.childClass = "products_sort";
+    },
   },
   setup() {
     const [isHeart, toggleHeart] = useToggle();
     return {
       isHeart,
-      toggleHeart
+      toggleHeart,
     };
-  }
+  },
 };
 </script>
 
@@ -168,32 +161,39 @@ export default {
       <nav aria-label="breadcrumb" class="mt-10">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <router-link class="breadcrumb_a" style="text-decoration: none !important" to="/"
-              >Home</router-link
+            <RouterLink
+              class="breadcrumb_a"
+              style="text-decoration: none !important"
+              to="/"
+              >Home</RouterLink
             >
           </li>
           <li class="breadcrumb-item">
-            <router-link
+            <RouterLink
               class="breadcrumb_a"
               style="text-decoration: none !important"
               to="/products-view/products-content/title"
-              >Product</router-link
+              >Product</RouterLink
             >
           </li>
           <li class="breadcrumb-item active">
-            <router-link
+            <RouterLink
               class="breadcrumb_a"
               @click="setCategory(product_item.category)"
               style="text-decoration: none !important"
               to="/products-view/products-content/title"
-              >{{ product_item.category }}</router-link
+              >{{ product_item.category }}</RouterLink
             >
           </li>
         </ol>
       </nav>
       <!--  -->
       <div class="row row-cols-md-2 g-md-5 mt-md-5">
-        <div id="carouselExampleIndicators" class="carousel slide col-md-8" data-bs-ride="carouse">
+        <div
+          id="carouselExampleIndicators"
+          class="carousel slide col-md-8"
+          data-bs-ride="carouse"
+        >
           <div class="carousel-indicators">
             <button
               type="button"
@@ -202,20 +202,19 @@ export default {
               class="active"
               aria-current="true"
               aria-label="Slide 1"
-            ></button>
+            />
             <button
               v-for="(item, index) in product_item.imagesUrl"
-              :key="index + 1"
+              :key="item.id"
               type="button"
               data-bs-target="#carouselExampleIndicators"
               :data-bs-slide-to="index + 1"
               aria-current="true"
               :aria-label="'Slide ' + index + 1"
-            ></button>
+            />
           </div>
           <div class="carousel-inner">
             <div class="carousel-item active text-center h-100 w-100 mx-auto">
-              <!-- <img :src="product_item.imageUrl" class=" w-auto  h-100" alt="..." /> -->
               <div class="f-panzoom h-100 w-100 mx-auto" ref="myPanzoom">
                 <div data-panzoom-pin data-x="56%" data-y="60%">
                   <div title="My dream house">
@@ -231,25 +230,24 @@ export default {
                   </div>
                   <p
                     class="text-white"
-                    style="
-                      text-shadow:
-                        2px 2px 4px #000,
-                        -2px -2px 4px #000;
-                    "
+                    style="text-shadow: 2px 2px 4px #000, -2px -2px 4px #000"
                   >
                     feature
                   </p>
                 </div>
-                <img class="f-panzoom__content w-100 h-100 mx-auto" :src="product_item.imageUrl" />
+                <img
+                  class="f-panzoom__content w-100 h-100 mx-auto"
+                  :src="product_item.imageUrl"
+                />
               </div>
             </div>
             <!--  -->
             <div
               class="carousel-item text-center h-100 w-100"
-              v-for="(item, index) in product_item.imagesUrl"
-              :key="index"
+              v-for="item in product_item.imagesUrl"
+              :key="item.url"
             >
-              <img :src="item.url" class="w-auto h-100" alt="..." />
+              <img :src="item.url" class="w-auto h-100" :alt="item.name" />
             </div>
           </div>
           <button
@@ -280,7 +278,6 @@ export default {
         <!--  -->
         <div class="col-md-4 d-flex flex-column justify-content-around text-center">
           <h1 class="mb-5">{{ product_item.title }}</h1>
-          <!--  -->
           <div class="my-5">
             <div class="d-flex justify-content-center w-50 mx-auto">
               <div class="form-check">
@@ -355,7 +352,6 @@ export default {
               </div>
             </div>
           </div>
-          <!--  -->
           <div class="d-flex align-items-center justify-content-center gap-3">
             <small class="text-secondary fs-6 text-decoration-line-through fw-lighter"
               >$ {{ $filters.currency(product_item.origin_price) }}</small
@@ -365,6 +361,7 @@ export default {
           <div class="justify-content-center d-flex align-items-center my-3 gap-5">
             <div class="fs-1 d-flex justify-content-center gap-3 align-items-center">
               <button
+                type="button"
                 style="height: 40px"
                 :disabled="qty === 1"
                 @click="qty--"
@@ -374,6 +371,7 @@ export default {
               </button>
               <span>{{ qty }}</span>
               <button
+                type="button"
                 style="height: 40px"
                 @click="qty++"
                 class="btn btn-outline-secondary py-0 rounded-3"
@@ -382,7 +380,6 @@ export default {
                 +
               </button>
             </div>
-            <!--  -->
             <div class="position-relative">
               <i
                 v-if="favoriteIds.indexOf(product_item.id) !== -1"
@@ -403,19 +400,22 @@ export default {
               ></i>
             </div>
           </div>
-          <!--  -->
-          <div class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1">
+          <div
+            class="d-flex flex-column flex-md-row justify-content-center gap-md-5 mt-5 gap-1"
+          >
             <button
+              type="button"
               class="btn-outline-nbaBlue btn rounded-3"
               @click="addToCart(product_item.id, qty, (isBuy = false))"
               :class="{
-                'btn btn-outline-nbaBlue': product_item.id === statusBtn.loadingItem
+                'btn btn-outline-nbaBlue': product_item.id === statusBtn.loadingItem,
               }"
               :disabled="product_item.id === statusBtn.loadingItem"
             >
               ADD TO CART
             </button>
             <button
+              type="button"
               class="btn btn-danger rounded-3"
               @click="addToCart(product_item.id, qty, (isBuy = true))"
             >
@@ -425,13 +425,28 @@ export default {
           <!--  -->
           <hr class="w-100 mx-auto" />
           <div class="my-3 d-flex gap-2 w-100 flex-wrap mx-auto">
-            <el-tag class="fs-6 rounded-3 p-3" type="warning" size="small" effect="plain" round
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="warning"
+              size="small"
+              effect="plain"
+              round
               >Free shipping</el-tag
             >
-            <el-tag class="fs-6 rounded-3 p-3" type="info" size="small" effect="plain" round
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="info"
+              size="small"
+              effect="plain"
+              round
               >Store pickup</el-tag
             >
-            <el-tag class="fs-6 rounded-3 p-3" type="danger" size="small" effect="plain" round
+            <el-tag
+              class="fs-6 rounded-3 p-3"
+              type="danger"
+              size="small"
+              effect="plain"
+              round
               >Fast delivery</el-tag
             >
           </div>
@@ -534,9 +549,9 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@import '@fancyapps/ui/dist/fancybox/fancybox.css';
-@import '@fancyapps/ui/dist/panzoom/panzoom.css';
-@import '@fancyapps/ui/dist/panzoom/panzoom.pins.css';
+@import "@fancyapps/ui/dist/fancybox/fancybox.css";
+@import "@fancyapps/ui/dist/panzoom/panzoom.css";
+@import "@fancyapps/ui/dist/panzoom/panzoom.pins.css";
 
 .breadcrumb-item {
   a {
@@ -619,7 +634,7 @@ export default {
 }
 
 .slanted-div::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 6%;
   right: 34%;

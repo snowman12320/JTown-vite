@@ -105,7 +105,7 @@ export default {
   <div>
     <head
       class="navbar navbar-expand-md position-fixed top-0 start-0 end-0 backdrop py-1"
-      style="z-index: 10"
+      style="z-index: 11"
       ref="header"
       :class="{
         ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop
@@ -115,7 +115,7 @@ export default {
         class="container-fluid d-flex justify-content-between p-3"
         :class="{ nav_height_after: !atTop }"
       >
-        <router-link to="/" class="d-flex position-relative text-decoration-none">
+        <RouterLink to="/" class="d-flex position-relative text-decoration-none">
           <p
             class="navbar-brand position-absolute top-0 start-0 end-0 bottom-0 brand_scale"
             :class="{ brand_scale_after: !atTop }"
@@ -125,7 +125,7 @@ export default {
           <h1 class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
             JTown
           </h1>
-        </router-link>
+        </RouterLink>
         <!-- 漢堡 -->
         <button class="navbar-toggler" type="button" @click="collapse_toggle">
           <span class="navbar-toggler-icon"></span>
@@ -139,27 +139,27 @@ export default {
         >
           <ul class="navbar-nav ms-auto text-center">
             <li class="nav-item">
-              <router-link to="/" class="nav-link px-4 py-3"> Home </router-link>
+              <RouterLink to="/" class="nav-link px-4 py-3"> Home </RouterLink>
             </li>
             <li class="nav-item">
-              <router-link
+              <RouterLink
                 to="/story/list"
                 :class="{ active: $route.path.includes('/story') }"
                 class="nav-link px-4 py-3"
               >
                 Story
-              </router-link>
+              </RouterLink>
             </li>
             <li class="nav-item">
-              <router-link
+              <RouterLink
                 class="nav-link px-4 py-3"
                 to="/products-view/products-content/title"
                 :class="{ active: $route.path.includes('/products-view') }"
-                >Product</router-link
+                >Product</RouterLink
               >
             </li>
             <li class="ms-1">
-              <router-link
+              <RouterLink
                 :to="isLogin ? '/dashboard/products' : '/login'"
                 class="fs-6 px-3 rounded-pill text-white"
               >
@@ -170,10 +170,11 @@ export default {
                 >
                   {{ isLogin ? 'Log out' : 'Login' }}
                 </button>
-              </router-link>
+              </RouterLink>
             </li>
             <li>
               <button
+              type="button"
                 @click="openFavoriteOffcanvas"
                 class="bg-transparent border-0 position-relative"
               >
@@ -192,7 +193,7 @@ export default {
               </button>
             </li>
             <li>
-              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative">
+              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative" type="button">
                 <i class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"></i>
                 <span
                   v-if="carts.length && isLogin"

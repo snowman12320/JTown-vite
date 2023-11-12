@@ -1,10 +1,11 @@
 <script>
-import modalMixin from '@/mixins/modalMixin';
+import modalMixin from "@/mixins/modalMixin";
+
 export default {
   mixins: [modalMixin],
   data() {
     return {
-      modal: {}
+      modal: {},
     };
   },
   methods: {
@@ -13,10 +14,10 @@ export default {
         Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
         this.$refs.element.scrollHeight
       ) {
-        this.$emit('my-scroll');
+        this.$emit("my-scroll");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -30,7 +31,7 @@ export default {
     aria-hidden="true"
   >
     <div
-      class="modal-dialog modal-dialog-scrollable  mx-auto"
+      class="modal-dialog modal-dialog-scrollable mx-auto"
       style="max-height: 600px; max-width: 1000px"
     >
       <div class="modal-content">
@@ -41,7 +42,7 @@ export default {
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div
           class="modal-body"
@@ -108,7 +109,9 @@ export default {
               您保證您提供的所有資料（包括但不限於文字、照片、圖像及影片等）未違反任何法律規範，未侵害任何第三人的權利，且"JTown"使用該等資料不會侵害任何第三人的權利；您明瞭您必須對您提供的所有資料獨自負責，"JTown"不對其中的任何錯誤或疏漏負任何責任
             </div>
             <div>4.5</div>
-            <div>您明示同意我們得依我們的判斷，隨時將您提供的任何資料從"JTown"平台移除。</div>
+            <div>
+              您明示同意我們得依我們的判斷，隨時將您提供的任何資料從"JTown"平台移除。
+            </div>
             <div>5. 您的承諾</div>
             <div>5.1</div>
             <div>
@@ -168,7 +171,9 @@ export default {
               "JTown"保留隨時變更或調整"JTown"或供應商所提供的旅遊行程、接送服務、票券及其他旅遊體驗相關服務的價格及費用的權利，變更的內容可能透過簡訊、電子郵件、網站、手機App公布，若您於該等變更的通知發出後使用"JTown"的服務，即代表您同意並接受變更後的價格及費用。
             </div>
             <div>6.3</div>
-            <div>您同意"JTown"得依我們的判斷，拒絕或取消任何可能違反本使用條款的預訂或訂購。</div>
+            <div>
+              您同意"JTown"得依我們的判斷，拒絕或取消任何可能違反本使用條款的預訂或訂購。
+            </div>
             <div>6.4</div>
             <div>
               您同意您必須依照我們接受的付款方式，支付您的訂單；您瞭解並同意在您依照我們指示的付款流程完成付款前，我們並無義務處理或執行您的訂單。除本使用條款另有約定，您已支付的訂單金額均不可退款。
@@ -257,7 +262,9 @@ export default {
               我們得轉讓本使用條款或任何基於本使用條款產生的權利與義務，且得將本使用條款下的任何義務委由任何第三方處理。未經我們事前書面同意，您不得直接或間接轉讓本使用條款或任何基於本使用條款產生的權利與義務。
             </div>
             <div>13. 聯絡我們</div>
-            <div>如果您對我們的服務或本使用條款有任何疑問，請直接與"JTown"客服中心（客服Email:</div>
+            <div>
+              如果您對我們的服務或本使用條款有任何疑問，請直接與"JTown"客服中心（客服Email:
+            </div>
             <div>"JTown"@gmail.com）聯絡，我們將儘速為您處理。</div>
           </div>
           <!--  -->

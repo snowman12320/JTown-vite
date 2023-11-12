@@ -12,23 +12,17 @@ export default {
       statusBtn_car: {
         loadingItem: "",
       },
-      //
-      products: [], // 原始資料
+       products: [], // 原始資料
       Filtered: [], // 搜尋全部商品用
-      //
-      page: 1,
+       page: 1,
       pagination: {},
-      //
-      productsList_hight: 0,
-      //
-      selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
+       productsList_hight: 0,
+       selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
       setClass: false,
-      //
-      //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
+       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
       productSize_list: "",
       productSize_item: "",
-      //
-      addToCart_item_id: null,
+       addToCart_item_id: null,
     };
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
@@ -159,8 +153,7 @@ export default {
           this.$swal.fire("Please", "Size must be selected.", "warning");
         } else {
           this.statusBtn_car.loadingItem = id;
-          //
-          const url = `${import.meta.env.VITE_APP_API}api/${
+               const url = `${import.meta.env.VITE_APP_API}api/${
             import.meta.env.VITE_APP_PATH
           }/cart`;
           const cart = {
@@ -169,8 +162,7 @@ export default {
           };
           this.$http.post(url, { data: cart }).then(() => {
             this.getCart();
-            //
-            this.statusBtn_car.loadingItem = "";
+                   this.statusBtn_car.loadingItem = "";
             this.$toast("success", "add to cart.");
             if (isBuy) {
               this.$router.push("/cart-view/cart-list");
@@ -263,17 +255,17 @@ export default {
         v-if="filteredData.length > 0"
         class="row row-cols-2 row-cols-lg-5 g-2 g-md-4 mb-7"
       >
-        <div v-for="(item, index) in filteredData" :key="item.id">
+        <div v-for="item in filteredData" :key="item.id">
           <div class="col overflow-hidden">
             <div
               class="card w-100 position-relation newproduct_img"
-              :class="{ 'overflow-hidden': setClass === index }"
+              :class="{ 'overflow-hidden': setClass === item.id }"
               data-num="1"
             >
               <div
                 class="newproduct_cloth p-1"
                 ref="newproduct_cloth"
-                :class="{ newproduct_cloth_set: setClass === index }"
+                :class="{ newproduct_cloth_set: setClass === item.id }"
               >
                 <div style="padding: 1em">
                   <h6 class="fw-light" style="font-size: 14px">{{ item.category }}</h6>
@@ -306,7 +298,7 @@ export default {
                     :width="200"
                     trigger="click"
                     @hide="setClass = false"
-                    @show="setClass = index"
+                    @show="setClass = item.id"
                     popper-class="product_list_el-popover"
                   >
                     <div
@@ -438,11 +430,12 @@ export default {
 
 <style lang="scss">
 .product_list_el-popover {
-  z-index: 2 !important;
+  z-index: 2;
   border-radius: 0.75rem !important;
 }
 
 .product_list {
+  z-index: 1 !important;
   min-height: 100vh;
   .col h5 {
     cursor: pointer;

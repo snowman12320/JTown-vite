@@ -72,12 +72,12 @@ export default {
     <div
       class="text-center my-5 d-flex flex-column flex-md-row justify-content-center align-items-center"
     >
-      <router-link
+      <RouterLink
         to="/products-view/products-content/title"
         class="btn btn-outline-dark rounded-pill btn_pill fs-5 me-md-3 me-0 mb-3 mb-md-0"
       >
         MORE PRODUCT
-      </router-link>
+      </RouterLink>
     </div>
   </div>
 </template>

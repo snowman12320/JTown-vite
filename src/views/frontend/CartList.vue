@@ -1,63 +1,62 @@
 <script>
-import CartModal from '@/components/CartModal.vue';
-import validatorMixin from '@/mixins/validatorMixin';
+import CartModal from "@/components/CartModal.vue";
+import validatorMixin from "@/mixins/validatorMixin";
 
-import cartStore from '@/stores/cartStore.js';
-import { mapActions, mapState } from 'pinia';
+import cartStore from "@/stores/cartStore.js";
+import { mapActions, mapState } from "pinia";
 
 export default {
   mixins: [validatorMixin],
   components: {
-    CartModal
+    CartModal,
   },
   data() {
     return {
       feeDeliver: 120,
       product: {},
-      couponPercent: '',
-      couponCode: 'default',
+      couponPercent: "",
+      couponCode: "default",
       options: [
         {
-          code: 'gooaya',
-          title: 'gooaya / 每件商品打9折'
+          code: "gooaya",
+          title: "gooaya / 每件商品打9折",
         },
         {
-          code: 'howhowhasfriend',
-          title: 'howhow / 每件商品打8折'
-        }
+          code: "howhowhasfriend",
+          title: "howhow / 每件商品打8折",
+        },
       ],
       form: {
         user: {
-          email: '',
-          name: '',
-          tel: '',
-          address: ''
-        }
+          email: "",
+          name: "",
+          tel: "",
+          address: "",
+        },
       },
-      message: '這是留言',
+      message: "這是留言",
       isBuyPerson: false,
       tempForm: {
         user: {
-          email: 'snowman12320@gmail.com',
-          name: '陳威良',
-          tel: '0912346768',
-          address: '台灣省'
-        }
+          email: "snowman12320@gmail.com",
+          name: "陳威良",
+          tel: "0912346768",
+          address: "台灣省",
+        },
       },
       isLookOver: false,
-      isTermChecked: false
+      isTermChecked: false,
     };
   },
   created() {
-    console.clear();
-    //
+
     if (!this.isLogin) {
-      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'));
+      this.tempForm.user.email = JSON.parse(localStorage.getItem("username"));
       this.getCoupons();
     }
     //* 判斷有無折扣馬 然後自動addCouponCode()送出折扣馬 這樣才有折扣趴數資料
-    if (localStorage.getItem('local-couponCode')) {
-      this.couponCode = localStorage.getItem('local-couponCode');
+    if (localStorage.getItem("local-couponCode")) {
+      this.couponCode = localStorage.getItem("local-couponCode");
     }
     //
     if (this.carts.length > 0) {
@@ -67,23 +66,25 @@ export default {
   },
   watch: {
     couponCode() {
-      if (!localStorage.getItem('local-couponCode')) {
-        localStorage.setItem('local-couponCode', this.couponCode);
+      if (!localStorage.getItem("local-couponCode")) {
+        localStorage.setItem("local-couponCode", this.couponCode);
       }
-      localStorage.setItem('local-couponCode', this.couponCode);
+      localStorage.setItem("local-couponCode", this.couponCode);
       this.addCouponCode();
-    }
+    },
   },
   computed: {
-    ...mapState(cartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
+    ...mapState(cartStore, ["isLoading", "carts", "sumFinalQty", "sumTotal"]),
   },
   methods: {
-    ...mapActions(cartStore, ['getCart', 'updateCart']),
+    ...mapActions(cartStore, ["getCart", "updateCart"]),
     //
     getCouponPercent() {
-      if (this.couponCode !== 'default') {
-        if (this.$route.path.includes('cart-list')) {
-          const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart`;
+      if (this.couponCode !== "default") {
+        if (this.$route.path.includes("cart-list")) {
+          const api = `${import.meta.env.VITE_APP_API}api/${
+            import.meta.env.VITE_APP_PATH
+          }/cart`;
           this.$http.get(api).then((res) => {
             this.couponPercent = res.data.data.carts[0].coupon.percent;
           });
@@ -91,11 +92,11 @@ export default {
       }
     },
     delCart(item) {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
-        item.id
-      }`;
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/cart/${item.id}`;
       this.$http.delete(url).then(() => {
-        this.$toast('success', 'delete ' + `"${item.product.title}"`);
+        this.$toast("success", "delete " + `"${item.product.title}"`);
         this.updateCart(item);
       });
       if (this.carts.length === 0) {
@@ -118,24 +119,25 @@ export default {
       });
     },
     addCouponCode() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`;
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/coupon`;
       const coupon = {
-        code: this.couponCode
+        code: this.couponCode,
       };
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
           this.getCouponPercent();
           this.getCart();
-          this.$toast('success', 'Add Coupon');
+          this.$toast("success", "Add Coupon");
         } else {
-          localStorage.removeItem('local-couponCode', this.couponCode);
+          localStorage.removeItem("local-couponCode", this.couponCode);
           this.getCouponPercent();
           this.getCart();
-          this.$toast('success', 'Cancel coupon');
-          //
-          this.couponCode = 'default';
-          this.couponPercent = '';
-          localStorage.setItem('local-couponCode', this.couponCode);
+          this.$toast("success", "Cancel coupon");
+               this.couponCode = "default";
+          this.couponPercent = "";
+          localStorage.setItem("local-couponCode", this.couponCode);
         }
       });
     },
@@ -147,19 +149,21 @@ export default {
       } else {
         this.form = {
           user: {
-            email: '',
-            name: '',
-            tel: '',
-            address: ''
-          }
+            email: "",
+            name: "",
+            tel: "",
+            address: "",
+          },
         };
       }
     },
     createOrder() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`;
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/order`;
       const order = this.form;
       this.$http.post(url, { data: order }).then((res) => {
-        localStorage.removeItem('local-couponCode', this.couponCode);
+        localStorage.removeItem("local-couponCode", this.couponCode);
         this.getCart();
         this.$router.push(`checkout/${res.data.orderId}`);
       });
@@ -178,8 +182,8 @@ export default {
       CartCp.hideModal();
       this.isTermChecked = true;
       document.querySelector('[name="termCheck"]').checked = true;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -231,7 +235,9 @@ export default {
                   </span>
                   -$
                   {{
-                    couponPercent ? $filters.currency(sumTotal * ((100 - couponPercent) / 100)) : 0
+                    couponPercent
+                      ? $filters.currency(sumTotal * ((100 - couponPercent) / 100))
+                      : 0
                   }}
                 </p>
               </li>
@@ -244,7 +250,9 @@ export default {
                 <p>
                   $
                   <span class="text-qopink fs-1 fw-bold">{{
-                    $filters.currency(sumTotal + feeDeliver - sumTotal / (100 - couponPercent))
+                    $filters.currency(
+                      sumTotal + feeDeliver - sumTotal / (100 - couponPercent)
+                    )
                   }}</span>
                 </p>
               </li>
@@ -333,7 +341,12 @@ export default {
             <span class="ms-auto">購物車 共計 {{ sumFinalQty }} 項商品</span>
           </div>
         </section>
-        <FormValidate v-if="carts.length > 0" id="cartForm" @submit="createOrder" v-slot="{ errors }">
+        <FormValidate
+          v-if="carts.length > 0"
+          id="cartForm"
+          @submit="createOrder"
+          v-slot="{ errors }"
+        >
           <h2 class="mt-3">會員專區</h2>
           <section>
             <ul class="list-group">
@@ -352,7 +365,11 @@ export default {
                     v-model="couponCode"
                   >
                     <option value="default" selected disabled>選擇優惠券</option>
-                    <option :value="item.code" v-for="(item, index) in options" :key="index">
+                    <option
+                      :value="item.code"
+                      v-for="item in options"
+                      :key="item.id"
+                    >
                       {{ item.title }}
                     </option>
                   </select>
@@ -505,11 +522,14 @@ export default {
                         rules="email|required"
                         :class="{
                           'is-invalid': errors['email'],
-                          'is-valid': !errors['email'] && form.user.email
+                          'is-valid': !errors['email'] && form.user.email,
                         }"
                         v-model="form.user.email"
                       ></FieldValidate>
-                      <error-message name="email" class="invalid-feedback"></error-message>
+                      <ErrorMessage
+                        name="email"
+                        class="invalid-feedback"
+                      ></ErrorMessage>
                       <!-- ! name要對到錯誤標籤的name / error['跟name一樣'] / :rule="自訂規則函式或vee內建" / -->
                       <label for="name">姓名：</label>
                       <FieldValidate
@@ -523,12 +543,12 @@ export default {
                         :rules="isName"
                         :class="{
                           'is-invalid': errors['姓名'],
-                          'is-valid': !errors['姓名'] && form.user.name
+                          'is-valid': !errors['姓名'] && form.user.name,
                         }"
                         v-model="form.user.name"
                       >
                       </FieldValidate>
-                      <error-message name="姓名" class="invalid-feedback"></error-message>
+                      <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
                       <!--  -->
                       <label for="tel">手機：</label>
                       <FieldValidate
@@ -541,12 +561,12 @@ export default {
                         :rules="isPhone"
                         :class="{
                           'is-invalid': errors['手機'],
-                          'is-valid': !errors['手機'] && form.user.name
+                          'is-valid': !errors['手機'] && form.user.name,
                         }"
                         v-model="form.user.tel"
                       >
                       </FieldValidate>
-                      <error-message name="手機" class="invalid-feedback"></error-message>
+                      <ErrorMessage name="手機" class="invalid-feedback"></ErrorMessage>
                       <!--  -->
                       <p>*取貨通知將以此電話聯繫</p>
                       <label for="address">地址：</label>
@@ -560,12 +580,12 @@ export default {
                         :rules="isAddress"
                         :class="{
                           'is-invalid': errors['地址'],
-                          'is-valid': !errors['地址'] && form.user.address
+                          'is-valid': !errors['地址'] && form.user.address,
                         }"
                         v-model="form.user.address"
                       >
                       </FieldValidate>
-                      <error-message name="地址" class="invalid-feedback"></error-message>
+                      <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
                       <!--  -->
                     </div>
                   </div>
@@ -595,15 +615,15 @@ export default {
                       :class="{
                         'is-invalid': errors['termCheck'],
                         'is-valid': !errors['termCheck'],
-                        'opacity-50': !isLookOver
+                        'opacity-50': !isLookOver,
                       }"
                     >
                     </FieldValidate>
-                    <error-message
+                    <ErrorMessage
                       name="termCheck"
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
-                    ></error-message>
+                    ></ErrorMessage>
                     <label for="termCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true"
                         >同意
@@ -631,15 +651,15 @@ export default {
                       class="form-check-input"
                       :class="{
                         'is-invalid': errors['buyCheck'],
-                        'is-valid': !errors['buyCheck']
+                        'is-valid': !errors['buyCheck'],
                       }"
                     >
                     </FieldValidate>
-                    <error-message
+                    <ErrorMessage
                       name="buyCheck"
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
-                    ></error-message>
+                    ></ErrorMessage>
                     <label for="buyCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true"
                         >同意，為保障彼此之權益，賣家在收到您的訂單後仍保有決定是否接受訂單及出貨與否之權利</span
@@ -653,8 +673,8 @@ export default {
               <button type="submit" class="btn btn-nbaBlue w-100" id="_cartCheckout">
                 立即結帳
               </button>
-              <router-link to="/products-view/products-content/title" class="text-black"
-                >繼續購物</router-link
+              <RouterLink to="/products-view/products-content/title" class="text-black"
+                >繼續購物</RouterLink
               >
             </div>
           </section>
@@ -675,7 +695,7 @@ export default {
   overflow-x: auto;
 }
 
-[type='radio']:checked ~ div {
+[type="radio"]:checked ~ div {
   display: block !important;
 }
 

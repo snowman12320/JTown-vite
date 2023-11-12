@@ -46,7 +46,7 @@ export default {
     <section class="row row-cols-1 row-cols-lg-3 rank_card mx-2">
       <div
         class="col mb-5 mt-7 mb-lg-0"
-        v-for="(item, index) in storyList.splice(0, 3)"
+        v-for="item in storyList.splice(0, 3)"
         :key="item.id"
         @click="getStory(item.id)"
       >
@@ -58,7 +58,7 @@ export default {
             :data-aos-duration="3000"
             height="300"
             class="card-img-top of-none op-top position-absolute mt-n5"
-            alt="..."
+            :alt="item.title"
           />
           <div data-num="001" class="img_back img_back_kobe"></div>
           <div class="card-body">
@@ -69,6 +69,7 @@ export default {
             ></p>
             <hr />
             <button
+            type="button"
               class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
             >
               MORE
@@ -78,12 +79,12 @@ export default {
       </div>
     </section>
     <div class="text-center my-7">
-      <router-link
+      <RouterLink
         to="/story/list"
         class="btn btn-outline-dark rounded-pill btn_pill my-5 fs-5 sellbtn_Rwd"
       >
         MORE LISTS
-      </router-link>
+      </RouterLink>
     </div>
   </div>
 </template>

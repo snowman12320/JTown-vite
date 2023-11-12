@@ -1,68 +1,75 @@
 <script>
-import offcanvasMixin from '@/mixins/offcanvasMixin'
-import DelModal from '@/components/DelModal.vue'
+import offcanvasMixin from "@/mixins/offcanvasMixin";
+import DelModal from "@/components/DelModal.vue";
 
-import cartStore from '../stores/cartStore.js'
-import productStore from '../stores/productStore'
-import { mapActions, mapState } from 'pinia'
+import cartStore from "../stores/cartStore.js";
+import productStore from "../stores/productStore";
+import { mapActions, mapState } from "pinia";
+
 export default {
-  mixins: [offcanvasMixin], 
+  mixins: [offcanvasMixin],
   components: {
-    DelModal
+    DelModal,
   },
   data() {
     return {
       offcanvas: {},
       tempCart: {},
-      tempCartTitle: {}
-    }
+      tempCartTitle: {},
+    };
   },
   props: {
     product: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   created() {
-    this.getCart()
+    this.getCart();
   },
   computed: {
-    ...mapState(cartStore, ['isLoading', 'carts', 'statusBtn_car', 'sumTotal', 'sumFinalQty'])
+    ...mapState(cartStore, [
+      "isLoading",
+      "carts",
+      "statusBtn_car",
+      "sumTotal",
+      "sumFinalQty",
+    ]),
   },
   methods: {
-    ...mapActions(cartStore, ['getCart', 'updateCart']),
-    ...mapActions(productStore, ['getProduct_item']),
+    ...mapActions(cartStore, ["getCart", "updateCart"]),
+    ...mapActions(productStore, ["getProduct_item"]),
     //
     async handleGetProductAndHideModal(id) {
-      await this.getProduct_item(id)
-      this.hideOffcanvas()
+      await this.getProduct_item(id);
+      this.hideOffcanvas();
     },
     openDelCartModel(item) {
-      this.tempCart = { ...item }
-      this.tempCartTitle = { ...item.product }
-      const delCp = this.$refs.delModal
-      delCp.showModal()
+      this.tempCart = { ...item };
+      this.tempCartTitle = { ...item.product };
+      const delCp = this.$refs.delModal;
+      delCp.showModal();
     },
     delCart() {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
-        this.tempCart.id
-      }`
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/cart/${this.tempCart.id}`;
       this.$http.delete(url).then(() => {
-        const delCp = this.$refs.delModal
-        delCp.hideModal()
-        this.updateCart(this.tempCart)
-      })
+        const delCp = this.$refs.delModal;
+        delCp.hideModal();
+        this.updateCart(this.tempCart);
+      });
     },
     delCarts() {
       if (this.carts.length > 0) {
         this.$swal
           .fire({
-            title: 'Do you want to delete the all carts?',
+            title: "Do you want to delete the all carts?",
             showDenyButton: false,
             showCancelButton: true,
-            confirmButtonText: 'O.K'
+            confirmButtonText: "O.K",
             // denyButtonText: 'Don\'t save'
           })
           .then((result) => {
@@ -70,29 +77,29 @@ export default {
             if (result.isConfirmed) {
               const url = `${import.meta.env.VITE_APP_API}api/${
                 import.meta.env.VITE_APP_PATH
-              }/carts`
+              }/carts`;
               this.$http.delete(url).then(() => {
-                this.getCart()
-                this.$swal.fire('Done delete all!', '', 'success')
-              })
+                this.getCart();
+                this.$swal.fire("Done delete all!", "", "success");
+              });
             } else if (result.isDenied) {
-              this.$swal.fire('Changes are not saved', '', 'info')
+              this.$swal.fire("Changes are not saved", "", "info");
             }
-          })
+          });
       } else {
-        this.$swal.fire('Cart was empty.', '', 'warning')
+        this.$swal.fire("Cart was empty.", "", "warning");
       }
     },
     plusQty(item) {
-      item.qty++
-      this.$nextTick(this.updateCart(item))
+      item.qty++;
+      this.$nextTick(this.updateCart(item));
     },
     minusQty(item) {
-      item.qty--
-      this.$nextTick(this.updateCart(item))
-    }
-  }
-}
+      item.qty--;
+      this.$nextTick(this.updateCart(item));
+    },
+  },
+};
 </script>
 
 <template>
@@ -123,7 +130,7 @@ export default {
           class="btn-close text-reset fs-5"
           data-bs-dismiss="offcanvas"
           aria-label="Close"
-        ></button>
+        />
       </div>
       <div class="offcanvas-body">
         <div
@@ -140,7 +147,10 @@ export default {
             />
           </div>
           <div class="w-100 p-1">
-            <h2 class="fs-6 text-center" @click="handleGetProductAndHideModal(item.product_id)">
+            <h2
+              class="fs-6 text-center"
+              @click="handleGetProductAndHideModal(item.product_id)"
+            >
               {{ item.product.title }}
             </h2>
             <p class="text-center pt-2 fs-5 mb-0">
@@ -158,6 +168,7 @@ export default {
                 @click="minusQty(item)"
                 class="btn btn-outline-secondary py-0"
                 :disabled="item.qty === 1 || item.id === statusBtn_car.loadingItem"
+                type="button"
               >
                 -
               </button>
@@ -170,6 +181,7 @@ export default {
                 @change="updateCart(item)"
               />
               <button
+                type="button"
                 style="height: 30px"
                 @click="plusQty(item)"
                 class="btn btn-outline-secondary py-0"
@@ -194,13 +206,13 @@ export default {
           <span>$ {{ $filters.currency(sumTotal) }}</span>
         </p>
         <!--  -->
-        <router-link
+        <RouterLink
           to="/cart-view/cart-list"
           @click="hideOffcanvas"
           class="btn btn-outline-nbaRed w-100 mt-5"
           href="#"
           role="button"
-          >CHECK OUT</router-link
+          >CHECK OUT</RouterLink
         >
       </div>
     </div>

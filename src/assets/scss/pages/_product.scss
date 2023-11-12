@@ -5,7 +5,8 @@
 // 雖然有加上active 但若權重不足 可能導致失效 加上&增加權重 不使用 ~ 可能沒有支援(是代表你寫錯了)
 .aside {
   border-radius: 0.75rem;
-  z-index: 1;
+  z-index: 10 ;
+  background: #fff;
   input[type='radio']:checked + label {
     color: $nbaBlue !important;
     & .aside_span {

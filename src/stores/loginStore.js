@@ -27,8 +27,7 @@ export default defineStore('loginStore', {
           }
         })
         .catch((error) => {
-          console.error('Error checking login status:', error);
-          this.isLogin = false;
+          this.$toast('error', ' Error checking login status:' + error);
         })
         .finally(() => {
           this.isLoading = false;
@@ -53,8 +52,7 @@ export default defineStore('loginStore', {
           }
         })
         .catch((error) => {
-          console.error('Error checking login status:', error);
-          this.isLogin = false;
+          this.$toast('error', ' Error checking login status:' + error);
         })
         .finally(() => {
           this.isLoading = false;

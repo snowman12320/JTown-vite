@@ -23,8 +23,6 @@ export default {
     }
   },
   created() {
-    // console.clear()
-    //
     this.getProducts()
   },
   methods: {
@@ -137,10 +135,10 @@ export default {
           </td>
           <td class="text-center">
             <div class="btn-group">
-              <button class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
+              <button type="button" class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
                 編輯
               </button>
-              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelProductModal(item)">
+              <button type="button" class="btn btn-outline-nbaRed btn-sm" @click="openDelProductModal(item)">
                 刪除
               </button>
             </div>

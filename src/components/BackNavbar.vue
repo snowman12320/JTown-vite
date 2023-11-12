@@ -88,7 +88,7 @@ export default {
           ><span class="text-white mx-1 text-center w-100">{{ username }}</span></template
         >
       </el-menu-item>
-      <router-link to="/">
+      <RouterLink to="/">
         <el-menu-item index="/">
           <el-icon>
             <Monitor />
@@ -97,8 +97,8 @@ export default {
             <div class="text-center w-100 btn btn-nbaBlue text-decoration-none">前台</div>
           </template>
         </el-menu-item>
-      </router-link>
-      <router-link to="/dashboard/members">
+      </RouterLink>
+      <RouterLink to="/dashboard/members">
         <el-menu-item index="/dashboard/members">
           <el-icon>
             <User />
@@ -107,8 +107,8 @@ export default {
             <div class="text-center w-100 btn btn-nbaRed text-decoration-none">會員</div>
           </template>
         </el-menu-item>
-      </router-link>
-      <router-link to="/dashboard/products" class="text-white text-decoration-none w-100">
+      </RouterLink>
+      <RouterLink to="/dashboard/products" class="text-white text-decoration-none w-100">
         <el-menu-item route="/dashboard/products" index="/dashboard/products">
           <el-icon>
             <Basketball />
@@ -117,8 +117,8 @@ export default {
             <div class="text-center w-100">產品</div>
           </template>
         </el-menu-item>
-      </router-link>
-      <router-link to="/dashboard/orders" class="text-white w-100 text-center text-decoration-none">
+      </RouterLink>
+      <RouterLink to="/dashboard/orders" class="text-white w-100 text-center text-decoration-none">
         <el-menu-item index="/dashboard/orders">
           <el-icon>
             <List />
@@ -127,8 +127,8 @@ export default {
             <div class="text-center w-100">訂單</div>
           </template>
         </el-menu-item>
-      </router-link>
-      <router-link
+      </RouterLink>
+      <RouterLink
         to="/dashboard/coupons"
         class="text-white w-100 text-center text-decoration-none"
       >
@@ -140,8 +140,8 @@ export default {
             <div class="text-center w-100">優惠券</div>
           </template>
         </el-menu-item>
-      </router-link>
-      <router-link to="/dashboard/storys" class="text-white text-center w-100 text-decoration-none">
+      </RouterLink>
+      <RouterLink to="/dashboard/storys" class="text-white text-center w-100 text-decoration-none">
         <el-menu-item index="/dashboard/storys">
           <el-icon>
             <Notebook />
@@ -150,7 +150,7 @@ export default {
             <div class="text-center w-100">文章</div>
           </template>
         </el-menu-item>
-      </router-link>
+      </RouterLink>
     </div>
     <el-menu-item index="8" class="border-top border-white">
       <el-icon @click.prevent="logout">

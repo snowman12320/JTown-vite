@@ -1,40 +1,37 @@
 <script>
-import modalMixin from '@/mixins/modalMixin'
+import modalMixin from "@/mixins/modalMixin";
 
 export default {
-  name: 'orderModal',
-  emits: ['update-paid'],
+  name: "orderModal",
+  emits: ["update-paid"],
   mixins: [modalMixin],
   data() {
     return {
       status: {},
-      modal: '',
-      tempOrder: {}
-    }
+      modal: "",
+      tempOrder: {},
+    };
   },
   props: {
     order: {
       type: Object,
       default() {
-        return {}
-      }
-    }
-  },
-  created() {
-    // console.clear()
+        return {};
+      },
+    },
   },
   watch: {
     order() {
-      this.tempOrder = this.order
-    }
+      this.tempOrder = this.order;
+    },
   },
   methods: {
     setPaid() {
-      this.tempOrder.is_paid = !this.tempOrder.is_paid
-      this.$emit('update-paid', this.tempOrder)
-    }
-  }
-}
+      this.tempOrder.is_paid = !this.tempOrder.is_paid;
+      this.$emit("update-paid", this.tempOrder);
+    },
+  },
+};
 </script>
 
 <template>
@@ -58,7 +55,7 @@ export default {
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div class="modal-body">
           <div class="row">
@@ -109,7 +106,9 @@ export default {
                   <tr>
                     <th>付款狀態</th>
                     <td>
-                      <strong v-if="tempOrder.is_paid" class="text-success">已付款</strong>
+                      <strong v-if="tempOrder.is_paid" class="text-success"
+                        >已付款</strong
+                      >
                       <span v-else class="text-muted">尚未付款</span>
                     </td>
                   </tr>
@@ -145,7 +144,9 @@ export default {
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             關閉
           </button>
-          <button type="button" class="btn btn-nbaBlue" @click="setPaid()">更新付款</button>
+          <button type="button" class="btn btn-nbaBlue" @click="setPaid()">
+            更新付款
+          </button>
         </div>
       </div>
     </div>

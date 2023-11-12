@@ -4,6 +4,7 @@ import DelModal from '@/components/DelModal.vue'
 
 import messageStore from '@/stores/messageStore'
 import { mapActions } from 'pinia'
+
 export default {
   components: { CouponModal, DelModal },
   data() {
@@ -23,7 +24,6 @@ export default {
     config: Object
   },
   created() {
-    console.clear()
     this.getCoupons()
   },
   methods: {
@@ -96,7 +96,7 @@ export default {
   <div class="w-100">
     <LoadingMask :active="isLoading" />
     <div class="text-end mt-4">
-      <button class="btn btn-nbaBlue" @click="openCouponModal(true)">新增優惠券</button>
+      <button type="button" class="btn btn-nbaBlue" @click="openCouponModal(true)">新增優惠券</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -119,10 +119,10 @@ export default {
           </td>
           <td>
             <div class="btn-group">
-              <button class="btn btn-outline-nbaBlue btn-sm" @click="openCouponModal(false, item)">
+              <button type="button" class="btn btn-outline-nbaBlue btn-sm" @click="openCouponModal(false, item)">
                 編輯
               </button>
-              <button class="btn btn-outline-nbaRed btn-sm" @click="openDelCouponModal(item)">
+              <button type="button" class="btn btn-outline-nbaRed btn-sm" @click="openDelCouponModal(item)">
                 刪除
               </button>
             </div>

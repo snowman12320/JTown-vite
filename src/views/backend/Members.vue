@@ -10,6 +10,7 @@
 <script>
 import MemberOrders from '@/components/MemberOrders.vue'
 import MemberSide from '@/components/MemberSide.vue'
+
 export default {
   components: { MemberOrders, MemberSide }
 }

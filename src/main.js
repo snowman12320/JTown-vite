@@ -1,4 +1,3 @@
-console.clear();
 //! Create the Vue app instance:
 import { createApp } from "vue";
 import App from "./App.vue";

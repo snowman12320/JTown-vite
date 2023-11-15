@@ -14,9 +14,10 @@ git push
 
 
 
-# 刪 /note or 開 .gitignore
+# 刪 /note or 開 .gitignore (要隱藏上傳的 在資料夾和檔案前加 - 或刪掉 -)
 # 大小寫敏感問題 ，要檔案路徑下git mv -f memberSide.vue  MemberSide.vue 
 # 直接開 present 分支
+
 # git add .
 # git commit -m 'present homework'
 # git push -f git@github.com:snowman12320/jtown-vite.git pinia:present

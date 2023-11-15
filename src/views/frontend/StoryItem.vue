@@ -196,7 +196,7 @@ export default {
               />
               <a
                 type="button"
-                @click.prevent="getMerchandise()"
+                @click.prevent="getMerchandise"
                 class="btn btn-nbaBlue rounded-pill fs-4 btnRwd mx-auto mb-4"
                 >Visit Merchandise</a
               >
@@ -210,7 +210,6 @@ export default {
 
 <style scoped lang="scss">
 * {
-  // background-color: #aaa;
   .page-link:focus {
     background: transparent !important;
   }
@@ -230,5 +229,9 @@ export default {
 button {
   border: none;
   background: #fff;
+}
+
+.text-secondary {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

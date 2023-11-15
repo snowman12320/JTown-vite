@@ -1,23 +1,23 @@
 <script>
-import FrontNavbar from '@/components/FrontNavbar.vue';
-import FullFooter from '@/components/FullFooter.vue';
+import FrontNavbar from "@/components/FrontNavbar.vue";
+import FullFooter from "@/components/FullFooter.vue";
 
-import loginStore from '@/stores/loginStore.js';
-import { mapActions, mapState } from 'pinia';
+import loginStore from "@/stores/loginStore.js";
+import { mapActions, mapState } from "pinia";
 
 export default {
   components: {
     FrontNavbar,
-    FullFooter
+    FullFooter,
   },
   data() {
     return {
       user: {
-        username: '',
+        username: "",
         // username: 'VIP-test@jtown.com.tw',
-        password: ''
+        password: "",
       },
-      rememberMe: false
+      rememberMe: false,
     };
   },
   created() {
@@ -27,38 +27,38 @@ export default {
     this.checkLoginStatus();
   },
   computed: {
-    ...mapState(loginStore, ['isLoading', 'isLogin'])
+    ...mapState(loginStore, ["isLoading", "isLogin"]),
   },
   watch: {
     rememberMe() {
       if (this.rememberMe) {
         this.$swal
           .fire({
-            title: 'Are you sure remember it?',
-            text: ' Please verify and correct it if necessary!',
-            icon: 'warning',
+            title: "Are you sure remember it?",
+            text: " Please verify and correct it if necessary!",
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, do it!'
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, do it!",
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$swal.fire('Remember!', 'Your password has been saved.', 'success');
-              localStorage.setItem('username', this.user.username);
-              localStorage.setItem('password', this.user.password);
-              localStorage.setItem('rememberMe', true);
+              this.$swal.fire("Remember!", "Your password has been saved.", "success");
+              localStorage.setItem("username", this.user.username);
+              localStorage.setItem("password", this.user.password);
+              localStorage.setItem("rememberMe", true);
             }
           });
       } else {
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-        localStorage.removeItem('rememberMe');
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        localStorage.removeItem("rememberMe");
       }
-    }
+    },
   },
   methods: {
-    ...mapActions(loginStore, ['checkLoginStatus']),
+    ...mapActions(loginStore, ["checkLoginStatus"]),
     signIn() {
       const api = `${import.meta.env.VITE_APP_API}admin/signin`;
       this.$http.post(api, this.user).then((res) => {
@@ -66,53 +66,53 @@ export default {
           const { token, expired } = res.data;
           document.cookie = `JTownToken=${token}; expires=${new Date(expired)}`;
           this.$router.go(-1);
-          localStorage.setItem('username', JSON.stringify(this.user.username));
+          localStorage.setItem("username", JSON.stringify(this.user.username));
         } else {
-          this.$swal.fire('Incorrect', 'please check username or password.', 'warning');
+          this.$swal.fire("Incorrect", "please check username or password.", "warning");
         }
       });
     },
     validatePassword(value) {
       if (!value) return false;
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
-      return regex.test(value) ? true : '密碼需包含英文大小寫和數字，且超過十位數以上';
+      return regex.test(value) ? true : "密碼需包含英文大小寫和數字，且超過十位數以上";
     },
     checkRemember() {
-      if (localStorage.getItem('rememberMe') === 'true') {
+      if (localStorage.getItem("rememberMe") === "true") {
         this.rememberMe = true;
-        this.user.username = localStorage.getItem('username');
-        this.user.password = localStorage.getItem('password');
+        this.user.username = localStorage.getItem("username");
+        this.user.password = localStorage.getItem("password");
       } else {
-        localStorage.setItem('rememberMe', 'false');
+        localStorage.setItem("rememberMe", "false");
       }
     },
     confirmEvent() {
-      localStorage.setItem('VIP', JSON.stringify('testToken'));
-      localStorage.setItem('username', JSON.stringify(this.user.username));
-      this.$router.push('/dashboard/products');
-    }
-  }
+      localStorage.setItem("VIP", JSON.stringify("testToken"));
+      localStorage.setItem("username", JSON.stringify(this.user.username));
+      this.$router.push("/dashboard/products");
+    },
+  },
 };
 </script>
 
 <template>
   <div>
     <LoadingMask :active="isLoading" />
-    <FrontNavbar :is-login="isLogin"></FrontNavbar>
+    <FrontNavbar :is-login="isLogin" />
     <div class="login_bg">
       <div class="d-flex justify-content-center align-items-center h-100">
         <div class="card">
           <div class="card-header">
             <h3>Login</h3>
             <div class="d-flex justify-content-end social_icon">
-              <span><i class="fab fa-google-plus-square"></i></span>
+              <span><i class="fab fa-google-plus-square" /></span>
             </div>
           </div>
           <div class="card-body">
             <FormValidate @submit.prevent="signIn" v-slot="{ errors }">
               <div class="input-group form-group mb-2 position-relative">
                 <div class="input-group-prepend">
-                  <i class="fas fa-user"></i>
+                  <i class="fas fa-user" />
                 </div>
                 <FieldValidate
                   id="email"
@@ -123,20 +123,17 @@ export default {
                   rules="email|required"
                   :class="{
                     'is-invalid': errors['email'],
-                    'is-valid': !errors['email'] && Boolean(user.username)
+                    'is-valid': !errors['email'] && Boolean(user.username),
                   }"
                   autofocus
                   v-model="user.username"
-                ></FieldValidate>
-                <ErrorMessage
-                  name="email"
-                  class="invalid-feedback ms-5"
-                ></ErrorMessage>
+                />
+                <ErrorMessage name="email" class="invalid-feedback ms-5" />
               </div>
 
               <div class="input-group form-group mt-4">
                 <div class="input-group-prepend">
-                  <i class="fas fa-key"></i>
+                  <i class="fas fa-key" />
                 </div>
                 <FieldValidate
                   type="password"
@@ -150,15 +147,12 @@ export default {
                   :rules="validatePassword"
                   :class="{
                     'is-invalid': errors['密碼'],
-                    'is-valid': !errors['密碼'] && Boolean(user.password)
+                    'is-valid': !errors['密碼'] && Boolean(user.password),
                   }"
-                ></FieldValidate>
-                <ErrorMessage
-                  name="密碼"
-                  class="invalid-feedback ms-5"
-                ></ErrorMessage>
+                />
+                <ErrorMessage name="密碼" class="invalid-feedback ms-5" />
               </div>
-              <!--  -->
+              
               <div class="mt-2 d-flex gap-1 align-items-center justify-content-end me-2">
                 <input id="remember" type="checkbox" v-model="rememberMe" />
                 <label for="remember" class="text-white">Remember Me</label>
@@ -177,7 +171,7 @@ export default {
         </div>
       </div>
     </div>
-    <FullFooter></FullFooter>
+    <FullFooter />
   </div>
 </template>
 
@@ -186,7 +180,7 @@ export default {
   background-size: cover;
   background-position: 50% 80%;
   background-repeat: no-repeat;
-  background-image: url('@/assets/image/nbaWeb/jusdevoyage-hJOHlZjW9FQ-unsplash.jpg');
+  background-image: url("@/assets/image/nbaWeb/jusdevoyage-hJOHlZjW9FQ-unsplash.jpg");
   min-height: 110vh;
   max-width: 100vw;
   align-content: center;

@@ -1,34 +1,34 @@
 <script>
-import ToastMessages from '@/components/ToastMessages.vue';
-import FullFooter from '@/components/FullFooter.vue';
-import BackNavbar from '@/components/BackNavbar.vue';
+import ToastMessages from "@/components/ToastMessages.vue";
+import FullFooter from "@/components/FullFooter.vue";
+import BackNavbar from "@/components/BackNavbar.vue";
 
-import loginStore from '@/stores/loginStore.js';
-import { mapActions } from 'pinia';
+import loginStore from "@/stores/loginStore.js";
+import { mapActions } from "pinia";
 
 export default {
   components: {
     ToastMessages,
     FullFooter,
-    BackNavbar
+    BackNavbar,
   },
   async created() {
     await this.checkLoginStatusInDashboard();
   },
   methods: {
-    ...mapActions(loginStore, ['checkLoginStatusInDashboard'])
-  }
+    ...mapActions(loginStore, ["checkLoginStatusInDashboard"]),
+  },
 };
 </script>
 
 <template>
   <div class="container-fluid position-relative px-0 dashboard">
-    <ToastMessages></ToastMessages>
+    <ToastMessages />
     <div class="d-flex h-100">
-      <BackNavbar></BackNavbar>
+      <BackNavbar />
       <router-view />
     </div>
-    <FullFooter></FullFooter>
+    <FullFooter />
   </div>
 </template>
 

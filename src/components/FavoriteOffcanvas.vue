@@ -26,7 +26,6 @@ export default {
   methods: {
     ...mapActions(favoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
     ...mapActions(productStore, ['getProduct_item']),
-    //
     async handleGetProductAndHideModal(id) {
       await this.getProduct_item(id)
       this.hideOffcanvas()
@@ -60,7 +59,6 @@ export default {
         this.$swal.fire('Favorites was empty.', '', 'warning')
       }
     },
-    //
     openDelModel(item) {
       this.tempFavorite = { ...item }
       const delCp = this.$refs.delModal
@@ -82,15 +80,15 @@ export default {
       <LoadingMask :active="isLoading" />
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
-          <i class="fa fa-check-circle text-nbaRed" aria-hidden="true"></i> MY COLLECT
-          <!--  -->
+          <i class="fa fa-check-circle text-nbaRed" aria-hidden="true" /> MY COLLECT
+          
           <a
             @click.prevent="delFavorites"
             class="btn btn-outline-danger fs-5 px-2 ms-1"
             href="#"
             role="button"
           >
-            <i class="fa-sharp fa-solid fa-heart-circle-xmark"></i>ALL</a
+            <i class="fa-sharp fa-solid fa-heart-circle-xmark" />ALL</a
           >
         </h5>
         <button
@@ -127,10 +125,10 @@ export default {
             class="border-0 bg-transparent"
             style="height: 30px"
           >
-            <i class="bi bi-trash"></i>
+            <i class="bi bi-trash" />
           </button>
         </div>
-        <!--  -->
+        
         <p class="d-flex justify-content-end fs-4 mt-3">
           <span>TOTAL( {{ favoriteIds.length }} ) </span>
         </p>

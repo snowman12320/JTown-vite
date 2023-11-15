@@ -49,18 +49,16 @@ export default {
     };
   },
   created() {
-
     if (!this.isLogin) {
       this.tempForm.user.email = JSON.parse(localStorage.getItem("username"));
       this.getCoupons();
     }
-    //* 判斷有無折扣馬 然後自動addCouponCode()送出折扣馬 這樣才有折扣趴數資料
+    //* 判斷有無折扣碼 然後自動addCouponCode()送出折扣碼 這樣才有折扣趴數資料
     if (localStorage.getItem("local-couponCode")) {
       this.couponCode = localStorage.getItem("local-couponCode");
     }
-    //
     if (this.carts.length > 0) {
-      this.addCouponCode(); //* 取得購物車後 先判斷有無折扣馬並送出折扣馬 再判斷有無折扣趴數
+      this.addCouponCode(); //* 取得購物車後 先判斷有無折扣碼並送出折扣碼 再判斷有無折扣趴數
     }
     this.getCart();
   },
@@ -78,7 +76,6 @@ export default {
   },
   methods: {
     ...mapActions(cartStore, ["getCart", "updateCart"]),
-    //
     getCouponPercent() {
       if (this.couponCode !== "default") {
         if (this.$route.path.includes("cart-list")) {
@@ -103,11 +100,9 @@ export default {
         this.getCart();
       }
     },
-    //
     getProduct(id) {
       this.$router.push(`/products-view/products-item/${id}`);
     },
-    //
     getCoupons() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -135,13 +130,12 @@ export default {
           this.getCouponPercent();
           this.getCart();
           this.$toast("success", "Cancel coupon");
-               this.couponCode = "default";
+          this.couponCode = "default";
           this.couponPercent = "";
           localStorage.setItem("local-couponCode", this.couponCode);
         }
       });
     },
-    //
     funcBuyPerson() {
       this.isBuyPerson = !this.isBuyPerson;
       if (this.isBuyPerson) {
@@ -168,7 +162,6 @@ export default {
         this.$router.push(`checkout/${res.data.orderId}`);
       });
     },
-    //
     openModal() {
       const CartCp = this.$refs.CartModal;
       CartCp.showModal();
@@ -193,7 +186,7 @@ export default {
     <div class="row content container mx-auto mt-0">
       <aside class="col-12 col-lg-4 mb-3" style="z-index: 1">
         <section
-          class="sticky-lg-top border-secondary rounded-3 mb-3 border top-20"
+          class="sticky-lg-top border-secondary rounded-3 mb-3 shadow top-20"
           style="top: 0px"
         >
           <div class="card w-100 p-3" style="width: 18rem">
@@ -230,7 +223,7 @@ export default {
                       @click="addCouponCode((couponCode = 'default'))"
                       class="bi bi-x-lg"
                       style="cursor: pointer"
-                    ></i>
+                    />
                     已使用"{{ couponCode }}"折抵
                   </span>
                   -$
@@ -260,19 +253,19 @@ export default {
           </div>
         </section>
       </aside>
-      <!--  -->
+
       <div class="col-12 col-lg-8">
         <h2 class="mt-lg-0 mt-5 pt-5">購物車內容</h2>
         <section class="border-1 rounded-3 table_overflow border p-3">
           <table class="table">
             <thead>
               <tr>
-                <th scope="col"></th>
+                <th scope="col" />
                 <th scope="col">商品明細</th>
                 <th scope="col">單價</th>
                 <th scope="col">數量</th>
                 <th scope="col">小計</th>
-                <th scope="col"></th>
+                <th scope="col" />
               </tr>
             </thead>
             <tbody>
@@ -324,7 +317,7 @@ export default {
                     class="link-qopink carDel"
                     @click="delCart(item)"
                   >
-                    <i class="bi bi-x-lg"></i>
+                    <i class="bi bi-x-lg" />
                   </a>
                 </td>
               </tr>
@@ -352,7 +345,7 @@ export default {
             <ul class="list-group">
               <li class="list-group-item bg-qopink text-black">
                 {{ tempForm.user.email }} 已登入
-                <i class="bi bi-check-circle-fill text-danger"></i>
+                <i class="bi bi-check-circle-fill text-danger" />
               </li>
               <li class="list-group-item">
                 <h3>優惠折抵</h3>
@@ -361,20 +354,16 @@ export default {
                     name="offTicket"
                     id="offTicket"
                     class="form-select coupon_ticket"
-                    @change="addCouponCode()"
+                    @change="addCouponCode"
                     v-model="couponCode"
                   >
                     <option value="default" selected disabled>選擇優惠券</option>
-                    <option
-                      :value="item.code"
-                      v-for="item in options"
-                      :key="item.id"
-                    >
+                    <option :value="item.code" v-for="item in options" :key="item.id">
                       {{ item.title }}
                     </option>
                   </select>
                 </div>
-                <div class="col-12 d-flex flex-column" style="color: #ff0000"></div>
+                <div class="col-12 d-flex flex-column" style="color: #ff0000" />
               </li>
             </ul>
           </section>
@@ -489,7 +478,7 @@ export default {
                 <div class="col-12">
                   <div>
                     <input
-                      @click="funcBuyPerson()"
+                      @click="funcBuyPerson"
                       type="radio"
                       id="buy_person"
                       class="d-inline-block"
@@ -505,7 +494,7 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <!--  -->
+
                   <div class="mt-3">
                     <input type="radio" id="add_person" name="person" checked /><label
                       for="add_person"
@@ -525,11 +514,8 @@ export default {
                           'is-valid': !errors['email'] && form.user.email,
                         }"
                         v-model="form.user.email"
-                      ></FieldValidate>
-                      <ErrorMessage
-                        name="email"
-                        class="invalid-feedback"
-                      ></ErrorMessage>
+                      />
+                      <ErrorMessage name="email" class="invalid-feedback" />
                       <!-- ! name要對到錯誤標籤的name / error['跟name一樣'] / :rule="自訂規則函式或vee內建" / -->
                       <label for="name">姓名：</label>
                       <FieldValidate
@@ -548,8 +534,8 @@ export default {
                         v-model="form.user.name"
                       >
                       </FieldValidate>
-                      <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
-                      <!--  -->
+                      <ErrorMessage name="姓名" class="invalid-feedback" />
+
                       <label for="tel">手機：</label>
                       <FieldValidate
                         type="tel"
@@ -566,8 +552,8 @@ export default {
                         v-model="form.user.tel"
                       >
                       </FieldValidate>
-                      <ErrorMessage name="手機" class="invalid-feedback"></ErrorMessage>
-                      <!--  -->
+                      <ErrorMessage name="手機" class="invalid-feedback" />
+
                       <p>*取貨通知將以此電話聯繫</p>
                       <label for="address">地址：</label>
                       <FieldValidate
@@ -585,8 +571,7 @@ export default {
                         v-model="form.user.address"
                       >
                       </FieldValidate>
-                      <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
-                      <!--  -->
+                      <ErrorMessage name="地址" class="invalid-feedback" />
                     </div>
                   </div>
                 </div>
@@ -598,7 +583,7 @@ export default {
                   rows="3"
                   class="w-100 form-control"
                   placeholder="特別提醒事項..."
-                ></textarea>
+                />
               </li>
               <li class="list-group-item">
                 <div class="col-12">
@@ -623,7 +608,7 @@ export default {
                       name="termCheck"
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
-                    ></ErrorMessage>
+                    />
                     <label for="termCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true"
                         >同意
@@ -639,7 +624,7 @@ export default {
                       </button>
                     </label>
                   </div>
-                  <!--  -->
+
                   <div class="mb-3 position-relative">
                     <FieldValidate
                       :rules="buyCheck"
@@ -659,7 +644,7 @@ export default {
                       name="buyCheck"
                       class="ms-3 invalid-feedback position-absolute"
                       style="bottom: -18px"
-                    ></ErrorMessage>
+                    />
                     <label for="buyCheck">
                       <span data-translate-keys="agree-terms" data-translate-html="true"
                         >同意，為保障彼此之權益，賣家在收到您的訂單後仍保有決定是否接受訂單及出貨與否之權利</span
@@ -685,9 +670,8 @@ export default {
       ref="CartModal"
       @my-scroll="handleMyScroll"
       @toggle:agreeTerm="agreeTerm"
-    ></CartModal>
+    />
   </div>
-  <!--  -->
 </template>
 
 <style scoped>

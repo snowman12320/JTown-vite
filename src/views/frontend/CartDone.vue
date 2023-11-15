@@ -19,7 +19,7 @@
       <p class="text-center">訂單已完成！</p>
       <p
         class="border border-bottom border-md border-dark my-5 w-50 text-center mx-auto"
-      ></p>
+      />
       <p class="text-center">付款完成後，會盡快為您安排出貨！</p>
     </section>
   </div>

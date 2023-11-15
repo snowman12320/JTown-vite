@@ -1,16 +1,16 @@
 <script>
-import DelModal from '@/components/DelModal.vue';
-import OrderModal from '@/components/OrderModal.vue';
-import Pagination from '@/components/Pagination.vue';
+import DelModal from "@/components/DelModal.vue";
+import OrderModal from "@/components/OrderModal.vue";
+import Pagination from "@/components/Pagination.vue";
 
-import messageStore from '@/stores/messageStore';
-import { mapActions } from 'pinia';
+import messageStore from "@/stores/messageStore";
+import { mapActions } from "pinia";
 
 export default {
   components: {
     Pagination,
     DelModal,
-    OrderModal
+    OrderModal,
   },
   data() {
     return {
@@ -20,11 +20,11 @@ export default {
       isLoading: false,
       tempOrder: {},
       currentPage: 1,
-       search: '',
-      filterPaid: 'default',
+      search: "",
+      filterPaid: "default",
       ordersAll: [],
       tempPage: 1,
-      selectSort: 'default'
+      selectSort: "default",
     };
   },
   created() {
@@ -35,8 +35,8 @@ export default {
     filterOrder() {
       if (
         !this.search &&
-        this.filterPaid.includes('default') &&
-        this.selectSort.includes('default')
+        this.filterPaid.includes("default") &&
+        this.selectSort.includes("default")
       ) {
         return this.orders;
       } else {
@@ -46,11 +46,10 @@ export default {
           .filter(this.getFilterPaid())
           .sort(this.getSelectSort());
       }
-    }
+    },
   },
   methods: {
-    ...mapActions(messageStore, ['pushMessage']),
-    //
+    ...mapActions(messageStore, ["pushMessage"]),
     filterOrderByIdAndDate(order) {
       return (
         order.id.toLowerCase().includes(this.search.toLowerCase().trim()) ||
@@ -60,9 +59,9 @@ export default {
     getFilterPaid() {
       const filterPaidOptions = {
         unpaid: (item) => item.is_paid === false,
-        default: () => true
+        default: () => true,
       };
-      return filterPaidOptions[this.filterPaid || 'default'];
+      return filterPaidOptions[this.filterPaid || "default"];
     },
     getSelectSort() {
       // https://blog.csdn.net/Fairyasd/article/details/125502752
@@ -73,9 +72,9 @@ export default {
         // Height: (a, b) => new Date(b.create_at).getTime() - new Date(a.create_at).getTime(),
         Low: (a, b) => new Date(a.create_at * 1000) - new Date(b.create_at * 1000), //* 低>高 升冪 (create_at = 1689688205)
         Height: (a, b) => new Date(b.create_at * 1000) - new Date(a.create_at * 1000),
-        default: () => 0
+        default: () => 0,
       };
-      return sortFunc[this.selectSort || 'default'];
+      return sortFunc[this.selectSort || "default"];
     },
     getOrders(currentPage = 1) {
       this.currentPage = currentPage;
@@ -107,14 +106,14 @@ export default {
         import.meta.env.VITE_APP_PATH
       }/admin/order/${item.id}`;
       const paid = {
-        is_paid: item.is_paid
+        is_paid: item.is_paid,
       };
       this.$http.put(api, { data: paid }).then((res) => {
         this.getOrders(this.currentPage);
-           const orderComponent = this.$refs.orderModal;
+        const orderComponent = this.$refs.orderModal;
         orderComponent.hideModal();
         this.isLoading = false;
-        this.pushMessage(res, '更新付款狀態');
+        this.pushMessage(res, "更新付款狀態");
       });
     },
     delOrder() {
@@ -126,7 +125,7 @@ export default {
         const delComponent = this.$refs.delModal;
         delComponent.hideModal();
         this.getOrders(this.currentPage);
-        this.pushMessage(res, 'delete');
+        this.pushMessage(res, "delete");
       });
     },
     getOrdersAll() {
@@ -142,8 +141,8 @@ export default {
         } else {
           //! 須返回某個數值，不然會噴錯
           console.info(
-            'getOrdersAll,random success',
-            new Date(this.ordersAll[11].create_at * 1000).toISOString().split('T')[0]
+            "getOrdersAll,random success",
+            new Date(this.ordersAll[11].create_at * 1000).toISOString().split("T")[0]
           );
           // console.log('getOrdersAll,random success', new Date(new Date(this.ordersAll[11].create_at * 1000).toISOString().split('T')[0]).getTime());
         }
@@ -159,17 +158,17 @@ export default {
         const delComponent = this.$refs.delModal;
         delComponent.hideModal();
         this.getOrders(this.currentPage);
-        this.pushMessage(res, 'delete all');
+        this.pushMessage(res, "delete all");
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <template>
   <div class="w-100">
     <LoadingMask :active="isLoading" />
-    <!--  -->
+    
     <div class="d-flex justify-content-end">
       <div class="mt-3 d-flex flex-column flex-md-row gap-1 flex-nowrap">
         <input
@@ -179,7 +178,7 @@ export default {
           aria-describedby="helpId"
           placeholder="search order ID / DATE"
         />
-        <!--  -->
+        
         <div class="flex-shrink-0">
           <select v-model="filterPaid" class="form-select form-select-lg">
             <option value="default" selected>to sift</option>
@@ -195,7 +194,7 @@ export default {
         </button>
       </div>
     </div>
-    <!--  -->
+    
     <table class="table mt-4">
       <thead>
         <tr>
@@ -219,10 +218,10 @@ export default {
                   class="form-check-label"
                   for="1"
                   :class="{
-                    ' text-primary': selectSort === 'Low' || selectSort === 'default'
+                    ' text-primary': selectSort === 'Low' || selectSort === 'default',
                   }"
                 >
-                  <i class="bi bi-caret-up-fill"></i>
+                  <i class="bi bi-caret-up-fill" />
                 </label>
               </div>
               <div class="form-check">
@@ -239,10 +238,10 @@ export default {
                   class="form-check-label"
                   for="2"
                   :class="{
-                    ' text-primary': selectSort === 'Height' || selectSort === 'default'
+                    ' text-primary': selectSort === 'Height' || selectSort === 'default',
                   }"
                 >
-                  <i class="bi bi-caret-down-fill"></i>
+                  <i class="bi bi-caret-down-fill" />
                 </label>
               </div>
             </div>
@@ -268,7 +267,7 @@ export default {
           <td class="">{{ item.id }}</td>
           <td class="d-md-table-cell d-none">{{ item.user.name }}</td>
           <td class="d-md-table-cell d-none">
-            <span v-text="item.user.email" v-if="item.user"></span>
+            <span v-text="item.user.email" v-if="item.user" />
           </td>
           <td class="d-md-table-cell d-none">
             <ul class="list-unstyled">
@@ -296,10 +295,18 @@ export default {
           </td>
           <td>
             <div class="btn-group">
-              <button type="button" class="btn btn-outline-nbaBlue btn-sm" @click="openModal(false, item)">
+              <button
+                type="button"
+                class="btn btn-outline-nbaBlue btn-sm"
+                @click="openModal(false, item)"
+              >
                 檢視
               </button>
-              <button type="button" class="btn btn-outline-nbaRed btn-sm" @click="openDelOrderModal(item)">
+              <button
+                type="button"
+                class="btn btn-outline-nbaRed btn-sm"
+                @click="openDelOrderModal(item)"
+              >
                 刪除
               </button>
             </div>
@@ -307,15 +314,15 @@ export default {
         </tr>
       </tbody>
     </table>
-    <OrderModal :order="tempOrder" ref="orderModal" @update-paid="updatePaid"></OrderModal>
-    <DelModal :item="tempOrder" ref="delModal" @del-item="delOrder" @del-all="delAllOrder()">
-    </DelModal>
-    <Pagination
-      v-show="!search && filterPaid === 'default'"
-      :pages="pagination"
-      @emit-pages="getOrders"
-    >
-    </Pagination>
+    <OrderModal :order="tempOrder" ref="orderModal" @update-paid="updatePaid" />
+    <DelModal
+      :item="tempOrder"
+      ref="delModal"
+      @del-item="delOrder"
+      @del-all="delAllOrder"
+    />
+    <Pagination v-show="!search && filterPaid === 'default'" :pages="pagination"
+    @emit-pages="getOrders" />
   </div>
 </template>
 

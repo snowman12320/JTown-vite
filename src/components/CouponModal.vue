@@ -98,7 +98,6 @@ export default {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-          <!-- 像外傳遞整包暫存設定 -->
           <button type="button" class="btn btn-nbaBlue" @click="$emit('update-coupon', tempCoupon)">
             更新優惠券
           </button>

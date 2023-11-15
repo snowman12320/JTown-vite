@@ -100,7 +100,7 @@ export default {
                       <span v-if="tempOrder.paid_date">
                         {{ $filters.dateAndTime(tempOrder.paid_date) }}
                       </span>
-                      <span v-else></span>
+                      <span v-else />
                     </td>
                   </tr>
                   <tr>
@@ -123,7 +123,7 @@ export default {
               <h3>選購商品</h3>
               <table class="table">
                 <thead>
-                  <tr></tr>
+                  <tr />
                 </thead>
                 <tbody>
                   <tr v-for="item in tempOrder.products" :key="item.id">
@@ -144,9 +144,7 @@ export default {
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             關閉
           </button>
-          <button type="button" class="btn btn-nbaBlue" @click="setPaid()">
-            更新付款
-          </button>
+          <button type="button" class="btn btn-nbaBlue" @click="setPaid">更新付款</button>
         </div>
       </div>
     </div>

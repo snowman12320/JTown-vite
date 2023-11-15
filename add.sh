@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "repair hexschool suggest in home"
+git commit -m "repair suggest done in NCKU"
 sleep 2
 
 git push
@@ -15,6 +15,7 @@ git push
 
 
 # 刪 /note or 開 .gitignore
+# 大小寫敏感問題 git mv -f readme.md README.md 
 # 直接開 present 分支
 # git add .
 # git commit -m 'present homework'

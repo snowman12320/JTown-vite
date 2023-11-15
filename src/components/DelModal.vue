@@ -46,7 +46,7 @@ export default {
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             Cancel
           </button>
-          <!--  -->
+          
           <button
             v-if="item.title === 'ALL'"
             type="button"

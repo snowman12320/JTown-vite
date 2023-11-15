@@ -27,19 +27,19 @@ export default {
             href="tel:0976103738"
             class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
           >
-            <i class="bi bi-telephone-fill" style="width: 26px; height: 26px; padding-top: 2px"></i>
+            <i class="bi bi-telephone-fill" style="width: 26px; height: 26px; padding-top: 2px" />
           </a>
           <a
             href="mailto:snowman12320@gmail.com"
             class="text-white d-inline-flex align-items-center justify-content-center"
           >
-            <i class="bi bi-envelope-at-fill text-white" style="font-size: 23px"></i>
+            <i class="bi bi-envelope-at-fill text-white" style="font-size: 23px" />
           </a>
           <a
             href="https://drive.google.com/file/d/1TGvceo-thlafmKdnMducqczBb6rBRy6j/view"
             class="text-white d-inline-flex align-items-center justify-content-center"
           >
-            <i class="bi bi-file-earmark-word-fill text-primary" style="font-size: 23px"></i>
+            <i class="bi bi-file-earmark-word-fill text-primary" style="font-size: 23px" />
           </a>
           <a
             href="#"
@@ -57,21 +57,21 @@ export default {
             class="position-relative d-flex align-items-center justify-content-center"
             style="height: 10px"
           >
-            <i class="bi bi-youtube pt-1 text-danger" style="font-size: 25px"></i>
+            <i class="bi bi-youtube pt-1 text-danger" style="font-size: 25px" />
           </a>
           <a
             href="#"
             class="position-relative d-inline-flex align-items-center justify-content-center"
             style="height: 10px"
           >
-            <i class="bi bi-line relative z-[1] pt-1 text-success" style="font-size: 25px"></i>
+            <i class="bi bi-line relative z-[1] pt-1 text-success" style="font-size: 25px" />
           </a>
           <a
             href="#"
             class="position-relative d-inline-flex align-items-center justify-content-center"
             style="height: 10px"
           >
-            <i class="bi bi-facebook pt-1 text-primary" style="font-size: 25px"></i>
+            <i class="bi bi-facebook pt-1 text-primary" style="font-size: 25px" />
           </a>
         </p>
       </div>

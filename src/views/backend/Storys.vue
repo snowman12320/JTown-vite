@@ -139,7 +139,7 @@ export default {
           <td
             class="d-md-inline-block d-none multiline-ellipsis overflow-hidden"
             v-html="item.description"
-          ></td>
+          />
           <td class="d-md-table-cell d-none">
             <span class="text-success" v-if="item.isPublic">啟用</span>
             <span class="text-muted" v-else>未啟用</span>
@@ -166,14 +166,10 @@ export default {
       </tbody>
     </table>
     <!-- props傳遞總頁數 emit傳出目前頁數 -->
-    <Pagination :pages="pagination" @emit-pages="getStoryList"></Pagination>
+    <Pagination :pages="pagination" @emit-pages="getStoryList" />
     <!-- 更新資料，先帶原始資料進去元件，元件內修改後，再透過emit傳遞觸發函式和資料出來 -->
-    <StoryModal
-      ref="storyModal"
-      :story="tempStory"
-      @update-story="updateStory"
-    ></StoryModal>
-    <!--  -->
+    <StoryModal ref="storyModal" :story="tempStory" @update-story="updateStory" />
+    
     <DelModal :item="tempStory" ref="delModal" @del-item="delStory" />
   </div>
 </template>

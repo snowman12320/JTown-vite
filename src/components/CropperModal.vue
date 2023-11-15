@@ -16,7 +16,7 @@ export default {
         },
       ],
       option: {
-        img: "", 
+        img: "",
         size: 1,
         full: false,
         outputType: "png",
@@ -34,7 +34,7 @@ export default {
       show: true,
       fixed: false,
       fixedNumber: [75, 34],
-       isLoading: false,
+      isLoading: false,
     };
   },
   props: {
@@ -62,18 +62,6 @@ export default {
         };
         xhr.send();
       });
-    },
-    downloadAndUploadImage(url) {
-      this.axios({
-        url,
-        responseType: "arraybuffer",
-      })
-        .then((response) => {
-          const imageBuffer = Buffer.from(response.data, "binary");
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
     },
     changeImg() {
       this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
@@ -144,13 +132,13 @@ export default {
       this.previews = data;
       // console.log(data);
     },
-    finish2(type) {
+    finish2() {
       this.$refs.cropper2.getCropData((data) => {
         this.model = true;
         this.modelSrc = data;
       });
     },
-    finish3(type) {
+    finish3() {
       this.$refs.cropper3.getCropData((data) => {
         this.model = true;
         this.modelSrc = data;
@@ -181,7 +169,7 @@ export default {
       // this.option.img
       const file = e.target.files[0];
       // console.log('file', typeof (file), file);
-       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
+      if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
         return false;
       }
@@ -233,11 +221,9 @@ export default {
           :center-box="option.centerBox"
           @real-time="realTime"
           :high="option.high"
-          @img-load="imgLoad"
           mode="contain"
           :max-img-size="option.max"
-          @crop-moving="cropMoving"
-        ></vue-cropper>
+        />
       </div>
       <div
         class="show-preview"
@@ -253,7 +239,7 @@ export default {
         </div>
       </div>
     </div>
-    <!--  -->
+    
     <div class="test-button">
       <!-- <button @click="changeImg" class="btn_2">changeImg</button> -->
       <label class="btn_2" for="uploads">upload</label>
@@ -290,7 +276,7 @@ export default {
             close
           </button>
         </div>
-        <!--  -->
+        
         <div v-if="false">
           <label class="c-item">
             <span>上传图片是否显示原始宽高 (针对大图 可以铺满)</span>
@@ -456,7 +442,7 @@ code.language-html {
     #3498db
   );
   color: transparent;
-  -webkit-background-clip: text;
+  background-clip: text;
   background-size: 200% 100%;
   animation: slide 5s infinite linear;
   font-size: 40px;

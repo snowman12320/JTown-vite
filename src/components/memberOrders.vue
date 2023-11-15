@@ -44,7 +44,6 @@ export default {
         }
       })
     },
-    //
     getOrders(currentPage = 1) {
       this.currentPage = currentPage
       const url = `${import.meta.env.VITE_APP_API}api/${
@@ -63,7 +62,6 @@ export default {
       }`
       this.$http.post(url).then((res) => {
         if (res.data.success) {
-          // this.order = [];
           this.handleSelect(order)
           this.getOrders()
         }
@@ -76,7 +74,7 @@ export default {
 <template>
   <div>
     <LoadingMask :active="isLoading" />
-    <!--  -->
+    
     <el-autocomplete
       :popper-class="'my-autocomplete'"
       class="my-autocomplete-self"
@@ -103,7 +101,6 @@ export default {
         </div>
       </template>
     </el-autocomplete>
-    <!-- order.length只有0和空白 {{ Boolean(order.length === 0)   }} -->
     <!-- 要用if不然抓不到資料會報錯 -->
     <form class="w-100 my-5" @submit.prevent="payOrder(order)" v-if="!Boolean(order.length === 0)">
       <table class="table align-middle">
@@ -170,7 +167,7 @@ export default {
         >
       </div>
     </form>
-    <!--  -->
+    
     <Pagination :pages="pagination" @emit-pages="getOrders"> </Pagination>
   </div>
 </template>

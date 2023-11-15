@@ -4,7 +4,7 @@ import App from "./App.vue";
 const app = createApp(App);
 import { createPinia } from "pinia";
 const pinia = createPinia();
-app.use(pinia);
+
 
 import "@/assets/scss/main.scss";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -68,6 +68,7 @@ app.use(VueSweetalert2);
 app.use(ElementPlus);
 app.use(CKEditor);
 app.use(VueClickAway);
+app.use(pinia);
 
 app.mixin({
   methods: {

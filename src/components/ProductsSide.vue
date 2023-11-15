@@ -41,6 +41,13 @@ export default {
       this.setFilterCheck(val);
       this.setToggleBehavior();
     },
+    toggleCollapse(val) {
+      if (val && window.innerWidth < 768) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+    },
   },
   methods: {
     ...mapActions(productStore, ["setCategory", "setCacheSearch", "setFilterCheck"]),
@@ -93,7 +100,7 @@ export default {
         placeholder="search"
         label="title"
         track-by="title"
-      ></multiselect>
+      />
       <i
         class="bi bi-funnel d-md-none fs-1 ps-2"
         @click="toggleCollapse = !toggleCollapse"
@@ -103,6 +110,9 @@ export default {
       <ul
         class="list-unstyled d-flex flex-column flex-wrap justify-content-center align-items-center align-items-md-start my-3"
       >
+        <li class="mx-4 mx-md-0 mb-2">
+          <label> CATEGORY： </label>
+        </li>
         <li class="mx-4 mx-md-0">
           <input
             ref="all"
@@ -116,7 +126,7 @@ export default {
           />
           <label for="all">
             <span class="aside_span"> － </span>
-            All
+            ALL
           </label>
         </li>
         <li v-for="(item, index) in uniqueCategories" :key="index">
@@ -130,7 +140,7 @@ export default {
           />
           <label :for="index" class="mx-4 mx-md-0">
             <span class="aside_span"> － </span>
-            {{ item }}
+            {{ item.toUpperCase() }}
           </label>
         </li>
       </ul>

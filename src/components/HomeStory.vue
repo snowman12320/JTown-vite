@@ -60,16 +60,16 @@ export default {
             class="card-img-top of-none op-top position-absolute mt-n5"
             :alt="item.title"
           />
-          <div data-num="001" class="img_back img_back_kobe"></div>
+          <div data-num="001" class="img_back img_back_kobe" />
           <div class="card-body">
             <h3 class="card-title fw-bold fs-6">{{ item.title }}</h3>
             <p
               class="card-text fs-6 multiline-ellipsis text-secondary"
               v-html="item.description"
-            ></p>
+            />
             <hr />
             <button
-            type="button"
+              type="button"
               class="text-decoration-none stretched-link text-dark rank_a d-flex justify-content-center bg-transparent"
             >
               MORE
@@ -138,7 +138,6 @@ export default {
 }
 
 .text-secondary {
-  p {
-  }
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

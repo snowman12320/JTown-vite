@@ -92,7 +92,7 @@ export default {
             </tfoot>
           </table>
         </div>
-        <!--  -->
+
         <table class="table">
           <tbody>
             <tr>

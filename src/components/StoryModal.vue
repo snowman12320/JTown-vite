@@ -140,7 +140,7 @@ export default {
               <div class="mb-3">
                 <label for="customFile" class="form-label"
                   >或 上傳圖片
-                  <i :class="{ 'd-none': !Loading_small }" class="fas fa-spinner fa-spin"></i>
+                  <i :class="{ 'd-none': !Loading_small }" class="fas fa-spinner fa-spin" />
                 </label>
                 <input
                   type="file"
@@ -196,7 +196,7 @@ export default {
                     :editor="editor"
                     v-model="tempStory.description"
                     :config="editorConfig"
-                  ></ckeditor>
+                  />
                 </div>
                 <div>
                   <label for="content" class="form-label">球員內容</label>
@@ -204,7 +204,7 @@ export default {
                     :editor="editor"
                     v-model="tempStory.content"
                     :config="editorConfig"
-                  ></ckeditor>
+                  />
                 </div>
                 <hr />
                 <div>

@@ -1,3 +1,185 @@
+<script>
+import modalMixin from "@/mixins/modalMixin";
+import Multiselect from "vue-multiselect"; //* 有問題的套件 (都較冷門套件) > 不能新增標籤 可改E+的板 > 版本太舊
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic"; //* 需從public中，換成有取得新增外掛的
+
+//! 有問題的套件 (都較冷門套件) > 不能拖拉和增刪 改另一個版
+import draggable from "vuedraggable"; //*npm install vuedraggable@4.1.0
+import CropperModal from "@/components/CropperModal.vue";
+
+export default {
+  mixins: [modalMixin],
+  components: {
+    //! 少一個s，就會掛掉
+    Multiselect,
+    draggable,
+    CropperModal,
+  },
+  data() {
+    return {
+      modal: {},
+      tempProduct: {},
+      main_photo: false,
+      other_photo: false,
+      value: [],
+      options: [
+        { name: "Free shipping", code: "vu" },
+        { name: "Store pickup", code: "js" },
+        { name: "Fast delivery", code: "os" },
+      ],
+      editor: ClassicEditor,
+      editorData: `
+      <div  >
+        <p>Material： Eco-friendly material</p>
+        <p>Manufacturing location： Taiwan </p>
+        <p>Manufacturer： Jersey Town </p>
+        <p>Expiration date： None</p>
+      </div>`, //* 預設內容
+      editorConfig: {},
+      image_add: `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/upload`,
+      fileList: [
+        {
+          name: "food.jpeg",
+          url:
+            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        },
+        {
+          name: "food2.jpeg",
+          url:
+            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        },
+      ], //* 元件圖檔陣列的範本
+      drag: false,
+      isCropper: false,
+      isLoading: false,
+      tempImagesUrl: null,
+      n: 1,
+      text: "example_123@example.com",
+    };
+  },
+  props: {
+    product: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+  },
+  watch: {
+    //* 監聽傳進來的story，並自動存到暫存區
+    product() {
+      this.tempProduct = this.product;
+      if (!this.tempProduct.description) this.tempProduct.description = this.editorData;
+      // !  沒有圖片就塞空陣列 > 錯，是預設多圖上傳空間
+      // 多圖範例
+      if (!this.tempProduct.imagesUrl) {
+        this.tempProduct.imagesUrl = [];
+      }
+    },
+    tempImagesUrl() {
+      const url = this.tempImagesUrl;
+      const name = this.tempImagesUrl.split("/").pop(); // 重組資料，存圖檔名
+      const uid = Math.floor(Math.random() * 100000); // 隨機產生uid
+      const status = "success";
+      const item = { name, url, uid, status };
+      this.tempProduct.imagesUrl.push(item);
+    },
+  },
+  computed: {
+    availableOptions() {
+      return this.options.filter((opt) => this.value.indexOf(opt) === -1);
+    },
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost",
+      };
+    },
+  },
+  methods: {
+    onClickAway() {
+      this.isCropper = false;
+    },
+    addTag(newTag) {
+      const tag = {
+        name: newTag,
+        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+      };
+      this.options.push(tag);
+      this.value.push(tag);
+    },
+    doneImage() {
+      const imgSrc = this.cropper
+        .getCroppedCanvas({
+          width: 100, // img_w.value /input value
+        })
+        .toDataURL();
+      this.tempProduct.imagesUrl[this.tempImageIndex] = imgSrc;
+    },
+    delImage(key) {
+      //* 刪除圖片
+      this.tempProduct.imagesUrl.splice(key, 1);
+      this.$emit("update-product", this.tempProduct);
+    },
+    // * new FormData() 是一個 JavaScript 內建的物件，用於創建一個空的 FormData 物件。
+    // * 首先獲取一個 <form> 元素，FormData 物件可以用來構建一個包含鍵值對的表單數據，並且可以通過 AJAX 以 multipart/form-data 格式將這些數據發送到服務器。
+    uploadFile() {
+      //* 主圖上傳 /單獨上傳
+      this.main_photo = true;
+      const uploadedFile = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file-to-upload", uploadedFile);
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/admin/upload`;
+      this.$http.post(url, formData).then((response) => {
+        if (response.data.success) {
+          this.tempProduct.imageUrl = response.data.imageUrl;
+          this.main_photo = false;
+        }
+      });
+    },
+    uploadFile_more() {
+      const uploadedFiles = this.$refs.fileInput_more.files; //* FileList
+      for (let i = 0; i < uploadedFiles.length; i++) {
+        const name = uploadedFiles[i].name;
+        const uid = Math.floor(Math.random() * 10000000000000);
+        const status = "success";
+        this.other_photo = true; //* 讀取動畫
+        const formData = new FormData(); //! 放迴圈中才會每次獨立出來
+        formData.append("file-to-upload", uploadedFiles[i]);
+        this.$http.post(this.image_add, formData).then((res) => {
+          if (res.data.success) {
+            const url = res.data.imageUrl;
+            const item = { name, url, uid, status };
+            this.tempProduct.imagesUrl.push(item);
+            this.other_photo = false;
+          }
+        });
+      }
+    },
+    openModal(img) {
+      this.tempImg = img;
+      this.isCropper = !this.isCropper;
+      if (this.isCropper) {
+        this.$toast("info", " Upload new image ,than cropper it");
+      }
+    },
+    updateImages(img) {
+      this.isCropper = false;
+      const id = img.uid;
+      const croppered = this.tempProduct.imagesUrl.filter((i) => i.uid === id);
+      croppered.imageUrl = img.url;
+      this.$swal.fire("Success", " Upload new image ", "success");
+    },
+  },
+};
+</script>
+
 <template>
   <div>
     <!-- Modal -->
@@ -38,9 +220,9 @@
                 <div class="mb-3">
                   <label for="customFile" class="form-label"
                     >或 上傳主圖片：
-                    <i v-show="main_photo" class="fas fa-spinner fa-spin"></i>
+                    <i v-show="main_photo" class="fas fa-spinner fa-spin" />
                   </label>
-                  <!--  -->
+                  
                   <input
                     type="file"
                     id="customFile"
@@ -56,15 +238,15 @@
                     :alt="tempProduct.title"
                   />
                 </div>
-                <!--  -->
+                
                 <!-- 延伸技巧，多圖 -->
                 <div class="mt-5">
                   <label for="customFile" class="form-label pb-2"
                     >上傳其他圖片：
-                    <i v-show="other_photo" class="fas fa-spinner fa-spin"></i>
+                    <i v-show="other_photo" class="fas fa-spinner fa-spin" />
                   </label>
                 </div>
-                <!--  -->
+                
                 <input
                   type="text"
                   class="form-control"
@@ -127,7 +309,7 @@
                               <i
                                 @click.self="openModal(element)"
                                 class="bi bi-pencil-square fs-3 text-white"
-                              ></i>
+                              />
                             </div>
                           </div>
                           <div class="overflow-hidden">
@@ -150,7 +332,7 @@
                           "
                           class="bi bi-x-circle fs-6 p-1 text-danger position-absolute top-0 end-0"
                           style="cursor: pointer"
-                        ></i>
+                        />
                       </div>
                     </template>
                   </draggable>
@@ -234,7 +416,7 @@
                     :editor="editor"
                     v-model="tempProduct.description"
                     :config="editorConfig"
-                  ></ckeditor>
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="content" class="form-label">說明內容</label>
@@ -242,7 +424,7 @@
                     :editor="editor"
                     v-model="tempProduct.content"
                     :config="editorConfig"
-                  ></ckeditor>
+                  />
                 </div>
                 <div class="mb-3">
                   <div class="form-check">
@@ -271,12 +453,11 @@
             v-click-away="onClickAway"
           >
           </CropperModal>
-          <!--  -->
+          
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-nbaRed" data-bs-dismiss="modal">
               取消
             </button>
-            <!-- 向外傳遞需觸發的函式和傳遞資料 -->
             <button
               type="button"
               class="btn btn-nbaBlue"
@@ -290,187 +471,7 @@
     </div>
   </div>
 </template>
-<script>
-import modalMixin from "@/mixins/modalMixin";
-import Multiselect from "vue-multiselect"; //* 有問題的套件 (都較冷門套件) > 不能新增標籤 可改E+的板 > 版本太舊
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic"; //* 需從public中，換成有取得新增外掛的
 
-//! 有問題的套件 (都較冷門套件) > 不能拖拉和增刪 改另一個版
-import draggable from "vuedraggable"; //*npm install vuedraggable@4.1.0
-import CropperModal from "@/components/CropperModal.vue";
-
-export default {
-  mixins: [modalMixin],
-  components: {
-    //! 少一個s，就會掛掉
-    Multiselect,
-    draggable,
-    CropperModal,
-  },
-  data() {
-    return {
-      modal: {},
-      tempProduct: {},
-      main_photo: false,
-      other_photo: false,
-       value: [],
-      options: [
-        { name: "Free shipping", code: "vu" },
-        { name: "Store pickup", code: "js" },
-        { name: "Fast delivery", code: "os" },
-      ],
-      editor: ClassicEditor,
-      editorData: `
-      <div  >
-        <p>Material： Eco-friendly material</p>
-        <p>Manufacturing location： Taiwan </p>
-        <p>Manufacturer： Jersey Town </p>
-        <p>Expiration date： None</p>
-      </div>`, //* 預設內容
-      editorConfig: {},
-       image_add: `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/admin/upload`,
-      fileList: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-      ], //* 元件圖檔陣列的範本
-       drag: false,
-       isCropper: false,
-      isLoading: false,
-      tempImagesUrl: null,
-      n: 1,
-       text: "example_123@example.com",
-    };
-  },
-  props: {
-    product: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
-  watch: {
-    //* 監聽傳進來的story，並自動存到暫存區
-    product() {
-      this.tempProduct = this.product;
-      if (!this.tempProduct.description) this.tempProduct.description = this.editorData;
-      // !  沒有圖片就塞空陣列 > 錯，是預設多圖上傳空間
-      // 多圖範例
-      if (!this.tempProduct.imagesUrl) {
-        this.tempProduct.imagesUrl = [];
-      }
-    },
-    tempImagesUrl() {
-      const url = this.tempImagesUrl;
-      const name = this.tempImagesUrl.split("/").pop(); // 重組資料，存圖檔名
-      const uid = Math.floor(Math.random() * 100000); // 隨機產生uid
-      const status = "success";
-      const item = { name, url, uid, status };
-      this.tempProduct.imagesUrl.push(item);
-    },
-  },
-  computed: {
-    availableOptions() {
-      return this.options.filter((opt) => this.value.indexOf(opt) === -1);
-    },
-    dragOptions() {
-      return {
-        animation: 200,
-        group: "description",
-        disabled: false,
-        ghostClass: "ghost",
-      };
-    },
-  },
-  methods: {
-    onClickAway() {
-      this.isCropper = false;
-    },
-    addTag(newTag) {
-      const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      };
-      this.options.push(tag);
-      this.value.push(tag);
-    },
-    doneImage() {
-      const imgSrc = this.cropper
-        .getCroppedCanvas({
-          width: 100, // img_w.value /input value
-        })
-        .toDataURL();
-      this.tempProduct.imagesUrl[this.tempImageIndex] = imgSrc;
-    },
-    delImage(key) {
-      //* 刪除圖片
-      this.tempProduct.imagesUrl.splice(key, 1);
-      this.$emit("update-product", this.tempProduct);
-    },
-    // * new FormData() 是一個 JavaScript 內建的物件，用於創建一個空的 FormData 物件。
-    // * 首先獲取一個 <form> 元素，FormData 物件可以用來構建一個包含鍵值對的表單數據，並且可以通過 AJAX 以 multipart/form-data 格式將這些數據發送到服務器。
-    uploadFile() {
-      //* 主圖上傳 /單獨上傳
-      this.main_photo = true;
-      const uploadedFile = this.$refs.fileInput.files[0];
-       const formData = new FormData();
-      formData.append("file-to-upload", uploadedFile);
-      const url = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/admin/upload`;
-      this.$http.post(url, formData).then((response) => {
-        if (response.data.success) {
-          this.tempProduct.imageUrl = response.data.imageUrl;
-          this.main_photo = false;
-        }
-      });
-    },
-    uploadFile_more() {
-      const uploadedFiles = this.$refs.fileInput_more.files; //* FileList
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        const name = uploadedFiles[i].name;
-        const uid = Math.floor(Math.random() * 10000000000000);
-        const status = "success";
-        this.other_photo = true; //* 讀取動畫
-        const formData = new FormData(); //! 放迴圈中才會每次獨立出來
-        formData.append("file-to-upload", uploadedFiles[i]);
-        this.$http.post(this.image_add, formData).then((res) => {
-          if (res.data.success) {
-                   const url = res.data.imageUrl;
-            const item = { name, url, uid, status };
-            this.tempProduct.imagesUrl.push(item);
-                   this.other_photo = false;
-          }
-        });
-      }
-    },
-    openModal(img) {
-      this.tempImg = img;
-      this.isCropper = !this.isCropper;
-      if (this.isCropper) {
-        this.$toast("info", " Upload new image ,than cropper it");
-      }
-    },
-    updateImages(img) {
-      this.isCropper = false;
-      const id = img.uid;
-      const croppered = this.tempProduct.imagesUrl.filter((i) => i.uid === id);
-      croppered.imageUrl = img.url;
-      this.$swal.fire("Success", " Upload new image ", "success");
-    },
-  },
-};
-</script>
 <style lang="scss" scoped>
 .multiline-ellipsis {
   display: -webkit-box;

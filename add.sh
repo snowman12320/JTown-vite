@@ -7,7 +7,7 @@ sleep 2
 
 # git commit -m " fixed suggest2 / git conflict  "
 
-git commit -m "repair suggest done in NCKU"
+git commit -m "repair uppercase file name with git in NCKU"
 sleep 2
 
 git push
@@ -15,8 +15,9 @@ git push
 
 
 # 刪 /note or 開 .gitignore
-# 大小寫敏感問題 git mv -f readme.md README.md 
+# 大小寫敏感問題 ，要檔案路徑下git mv -f memberSide.vue  MemberSide.vue 
 # 直接開 present 分支
 # git add .
 # git commit -m 'present homework'
 # git push -f git@github.com:snowman12320/jtown-vite.git pinia:present
+

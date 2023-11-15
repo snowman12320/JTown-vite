@@ -1,80 +1,82 @@
 <script>
-import Pagination from '@/components/Pagination.vue'
+import Pagination from "@/components/Pagination.vue";
 
 export default {
   components: { Pagination },
   data() {
     return {
       orders: [],
-      state: '',
-       pagination: {},
+      state: "",
+      pagination: {},
       isLoading: false,
       order: [],
       paid_date: null,
-      create_at: null
-    }
+      create_at: null,
+    };
   },
   created() {
-    this.getOrders()
+    this.getOrders();
   },
   methods: {
     querySearch(queryString) {
-      const orders = this.orders
-      const results = queryString ? this.createFilter(queryString) : orders
+      const orders = this.orders;
+      const results = queryString ? this.createFilter(queryString) : orders;
       // 调用 callback 返回建议列表的数据
       // cb(results);
-      return results
+      return results;
     },
     createFilter(queryString) {
-      return this.orders.filter((i) => i.id.toLowerCase().includes(queryString.toLowerCase()))
+      return this.orders.filter((i) =>
+        i.id.toLowerCase().includes(queryString.toLowerCase())
+      );
     },
     handleSelect(item) {
       // console.log(item);
-      this.isLoading = true
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order/${
-        item.id
-      }`
-      this.$http.get(url).then((res) => {
-        if (res.data.success) {
-          this.order = res.data.order
-          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString()
-          this.create_at = new Date(this.order.create_at * 1000).toLocaleString()
-          this.isLoading = false
-          this.querySearch(false)
-        }
-      })
-    },
-    getOrders(currentPage = 1) {
-      this.currentPage = currentPage
+      this.isLoading = true;
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/orders?page=${currentPage}`
-      this.isLoading = true
+      }/order/${item.id}`;
+      this.$http.get(url).then((res) => {
+        if (res.data.success) {
+          this.order = res.data.order;
+          this.paid_date = new Date(this.order.paid_date * 1000).toLocaleString();
+          this.create_at = new Date(this.order.create_at * 1000).toLocaleString();
+          this.isLoading = false;
+          this.querySearch(false);
+        }
+      });
+    },
+    getOrders(currentPage = 1) {
+      this.currentPage = currentPage;
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/orders?page=${currentPage}`;
+      this.isLoading = true;
       this.$http.get(url, this.tempProduct).then((response) => {
-        this.orders = response.data.orders
-        this.pagination = response.data.pagination
-        this.isLoading = false
-      })
+        this.orders = response.data.orders;
+        this.pagination = response.data.pagination;
+        this.isLoading = false;
+      });
     },
     payOrder(order) {
-      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/pay/${
-        order.id
-      }`
+      const url = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/pay/${order.id}`;
       this.$http.post(url).then((res) => {
         if (res.data.success) {
-          this.handleSelect(order)
-          this.getOrders()
+          this.handleSelect(order);
+          this.getOrders();
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <template>
   <div>
     <LoadingMask :active="isLoading" />
-    
+
     <el-autocomplete
       :popper-class="'my-autocomplete'"
       class="my-autocomplete-self"
@@ -102,7 +104,11 @@ export default {
       </template>
     </el-autocomplete>
     <!-- 要用if不然抓不到資料會報錯 -->
-    <form class="w-100 my-5" @submit.prevent="payOrder(order)" v-if="!Boolean(order.length === 0)">
+    <form
+      class="w-100 my-5"
+      @submit.prevent="payOrder(order)"
+      v-if="!Boolean(order.length === 0)"
+    >
       <table class="table align-middle">
         <thead>
           <th>品名</th>
@@ -113,7 +119,9 @@ export default {
           <tr v-for="item in order.products" :key="item.id">
             <td>{{ item.product.title }}</td>
             <td>{{ item.qty }}/{{ item.product.unit }}</td>
-            <td class="text-start">$ {{ $filters.currency(Math.round(item.final_total)) }}</td>
+            <td class="text-start">
+              $ {{ $filters.currency(Math.round(item.final_total)) }}
+            </td>
           </tr>
         </tbody>
         <tfoot>
@@ -163,11 +171,13 @@ export default {
       </div>
       <div class="text-end" v-else>
         <RouterLink to="/"
-          ><button type="button" class="btn btn-outline-primary">get other thing!</button></RouterLink
+          ><button type="button" class="btn btn-outline-primary">
+            get other thing!
+          </button></RouterLink
         >
       </div>
     </form>
-    
+
     <Pagination :pages="pagination" @emit-pages="getOrders"> </Pagination>
   </div>
 </template>

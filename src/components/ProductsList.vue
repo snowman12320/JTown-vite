@@ -111,7 +111,7 @@ export default {
 
         const sortFunc = {
           Low: (a, b) => a.price - b.price,
-          Height: (a, b) => b.price - a.price,
+          High: (a, b) => b.price - a.price,
           AZ: (a, b) => a.title.localeCompare(b.title),
           ZA: (a, b) => b.title.localeCompare(a.title),
           default: () => 0,
@@ -238,8 +238,8 @@ export default {
         <option class="fs-6" value="0" selected>Relevance</option>
         <option class="fs-6" value="AZ">Name - A to Z</option>
         <option class="fs-6" value="ZA">Name - Z to A</option>
-        <option class="fs-6" value="Low">Price - Low to Height</option>
-        <option class="fs-6" value="Height">Price - Height to Low</option>
+        <option class="fs-6" value="Low">Price - Low to High</option>
+        <option class="fs-6" value="High">Price - High to Low</option>
       </select>
     </div>
     <hr class="py-3" />
@@ -272,7 +272,7 @@ export default {
                     $ {{ $filters.currency(item.price) }}
                   </h6>
                 </div>
-                
+
                 <div
                   class="position-relative border border-white rounded-3 px-2 py-3 d-flex justify-content-around m-2"
                   style="backdrop-filter: blur(5px)"
@@ -284,7 +284,7 @@ export default {
                     }"
                     class="fa fa-heart fs-4"
                   />
-                  
+
                   <el-popover
                     placement="top"
                     title="SIZE："
@@ -380,7 +380,7 @@ export default {
                       />
                     </template>
                   </el-popover>
-                  
+
                   <div
                     v-if="
                       statusBtn.loadingItem === item.id ||
@@ -412,7 +412,7 @@ export default {
         </p>
       </div>
     </div>
-    
+
     <div class="text-center">
       <div v-show="isLoading_small" class="spinner-grow text-warning" role="status">
         <span class="visually-hidden">Loading...</span>

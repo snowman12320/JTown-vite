@@ -33,10 +33,18 @@ export default {
       this.collapse_hide();
     }, 500);
   },
+  watch: {
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info);
+      },
+      deep: true,
+    },
+  },
   computed: {
     ...mapState(favoriteStore, ["favoriteIds"]),
     ...mapState(cartStore, ["carts"]),
-    ...mapState(loginStore, ["isLogin", "checkLoginStatus"]),
+    ...mapState(loginStore, ["isLogin", "checkLoginStatus", "toast"]),
   },
   methods: {
     collapse_toggle() {

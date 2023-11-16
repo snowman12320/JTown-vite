@@ -109,7 +109,7 @@ export default {
             </div>
           </div>
           <div class="card-body">
-            <FormValidate @submit.prevent="signIn" v-slot="{ errors }">
+            <FormValidate @submit="signIn" v-slot="{ errors }">
               <div class="input-group form-group mb-2 position-relative">
                 <div class="input-group-prepend">
                   <i class="fas fa-user" />

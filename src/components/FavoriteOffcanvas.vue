@@ -1,71 +1,79 @@
 <script>
-import offcanvasMixin from '@/mixins/offcanvasMixin'
-import DelModal from '@/components/DelModal.vue'
+import offcanvasMixin from "@/mixins/offcanvasMixin";
+import DelModal from "@/components/DelModal.vue";
 
-import favoriteStore from '@/stores/favoriteStore.js'
-import productStore from '@/stores/productStore'
-import { mapActions, mapState } from 'pinia'
+import favoriteStore from "@/stores/favoriteStore.js";
+import productStore from "@/stores/productStore";
+import { mapActions, mapState } from "pinia";
 
 export default {
-  mixins: [offcanvasMixin], 
+  mixins: [offcanvasMixin],
   components: {
-    DelModal
+    DelModal,
   },
   data() {
     return {
       offcanvas: {},
-      tempFavorite: ''
-    }
+      tempFavorite: "",
+    };
   },
   created() {
-    this.getFavorite()
+    this.getFavorite();
+  },
+  watch: {
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info);
+      },
+      deep: true,
+    },
   },
   computed: {
-    ...mapState(favoriteStore, ['filteredProducts', 'favoriteIds', 'isLoading'])
+    ...mapState(favoriteStore, ["filteredProducts", "favoriteIds", "isLoading", "toast"]),
   },
   methods: {
-    ...mapActions(favoriteStore, ['getFavorite', 'getFavoriteId', 'delFavorite_store']),
-    ...mapActions(productStore, ['getProduct_item']),
+    ...mapActions(favoriteStore, ["getFavorite", "getFavoriteId", "delFavorite_store"]),
+    ...mapActions(productStore, ["getProduct_item"]),
     async handleGetProductAndHideModal(id) {
-      await this.getProduct_item(id)
-      this.hideOffcanvas()
+      await this.getProduct_item(id);
+      this.hideOffcanvas();
     },
     delFavorite(id) {
-      this.delFavorite_store(id)
-       const delCp = this.$refs.delModal
-      delCp.hideModal()
+      this.delFavorite_store(id);
+      const delCp = this.$refs.delModal;
+      delCp.hideModal();
     },
     delFavorites() {
-      if (JSON.parse(localStorage.getItem('favorite')).length > 0) {
+      if (JSON.parse(localStorage.getItem("favorite")).length > 0) {
         this.$swal
           .fire({
-            title: 'Do you want to delete the all Favorite?',
+            title: "Do you want to delete the all Favorite?",
             showDenyButton: false,
             showCancelButton: true,
-            confirmButtonText: 'O.K'
+            confirmButtonText: "O.K",
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.isLoading = true
-              localStorage.setItem('favorite', JSON.stringify([]))
-              this.getFavorite() 
+              this.isLoading = true;
+              localStorage.setItem("favorite", JSON.stringify([]));
+              this.getFavorite();
               setTimeout(() => {
-                this.$swal.fire('Done delete all!', '', 'success')
-                this.isLoading = false
-              }, 1000)
+                this.$swal.fire("Done delete all!", "", "success");
+                this.isLoading = false;
+              }, 1000);
             }
-          })
+          });
       } else {
-        this.$swal.fire('Favorites was empty.', '', 'warning')
+        this.$swal.fire("Favorites was empty.", "", "warning");
       }
     },
     openDelModel(item) {
-      this.tempFavorite = { ...item }
-      const delCp = this.$refs.delModal
-      delCp.showModal()
-    }
-  }
-}
+      this.tempFavorite = { ...item };
+      const delCp = this.$refs.delModal;
+      delCp.showModal();
+    },
+  },
+};
 </script>
 
 <template>
@@ -81,7 +89,7 @@ export default {
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
           <i class="fa fa-check-circle text-nbaRed" aria-hidden="true" /> MY COLLECT
-          
+
           <a
             @click.prevent="delFavorites"
             class="btn btn-outline-danger fs-5 px-2 ms-1"
@@ -105,7 +113,11 @@ export default {
           :key="item.id"
         >
           <div style="width: 100px !important; height: 70px !important">
-            <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" :alt="item.title" />
+            <img
+              class="of-cover op-top w-100 h-100"
+              :src="item.imageUrl"
+              :alt="item.title"
+            />
           </div>
           <div class="w-100 p-1" @click="handleGetProductAndHideModal(item.id)">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
@@ -128,7 +140,7 @@ export default {
             <i class="bi bi-trash" />
           </button>
         </div>
-        
+
         <p class="d-flex justify-content-end fs-4 mt-3">
           <span>TOTAL( {{ favoriteIds.length }} ) </span>
         </p>

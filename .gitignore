@@ -28,11 +28,11 @@ coverage
 *.sw?
 
 # ---
-.vscode
+# .vscode
 
--note/
+# -note/
 
--cypress/
-cypress.config.js
+# -cypress/
+# cypress.config.js
 
--__tests__/
+# -__tests__/

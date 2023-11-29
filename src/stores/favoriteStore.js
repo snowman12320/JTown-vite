@@ -14,9 +14,18 @@ export default defineStore('favoriteStore', {
       res: '',
       info: ''
     },
-    notLogin: false
+    notLogin: false,
+    count: 0
   }),
+  getters: {
+    doubleCount() {
+      return this.count * 2;
+    }
+  },
   actions: {
+    increment() {
+      this.count++;
+    },
     async getFavorite() {
       try {
         if (!localStorage.getItem('favorite')) {

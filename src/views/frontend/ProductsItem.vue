@@ -46,8 +46,8 @@ export default {
     this.productId = this.$route.params.productId; //! 統一商品唯一的ID(item.id)
     this.getProduct();
     this.getProduct_item(this.productId);
-        this.getFavorite(); //! 用其他電腦，先新增本地陣列
-        this.sendComment();
+    this.getFavorite(); //! 用其他電腦，先新增本地陣列
+    this.sendComment();
     this.changeClass();
   },
   computed: {
@@ -60,7 +60,7 @@ export default {
     ...mapActions(cartStore, ["getCart"]),
     ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
     ...mapActions(productStore, ["getProduct_item", "setCategory"]),
-        addToCart(id, qty = 1, isBuy) {
+    addToCart(id, qty = 1, isBuy) {
       if (!this.productSize_item) {
         this.$swal.fire("Please", "Size must be selected.", "warning");
       } else {
@@ -149,7 +149,7 @@ export default {
   <div>
     <LoadingMask :active="isLoading_big" />
     <LoadingMask :active="isLoading_productStore" />
-    
+
     <div class="container-xl">
       <nav aria-label="breadcrumb" class="mt-10">
         <ol class="breadcrumb">
@@ -180,7 +180,7 @@ export default {
           </li>
         </ol>
       </nav>
-      
+
       <div class="row row-cols-md-2 g-md-5 mt-md-5">
         <div
           id="carouselExampleIndicators"
@@ -234,7 +234,7 @@ export default {
                 />
               </div>
             </div>
-            
+
             <div
               class="carousel-item text-center h-100 w-100"
               v-for="item in product_item.imagesUrl"
@@ -268,7 +268,7 @@ export default {
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-        
+
         <div class="col-md-4 d-flex flex-column justify-content-around text-center">
           <h1 class="mb-5">{{ product_item.title }}</h1>
           <div class="my-5">
@@ -415,7 +415,7 @@ export default {
               BUY NOW
             </button>
           </div>
-          
+
           <hr class="w-100 mx-auto" />
           <div class="my-3 d-flex gap-2 w-100 flex-wrap mx-auto">
             <el-tag
@@ -445,7 +445,7 @@ export default {
           </div>
         </div>
       </div>
-      
+
       <div class="row row-cols-md-2 flex-column-reverse flex-md-row">
         <div class="col-md-8">
           <h3 class="mt-7">DESCRIPTION</h3>
@@ -529,7 +529,7 @@ export default {
           </div>
         </div>
       </div>
-      
+
       <h3 class="mt-7">RECOMMEND</h3>
       <ProductsList />
     </div>

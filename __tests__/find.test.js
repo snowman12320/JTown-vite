@@ -3,19 +3,24 @@
  */
 
 // globals: true,
-import { test, describe, expect } from 'vitest';
+import { test, describe, expect, beforeAll } from 'vitest';
 import { mount } from '@vue/test-utils';
 // import { createVitest } from '@vitest/vitest';
 // import axios from 'axios';
 // import MockAdapter from 'axios-mock-adapter';
 
 import FullFooter from '@/components/FullFooter.vue';
-import ProductsItem from '@/views/frontend/ProductsItem.vue';
 // import { render } from 'vue';
+
+import ProductsItem from '@/views/frontend/ProductsItem.vue';
+import filters from '@/methods/filters.js';
+import { createPinia, setActivePinia } from 'pinia'; // Import Pinia functions
+beforeAll(() => {
+  setActivePinia(createPinia());
+});
 
 describe('find something', () => {
   test('findComponent / toggles the isHover', async () => {
-
     // render(FullFooter);
 
     const wrapper = mount(FullFooter);
@@ -32,7 +37,7 @@ describe('find something', () => {
 
   //jsdom
   //cloud.tencent.com/developer/article/2116202`
-  test('findComponent', async () => {
+  test.only('findComponent', async () => {
     expect(ProductsItem).toBeDefined();
 
     // const wrapper = mount(ProductsItem);

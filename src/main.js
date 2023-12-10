@@ -79,6 +79,7 @@ app.mixin({
   },
 });
 
+
 //! Mount the app to the DOM and initialize any additional functionality:
 app.mount("#app");
 AOS.init();

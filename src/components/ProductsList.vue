@@ -12,17 +12,17 @@ export default {
       statusBtn_car: {
         loadingItem: "",
       },
-       products: [], // 原始資料
+      products: [], // 原始資料
       Filtered: [], // 搜尋全部商品用
-       page: 1,
+      page: 1,
       pagination: {},
-       productsList_hight: 0,
-       selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
+      productsList_hight: 0,
+      selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
       setClass: false,
-       //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
+      //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
       productSize_list: "",
       productSize_item: "",
-       addToCart_item_id: null,
+      addToCart_item_id: null,
     };
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
@@ -76,8 +76,6 @@ export default {
     ]),
     ...mapState(productStore, ["cacheSearch", "cacheCategory", "filterCheck"]),
     ...mapState(loginStore, ["isLogin"]),
-    //
-
     filteredData() {
       let filteredData = [];
       if (
@@ -113,7 +111,7 @@ export default {
 
         const sortFunc = {
           Low: (a, b) => a.price - b.price,
-          Height: (a, b) => b.price - a.price,
+          High: (a, b) => b.price - a.price,
           AZ: (a, b) => a.title.localeCompare(b.title),
           ZA: (a, b) => b.title.localeCompare(a.title),
           default: () => 0,
@@ -129,7 +127,6 @@ export default {
     ...mapActions(cartStore, ["getCart"]),
     ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
     ...mapActions(productStore, ["getProduct_item"]),
-    //
     addToCart(id, qty = 1, isBuy) {
       if (!this.isLogin) {
         // ! 在store不會用到this ，共用狀態才會放store
@@ -153,7 +150,7 @@ export default {
           this.$swal.fire("Please", "Size must be selected.", "warning");
         } else {
           this.statusBtn_car.loadingItem = id;
-               const url = `${import.meta.env.VITE_APP_API}api/${
+          const url = `${import.meta.env.VITE_APP_API}api/${
             import.meta.env.VITE_APP_PATH
           }/cart`;
           const cart = {
@@ -162,7 +159,7 @@ export default {
           };
           this.$http.post(url, { data: cart }).then(() => {
             this.getCart();
-                   this.statusBtn_car.loadingItem = "";
+            this.statusBtn_car.loadingItem = "";
             this.$toast("success", "add to cart.");
             if (isBuy) {
               this.$router.push("/cart-view/cart-list");
@@ -173,7 +170,6 @@ export default {
         }
       }
     },
-    //
     handleScroll() {
       //! 這邊定義會在切換router時，取不到dom（可能生命週期沒有重整吧）
       // this.productsList_hight = this.$refs.productsList_hight.offsetHeight;
@@ -181,7 +177,6 @@ export default {
         this.pushProducts();
       }
     },
-    //
     getFiltered() {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -192,7 +187,6 @@ export default {
         }
       });
     },
-    //
     getProducts(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -224,7 +218,6 @@ export default {
         });
       }
     },
-    //
     goToProduct(id) {
       this.getProduct_item(id);
     },
@@ -245,8 +238,8 @@ export default {
         <option class="fs-6" value="0" selected>Relevance</option>
         <option class="fs-6" value="AZ">Name - A to Z</option>
         <option class="fs-6" value="ZA">Name - Z to A</option>
-        <option class="fs-6" value="Low">Price - Low to Height</option>
-        <option class="fs-6" value="Height">Price - Height to Low</option>
+        <option class="fs-6" value="Low">Price - Low to High</option>
+        <option class="fs-6" value="High">Price - High to Low</option>
       </select>
     </div>
     <hr class="py-3" />
@@ -279,7 +272,7 @@ export default {
                     $ {{ $filters.currency(item.price) }}
                   </h6>
                 </div>
-                <!--  -->
+
                 <div
                   class="position-relative border border-white rounded-3 px-2 py-3 d-flex justify-content-around m-2"
                   style="backdrop-filter: blur(5px)"
@@ -290,8 +283,8 @@ export default {
                       'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1,
                     }"
                     class="fa fa-heart fs-4"
-                  ></i>
-                  <!--  -->
+                  />
+
                   <el-popover
                     placement="top"
                     title="SIZE："
@@ -384,10 +377,10 @@ export default {
                       <i
                         @click="addToCart_item_id = item.id"
                         class="fa fa-cart-plus text-white fs-4"
-                      ></i>
+                      />
                     </template>
                   </el-popover>
-                  <!--  -->
+
                   <div
                     v-if="
                       statusBtn.loadingItem === item.id ||
@@ -419,7 +412,7 @@ export default {
         </p>
       </div>
     </div>
-    <!--  -->
+
     <div class="text-center">
       <div v-show="isLoading_small" class="spinner-grow text-warning" role="status">
         <span class="visually-hidden">Loading...</span>

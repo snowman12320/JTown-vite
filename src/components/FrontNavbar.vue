@@ -1,24 +1,24 @@
 <script>
-import CartOffcanvas from '@/components/CartOffcanvas.vue';
-import FavoriteOffcanvas from '@/components/FavoriteOffcanvas.vue';
-import Collapse from 'bootstrap/js/dist/collapse';
+import CartOffcanvas from "@/components/CartOffcanvas.vue";
+import FavoriteOffcanvas from "@/components/FavoriteOffcanvas.vue";
+import Collapse from "bootstrap/js/dist/collapse";
 
-import favoriteStore from '@/stores/favoriteStore';
-import cartStore from '@/stores/cartStore';
-import loginStore from '@/stores/loginStore';
-import { mapState } from 'pinia';
+import favoriteStore from "@/stores/favoriteStore";
+import cartStore from "@/stores/cartStore";
+import loginStore from "@/stores/loginStore";
+import { mapState } from "pinia";
 
 export default {
   components: {
     CartOffcanvas,
-    FavoriteOffcanvas
+    FavoriteOffcanvas,
   },
   data() {
     return {
       nav: 0,
       atTop: true,
       collapse: null,
-      collapse_none: true
+      collapse_none: true,
     };
   },
   created() {
@@ -26,17 +26,25 @@ export default {
   },
   mounted() {
     this.nav = this.$refs.header.offsetHeight; //! 在 mounted 階段獲取 header 的高度
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
     this.collapse = new Collapse(this.$refs.collapse);
     setTimeout(() => {
       // ? 不知道為啥繼承collapase後就會自動開啟手機板導覽列，故設定自動關閉
-      this.collapse_hide(); //* 在 mounted 后触发 collapse_hide 方法
+      this.collapse_hide();
     }, 500);
   },
+  watch: {
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info);
+      },
+      deep: true,
+    },
+  },
   computed: {
-    ...mapState(favoriteStore, ['favoriteIds']),
-    ...mapState(cartStore, ['carts']),
-    ...mapState(loginStore, ['isLogin', 'checkLoginStatus'])
+    ...mapState(favoriteStore, ["favoriteIds"]),
+    ...mapState(cartStore, ["carts"]),
+    ...mapState(loginStore, ["isLogin", "checkLoginStatus", "toast"]),
   },
   methods: {
     collapse_toggle() {
@@ -47,27 +55,25 @@ export default {
       this.collapse_none = false;
       this.collapse.hide();
     },
-    //
     handleScroll() {
-      this.atTop = !(window.scrollY > this.nav + 10); //* 使用this.nav進行操作
+      this.atTop = !(window.scrollY > this.nav + 10);
     },
-    //
     openOffcanvas() {
       //! 避免開啟畫布，會一直重新判斷登入
       if (!this.isLogin) {
         this.$swal
           .fire({
-            title: 'Login or Sign up first.',
-            icon: 'warning',
+            title: "Login or Sign up first.",
+            icon: "warning",
             showCloseButton: false,
             showCancelButton: false,
             focusConfirm: true,
-            confirmButtonText: 'Login',
-            confirmButtonAriaLabel: 'Thumbs up, great!'
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$router.push('/login');
+              this.$router.push("/login");
             }
           });
       } else {
@@ -79,25 +85,25 @@ export default {
       if (!this.isLogin) {
         this.$swal
           .fire({
-            title: 'Login or Sign up first.',
-            icon: 'warning',
+            title: "Login or Sign up first.",
+            icon: "warning",
             showCloseButton: false,
             showCancelButton: false,
             focusConfirm: true,
-            confirmButtonText: 'Login',
-            confirmButtonAriaLabel: 'Thumbs up, great!'
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
           })
           .then((result) => {
             if (result.isConfirmed) {
-              this.$router.push('/login');
+              this.$router.push("/login");
             }
           });
       } else {
         const favoriteCp = this.$refs.favorite;
         favoriteCp.showOffcanvas();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -108,7 +114,7 @@ export default {
       style="z-index: 11"
       ref="header"
       :class="{
-        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop
+        ' animate__animated  animate__slideInDown  animate__animated bg-white shadow-sm': !atTop,
       }"
     >
       <div
@@ -122,13 +128,16 @@ export default {
           >
             JerseyTown
           </p>
-          <h1 class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale" :class="{ 'opacity-0': !atTop }">
+          <h1
+            class="fs-4 fw-bold mb-0 ms-8 nav_h1 brand_scale"
+            :class="{ 'opacity-0': !atTop }"
+          >
             JTown
           </h1>
         </RouterLink>
         <!-- 漢堡 -->
         <button class="navbar-toggler" type="button" @click="collapse_toggle">
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon" />
         </button>
         <!--  -->
         <div
@@ -168,17 +177,17 @@ export default {
                   id="login"
                   class="btn btn-nbaBlue text-white rounded-pill mt-lg-2 nav_pill"
                 >
-                  {{ isLogin ? 'Log out' : 'Login' }}
+                  {{ isLogin ? "Log out" : "Login" }}
                 </button>
               </RouterLink>
             </li>
             <li>
               <button
-              type="button"
+                type="button"
                 @click="openFavoriteOffcanvas"
                 class="bg-transparent border-0 position-relative"
               >
-                <i class="fa-solid fa-heart text-pickBlack fs-2 mt-2 px-1 ms-md-2"></i>
+                <i class="fa-solid fa-heart text-pickBlack fs-2 mt-2 px-1 ms-md-2" />
                 <span
                   v-if="favoriteIds.length && isLogin"
                   class="position-absolute text-white"
@@ -193,8 +202,14 @@ export default {
               </button>
             </li>
             <li>
-              <button @click="openOffcanvas" class="bg-transparent border-0 position-relative" type="button">
-                <i class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"></i>
+              <button
+                @click="openOffcanvas"
+                class="bg-transparent border-0 position-relative"
+                type="button"
+              >
+                <i
+                  class="fa-sharp fa-solid fa-cart-shopping text-pickBlack fs-2 mt-2 px-1"
+                />
                 <span
                   v-if="carts.length && isLogin"
                   class="position-absolute text-white"
@@ -212,8 +227,7 @@ export default {
         </div>
       </div>
     </head>
-    <CartOffcanvas ref="offcanvas"></CartOffcanvas>
-    <FavoriteOffcanvas ref="favorite"></FavoriteOffcanvas>
+    <CartOffcanvas ref="offcanvas" /> <FavoriteOffcanvas ref="favorite" />
   </div>
 </template>
 

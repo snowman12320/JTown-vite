@@ -38,7 +38,7 @@
             frameborder="0"
             allow="accelerometer;clipboard-write; encrypted-media; gyroscope; picture-in-picture "
             allowfullscreen
-          ></iframe>
+          />
         </div>
         <div class="carousel-item" data-bs-interval="100000">
           <img
@@ -67,7 +67,7 @@
           class="carousel-control-prev-icon"
           style="width: 100px; height: 50px"
           aria-hidden="true"
-        ></span>
+        />
         <span class="visually-hidden">Previous</span>
       </button>
       <button
@@ -80,7 +80,7 @@
           class="carousel-control-next-icon"
           style="width: 100px; height: 50px"
           aria-hidden="true"
-        ></span>
+        />
         <span class="visually-hidden">Next</span>
       </button>
     </div>

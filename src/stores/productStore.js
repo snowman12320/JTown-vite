@@ -8,7 +8,12 @@ export default defineStore('productStore', {
     product_item: [],
     cacheCategory: null,
     cacheSearch: null,
-    filterCheck: null
+    filterCheck: null,
+    toast: {
+      id: null,
+      res: '',
+      info: ''
+    }
   }),
   actions: {
     async getProduct_item(id) {
@@ -31,8 +36,11 @@ export default defineStore('productStore', {
           window.scrollTo(0, 0);
         }
       } catch (error) {
-        this.$toast('error', ' Error fetching product:' + error);
-
+        this.toast = {
+          id,
+          res: 'warning',
+          info: `Error fetching product:${error}`
+        };
         this.isLoading_productStore = false;
       }
     },

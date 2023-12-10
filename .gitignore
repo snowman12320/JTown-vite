@@ -27,10 +27,12 @@ coverage
 *.sln
 *.sw?
 
-# /note/*
+# ---
+# .vscode
 
+# -note/
+
+# -cypress/
 # cypress.config.js
 
-# cypress/
-
-# __tests__/*
+# -__tests__/

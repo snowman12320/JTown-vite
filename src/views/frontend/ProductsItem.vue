@@ -1,9 +1,7 @@
 <script>
 import ProductsList from "@/components/ProductsList.vue";
-//
 import { Pins } from "@fancyapps/ui/dist/panzoom/panzoom.pins.esm";
 import { Panzoom } from "@fancyapps/ui/dist/panzoom/panzoom.esm";
-//
 import favoriteStore from "@/stores/favoriteStore";
 import cartStore from "@/stores/cartStore";
 import productStore from "@/stores/productStore";
@@ -39,8 +37,7 @@ export default {
   },
   //! mitt
   mounted() {
-    //* 只能放一個圖
-    this.container = this.$refs.myPanzoom;
+    this.container = this.$refs.myPanzoom; //* 只能放一個圖
     if (this.panzoom) {
       this.panzoom = new Panzoom(this.container, this.options, { Pins });
     }
@@ -49,9 +46,7 @@ export default {
     this.productId = this.$route.params.productId; //! 統一商品唯一的ID(item.id)
     this.getProduct();
     this.getProduct_item(this.productId);
-    //
     this.getFavorite(); //! 用其他電腦，先新增本地陣列
-    //
     this.sendComment();
     this.changeClass();
   },
@@ -65,7 +60,6 @@ export default {
     ...mapActions(cartStore, ["getCart"]),
     ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
     ...mapActions(productStore, ["getProduct_item", "setCategory"]),
-    //
     addToCart(id, qty = 1, isBuy) {
       if (!this.productSize_item) {
         this.$swal.fire("Please", "Size must be selected.", "warning");
@@ -90,7 +84,6 @@ export default {
         });
       }
     },
-    //
     getProduct() {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
@@ -156,7 +149,7 @@ export default {
   <div>
     <LoadingMask :active="isLoading_big" />
     <LoadingMask :active="isLoading_productStore" />
-    <!--  -->
+
     <div class="container-xl">
       <nav aria-label="breadcrumb" class="mt-10">
         <ol class="breadcrumb">
@@ -187,7 +180,7 @@ export default {
           </li>
         </ol>
       </nav>
-      <!--  -->
+
       <div class="row row-cols-md-2 g-md-5 mt-md-5">
         <div
           id="carouselExampleIndicators"
@@ -241,7 +234,7 @@ export default {
                 />
               </div>
             </div>
-            <!--  -->
+
             <div
               class="carousel-item text-center h-100 w-100"
               v-for="item in product_item.imagesUrl"
@@ -259,7 +252,7 @@ export default {
             <span
               class="carousel-control-prev-icon bg-info p-2 rounded-circle"
               aria-hidden="true"
-            ></span>
+            />
             <span class="visually-hidden">Previous</span>
           </button>
           <button
@@ -271,11 +264,11 @@ export default {
             <span
               class="carousel-control-next-icon bg-info p-2 rounded-circle"
               aria-hidden="true"
-            ></span>
+            />
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-        <!--  -->
+
         <div class="col-md-4 d-flex flex-column justify-content-around text-center">
           <h1 class="mb-5">{{ product_item.title }}</h1>
           <div class="my-5">
@@ -385,7 +378,7 @@ export default {
                 v-if="favoriteIds.indexOf(product_item.id) !== -1"
                 @click="updateFavorite(product_item.id)"
                 class="fa-solid fa-heart fa-beat-fade text-danger fs-3"
-              ></i>
+              />
               <i
                 v-else
                 @click="updateFavorite(product_item.id)"
@@ -393,11 +386,11 @@ export default {
                 @mouseenter="toggleHeart(true)"
                 @mouseleave="toggleHeart(false)"
                 :class="{ 'text-white': isHeart }"
-              ></i>
+              />
               <i
                 v-if="isHeart"
                 class="fa-solid fa-heart fa-beat-fade text-danger fs-3 position-absolute"
-              ></i>
+              />
             </div>
           </div>
           <div
@@ -422,7 +415,7 @@ export default {
               BUY NOW
             </button>
           </div>
-          <!--  -->
+
           <hr class="w-100 mx-auto" />
           <div class="my-3 d-flex gap-2 w-100 flex-wrap mx-auto">
             <el-tag
@@ -452,14 +445,12 @@ export default {
           </div>
         </div>
       </div>
-      <!--  -->
+
       <div class="row row-cols-md-2 flex-column-reverse flex-md-row">
         <div class="col-md-8">
           <h3 class="mt-7">DESCRIPTION</h3>
           <hr />
-          <p v-html="product_item.content"></p>
-          <!--  -->
-
+          <p v-html="product_item.content" />
           <h3 class="mt-7">COMMENT</h3>
           <hr />
           <div
@@ -485,31 +476,28 @@ export default {
               </el-rate>
               <div class="position-relative">
                 <div class="msg_cotainer">
-                  <!-- The product_item is the best ,I have ever seen ! -->
                   {{ item.rateComment }}
                 </div>
                 <span class="msg_time">{{ item.rateTime }}</span>
               </div>
             </div>
           </div>
-          <!--  -->
           <div class="card-footer mt-10">
             <el-rate v-model="rateValue" show-text> </el-rate>
             <div class="input-group d-flex align-items-end">
               <textarea
-                @keydown.enter="sendComment()"
+                @keydown.enter="sendComment"
                 v-model="rateComment"
                 rows="3"
                 class="form-control type_msg"
                 placeholder="Type your comment ..."
-              ></textarea>
+              />
               <span @click="sendComment" class="input-group-text send_btn"
-                ><i class="fas fa-location-arrow"></i
-              ></span>
+                ><i class="fas fa-location-arrow"
+              /></span>
             </div>
           </div>
         </div>
-        <!--  -->
         <div class="col-md-4 sticky-md-top align-self-start" style="top: 10%; z-index: 1">
           <div
             class="accordion d-flex justify-content-center mt-5"
@@ -534,16 +522,16 @@ export default {
                 aria-labelledby="panelsStayOpen-headingOne"
               >
                 <div class="accordion-body text-start">
-                  <p v-html="product_item.description"></p>
+                  <p v-html="product_item.description" />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!--  -->
+
       <h3 class="mt-7">RECOMMEND</h3>
-      <ProductsList></ProductsList>
+      <ProductsList />
     </div>
   </div>
 </template>

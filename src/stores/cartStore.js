@@ -11,7 +11,12 @@ export default defineStore('cartStore', {
     qty: 1,
     carts: [],
     sumTotal: 0,
-    sumFinalQty: 0
+    sumFinalQty: 0,
+    toast: {
+      id: null,
+      res: '',
+      info: ''
+    }
   }),
   actions: {
     async getCart() {
@@ -30,7 +35,10 @@ export default defineStore('cartStore', {
           });
         }
       } catch (error) {
-        this.$toast('error', ' Error fetching the cart:' + error);
+        this.toast = {
+          res: 'warning',
+          info: `Error fetching the cart: ${error}`
+        };
       } finally {
         this.isLoading = false;
       }

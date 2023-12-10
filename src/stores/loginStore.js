@@ -6,7 +6,12 @@ export default defineStore('loginStore', {
   state: () => ({
     isLoading: false,
     isLogin: false,
-    user: null //!新增使用者狀態
+    user: null, //!新增使用者狀態
+    toast: {
+      id: null,
+      res: '',
+      info: ''
+    }
   }),
   actions: {
     async checkLoginStatus() {
@@ -27,7 +32,10 @@ export default defineStore('loginStore', {
           }
         })
         .catch((error) => {
-          this.$toast('error', ' Error checking login status:' + error);
+          this.toast = {
+            res: 'warning',
+            info: `Error checking login status: ${error}`
+          };
         })
         .finally(() => {
           this.isLoading = false;
@@ -52,7 +60,10 @@ export default defineStore('loginStore', {
           }
         })
         .catch((error) => {
-          this.$toast('error', ' Error checking login status:' + error);
+          this.toast = {
+            res: 'warning',
+            info: `Error checking login status: ${error}`
+          };
         })
         .finally(() => {
           this.isLoading = false;

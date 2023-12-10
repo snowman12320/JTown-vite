@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     ...mapActions(messageStore, ['pushMessage']),
-    //
     // 產品後台 取得遠端資料
     // !透過頁數取得資料
     getProducts(page = this.temp_current_page) {
@@ -147,10 +146,10 @@ export default {
       </tbody>
     </table>
     <!-- props傳遞總頁數 emit傳出目前頁數 -->
-    <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
+    <Pagination :pages="pagination" @emit-pages="getProducts" />
     <!-- 更新資料，先帶原始資料進去元件，元件內修改後，再透過emit傳遞觸發函式和資料出來 -->
-    <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
-    <!--  -->
+    <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct" />
+    
     <DelModal :item="tempProduct" ref="delModal" @del-item="delProduct" />
   </div>
 </template>

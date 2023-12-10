@@ -14,9 +14,18 @@ export default defineStore('favoriteStore', {
       res: '',
       info: ''
     },
-    notLogin: false
+    notLogin: false,
+    count: 0
   }),
+  getters: {
+    doubleCount() {
+      return this.count * 2;
+    }
+  },
   actions: {
+    increment() {
+      this.count++;
+    },
     async getFavorite() {
       try {
         if (!localStorage.getItem('favorite')) {
@@ -33,14 +42,17 @@ export default defineStore('favoriteStore', {
           );
         }
       } catch (error) {
-        this.$toast('error', ' Error fetching favorites:' + error);
+        this.toast = {
+          res: 'warning',
+          info: `Error fetching favorites:${error}`
+        };
       }
     },
     updateFavorite(id) {
       const { isLogin } = loginStore();
       if (isLogin) {
         this.statusBtn.loadingItem = id;
-        if (this.favoriteIds.indexOf(id) !== -1) {
+        if (this.favoriteIds.includes(id)) {
           this.favoriteIds.splice(this.favoriteIds.indexOf(id), 1);
           localStorage.setItem('favorite', JSON.stringify(this.favoriteIds));
           setTimeout(() => {

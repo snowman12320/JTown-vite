@@ -60,7 +60,7 @@ describe('cartStore', () => {
   });
 
   // mockAxios.onPut('https://vue3-course-api.hexschool.io/api/william-api/cart').reply(200);
-  test.skip('updateCart sets loadingItem and fetches cart data', async () => {
+  test('updateCart sets loadingItem and fetches cart data', async () => {
     const mockAxios = new MockAdapter(axios);
     mockAxios.onPut(/\/api\/william-api\/cart\/\d+/).reply(200);
     // const mockAxios = new MockAdapter(axios);
@@ -75,7 +75,8 @@ describe('cartStore', () => {
     store.statusBtn_car.loadingItem = '';
   });
 
-  test.skip('getCart function is called', async () => {
+  //? 單獨執行就會通過
+  test('getCart function is called', async () => {
     expect(typeof store.getCart).toBe('function');
 
     // Trigger the code that calls store.getCart

@@ -1,7 +1,5 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue, Filter, doc, setDoc } = require('firebase-admin/firestore');
-
-// TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
 const firebaseConfig = {
       apiKey: 'AIzaSyBjht0vea76V6ZLkCyqiFxeYRp4rvTaCYA',
@@ -13,18 +11,5 @@ const firebaseConfig = {
       measurementId: 'G-C8JWYX7WYP',
       databaseURL: 'https://DATABASE_NAME.firebaseio.com'
 };
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-
-// how to set firestore data
-const docRef = doc(db, 'users', 'alovelace');
-const setAda = setDoc(docRef, {
-      first: 'Ada',
-      last: 'Lovelace',
-      born: 1815
-});
-console.log(setAda);

@@ -12,4 +12,3 @@ const firebaseConfig = {
       databaseURL: 'https://DATABASE_NAME.firebaseio.com'
 };
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);

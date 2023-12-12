@@ -37,4 +37,4 @@ coverage
 
 # -__tests__/
 
-firebase/my-first-project-1110913-firebase-adminsdk-qcepc-a05f095b32.json
+firebase/*.json

@@ -13,6 +13,12 @@ admin.initializeApp({
 });
 let db= admin.firestore();
 
+/**
+*
+* DEMO
+*
+*/
+
 // +++https://w3c.hexschool.com/blog/8a8d783c
 // add data
 // const FieldValue = admin.firestore.FieldValue;
@@ -29,24 +35,23 @@ let db= admin.firestore();
 // });
 
 // add document
-db.collection("students").doc("five").set([{
-    no: 6,
-    name: "william",
-}, {
-    no: 7,
-    name: "william",
-}]).then(function() {
-    console.log("新增成功");
-})
+// db.collection("students").doc("five").set([{
+//     no: 6,
+//     name: "william",
+// }, {
+//     no: 7,
+//     name: "william",
+// }]).then(function() {
+//     console.log("新增成功");
+// })
 
 // get
-// var docRef = db.collection("students");
-// docRef.get().then(function(querySnapshot) {
-//     querySnapshot.forEach(function(doc) {
-
-//         console.log(doc.data());
-//     });
-// })
+var docRef = db.collection("students");
+docRef.get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        console.log(doc.data());
+    });
+})
 
 // search
 // var docRef = db.collection("students");

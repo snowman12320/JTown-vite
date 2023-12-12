@@ -36,3 +36,5 @@ coverage
 # cypress.config.js
 
 # -__tests__/
+
+firebase/*.json

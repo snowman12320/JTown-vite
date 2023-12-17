@@ -11,4 +11,4 @@ const firebaseConfig = {
       measurementId: 'G-C8JWYX7WYP',
       databaseURL: 'https://DATABASE_NAME.firebaseio.com'
 };
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);

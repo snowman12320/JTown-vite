@@ -3,8 +3,6 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { createPinia, setActivePinia } from 'pinia'; // Import Pinia functions
 import cartStore from '@/stores/cartStore.js';
-// import sinon from 'sinon';
-// import { mockFn } from 'vite-plugin-test';
 
 beforeAll(() => {
   setActivePinia(createPinia());
@@ -17,7 +15,7 @@ describe('cartStore', () => {
     product_id: 123,
     qty: 2
   };
-  let getCartSpy; // Declare the spy variable
+  let getCartSpy;
 
   beforeEach(() => {
     store = cartStore();
@@ -47,10 +45,8 @@ describe('cartStore', () => {
       .onGet('https://vue3-course-api.hexschool.io/api/william-api/cart')
       .reply(200, mockResponse);
 
-    // Call the getCart function
     await store.getCart();
 
-    // Verify that isLoading is set to false
     expect(store.isLoading).toBe(false);
 
     // Verify that carts and totals are set correctly

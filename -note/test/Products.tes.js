@@ -1,7 +1,7 @@
 import { test, describe, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-import Products from '@/components/Products.vue';
+import Products from '@/views/backend/Products.vue';
 
 describe('Products.vue', () => {
   const wrapper = mount(Products,{

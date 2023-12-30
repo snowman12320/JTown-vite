@@ -1,18 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { createTestingPinia } from '@pinia/testing';
 import productStore from '@/stores/productStore';
 import axios from 'axios';
 
-// Mock axios get request
-// Corrected mock for axios
 vi.mock('axios', async () => {
-  const actual = await vi.importActual('axios'); // Import the actual axios module
+  const actual = await vi.importActual('axios'); 
   return {
-    ...actual, // Spread the actual module's exports
+    ...actual, 
     default: {
-      // Provide a default export
-      ...actual.default, // Include actual default exports
+      ...actual.default,
       get: vi.fn(() =>
         Promise.resolve({ data: { success: true, product: { id: 1, name: 'Test Product' } } })
       )
@@ -21,16 +18,34 @@ vi.mock('axios', async () => {
 });
 
 describe.skip('productStore', () => {
-  // Set up a testing Pinia store before each test
+  let axiosGetSpy;
+
   beforeEach(() => {
     setActivePinia(createTestingPinia());
+    axiosGetSpy = vi.spyOn(axios, 'get');
+  });
+
+  afterEach(() => {
+    axiosGetSpy.mockRestore();
   });
 
   it('getProductItem should fetch product data correctly', async () => {
     const store = productStore();
-    await store.getProductItem(1); // Assuming the method accepts an ID
+    await store.getProduct_item(1);
     expect(store.product_item).toEqual({ id: 1, name: 'Test Product' });
-    expect(axios.get).toHaveBeenCalled();
+    expect(axiosGetSpy).toHaveBeenCalled();
+  });
+
+  it('getProductItem should handle errors correctly', async () => {
+    const store = productStore();
+    const error = new Error('Test error');
+    axiosGetSpy.mockRejectedValue(error);
+    await store.getProduct_item(1);
+    expect(store.toast).toEqual({
+      id: 1,
+      res: 'warning',
+      info: `Error fetching product:${error}`
+    });
   });
 
   it('setCategory should set the category correctly', () => {

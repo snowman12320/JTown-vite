@@ -1,9 +1,9 @@
 import { test, describe, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-import Products from '../src/components/Products.vue';
+import Products from '@/views/backend/Products.vue';
 
-import App from '../src/App.vue';
+import App from '@/App.vue';
 import axios from 'axios';
 
 describe('App.vue', () => {

@@ -7,7 +7,6 @@ import MockAdapter from 'axios-mock-adapter';
 
 const mock = new MockAdapter(axios);
 
-// 測試pinia就好 因為邏輯在裡面
 test.skip('delCart method deletes the cart and updates', async () => {
   // Set up mock
   mock.onDelete(/cart/).reply(200);

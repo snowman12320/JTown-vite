@@ -2,7 +2,7 @@ describe('test shopping process', () => {
   it('login', () => {
     // cy.visit('http://localhost:5173/#/login');
     // cy.get('#email').should('exist').click({ force: true }).type('snowman12320@gmail.com');
-    // cy.get('#password').should('exist').click({ force: true }).type('BoY4506699');
+    // cy.get('#password').should('exist').click({ force: true }).type('');
     // cy.get('form > .text-center > .btn').should('exist').click();
     // cy.wait(500);
     //
@@ -18,7 +18,7 @@ describe('test shopping process', () => {
     // cy.visit('http://localhost:5173/#/cart-view/cart-list');
   });
 
-  // 切分兩個it 登入後會斷掉 應該說路徑要再打一次才不會斷
+  // ! 切分兩個it 登入後會斷掉 應該說路徑要再打一次才不會斷
   it.only('add cart', () => {
     // cy.visit('http://localhost:5173/#/products-view/products-item/-NapFx_21qP46WymRS-_');
     // cy.get('#L').should('exist').check();

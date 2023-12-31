@@ -1,5 +1,7 @@
+// https://on.cypress.io/api
+// 官方示範檔，cy檔實際運作 https://github.com/cypress-io/cypress-example-kitchensink/blob/master/README.md
 
-
+```
 cy.get('[data-v-inspector="src/views/frontend/ProductsItem.vue:284:15"] > .form-check-label');
 cy.get('[data-v-inspector="src/views/frontend/ProductsItem.vue:301:15"] > .form-check-label').check();
 
@@ -16,4 +18,4 @@ cy.wait(1000)
 cy.get('.flex-column > .btn-danger').click()
 
 cy.visit('http://localhost:5173/#/cart-view/cart-list');
-
+```

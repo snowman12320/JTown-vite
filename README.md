@@ -16,7 +16,6 @@ JTown （Jersey Town） 是提供 NBA 球衣和商品的商店。
 <img src="/src/assets/image/nbaWeb/1693139126056.jpg" alt="GitHub" title="GitHub,Social Coding" width="auto" height="300" />
 <img src="/src/assets/image/nbaWeb/1693138968357.jpg" alt="GitHub" title="GitHub,Social Coding" width="70%" height="auto" />
 
-
 ---
 
 - 商品展示：直觀和易於瀏覽的展示界面，通過分類、搜索和排序來找到所需商品。
@@ -78,7 +77,6 @@ npm run dev
 
 - ~~"Vuex" 使用集中式的存儲模式，所有的狀態都存放在一個對象中，且冗餘的代碼去修改狀態，可能難以理解和維護。~~
 
-
 - [x] "Vite" 是一個較新的開發工具，提供快速的開發環境，使用 ES 模塊作為開發時的原始碼格式，使熱重載和冷啟動非常快，支持 Vue 3 的新功能 Composition API 和片段模板。
 
 - ~~"Vue CLI" 快速搭建和開發應用程序，提供的開發環境，包括熱重載、代碼打包和優化功能，使得開發能夠更輕鬆構建和部署網站。~~
@@ -93,19 +91,16 @@ npm run dev
   Reactive：Vue 的響應式系統允許在組件中定義響應式數據屬性。當數據發生變化時，相應的 UI 部分將自動更新。
 
 - Lifecycle：提供生命週期函數，可以在組件不同生命週期階段執行代碼。
-  
 - computed：可以根據數據的變化來動態生成衍生數據。
 
 - watch：在數據發生變化時執行自定義邏輯。可以通過監聽器來觸發特定的操作。
 
 - ~~ provide：Vue 提供的跨層級資料傳遞方式，父元件使用 provide 提供資料，子元件使用 inject 接收這些資料。~~
-  
 - Props：向內層元件傳遞資料狀態，從父元件傳遞，子元件使用這些資料來顯示或執行相應的操作。
 - prop 驗證機制：確保父元件傳遞的資料符合特定的型別和條件。
 
 - Emit：事件觸發機制，在子元件中觸發事件並向外層元件傳遞資料。
 - Emits：用於驗證向外層傳遞的事件的資料型別和參數。
-  
 - Slot：可以在父元件中插入子元件的內容。讓父元件控制子元件的外觀和行為。
   Slot Props：資料從父元件傳遞給子元件中的 Slot，子元件可以使用這些資料來自定義 Slot 的內容。
 
@@ -123,6 +118,13 @@ npm run dev
 
 - plugins：擴充插件用於擴展 Vue 的功能，通過 Vue.use()方法來安裝和使用這些插件。
 
+## 更新記錄
+
+- 2023/10 新增 Vitest ( Unit test ) + cypress ( E2E )
+- 2023/12 新增使用，於此專案 [F2E-nuxt3](https://test1227-dbafe.web.app/) / [原始碼](https://github.com/snowman12320/F2E-nuxt3/tree/hosting-firebase)
+  - Vue-Tsc + Composition API
+  - Nuxt.js
+
 ## 相關技術
 
 | JS   | CSS       | other        |
@@ -134,6 +136,9 @@ npm run dev
 
 ## 學習目標：
 
-- Vitest ( Unit test ) + cypress ( E2E  )
-- Vue-Tsc + Composition API
-- Nuxt.js
+- [x] Vitest ( Unit test ) + cypress ( E2E )
+- [x] Vue-Tsc + Composition API
+- [x] Nuxt.js
+- [進行中...] Firebase (Hosting / Cloud Storage / Cloud Firestore / Authentication / Cloud Messaging)
+- Node.js + MonogoDB/MySQL
+- AWS / GCP + Docker

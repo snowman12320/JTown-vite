@@ -14,8 +14,8 @@ dist-ssr
 coverage
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
+# /cypress/videos/
+# /cypress/screenshots/
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +26,16 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# ---
+# .vscode
+
+# -note/
+
+# -cypress/
+# cypress.config.js
+
+# -__tests__/
+
+firebase/*.json
+

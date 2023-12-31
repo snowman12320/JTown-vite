@@ -1,0 +1,167 @@
+<!-- // https://codepen.io/SkyrimTomato/pen/QWLgxNr?editors=1011 -->
+<!-- https://simonallen.coderbridge.io/2020/03/07/firebase-storage-note/ -->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>upload-firestore</title>
+
+  <style>
+    .drop-container {
+      width: 300px;
+      height: 300px;
+      border: 4px dashed #000;
+      /* line-height: 300px; */
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="msg"
+    style="background-color: #eee; width: 100%;color: #000;font-size: 20px;padding: 20px;text-align: center;"></div>
+  <h1>單檔上傳</h1>
+  <progress value="0" max="100" id="uploader"></progress>
+  <span id="progressPercent">0</span>
+  <br />
+  <input type="file" value="upload" id="uploadBtn" />
+  <br />
+  <hr>
+  <h1>拖曳上傳</h1>
+  <div id="dropContainer" class="drop-container">
+    <progress value="0" max="100" id="uploader2"></progress>
+    <span>拖曳檔案至此上傳</span>
+  </div>
+  <hr>
+  <h1>多檔拖曳上傳</h1>
+  <div id="dropContainer2" class="drop-container">
+    <span id="moreProgress">0/0</span>
+    <span>拖曳檔案至此上傳</span>
+  </div>
+
+
+  <!-- Firebase 核心 -->
+  <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-app.js"></script>
+  <!-- Firebase storage 模組檔案 -->
+  <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-storage.js"></script>
+  <script type="module">
+    // <!-- Uncaught SyntaxError: Cannot use import statement outside a module -->
+    // <!-- https://stackoverflow.com/questions/45854169/cannot-use-import-statement-outside-a-module -->
+    // <!-- 這個錯誤是因為在一個非模組的環境中使用了 import 語句。在瀏覽器中，如果要使用 ES6 的模組，需要在 script 標籤中加入 type="module"。 -->
+    // 結論：需打包編譯才能使用 import
+    // import * as firebase from '@firebase/app';
+    // import '@firebase/storage';
+
+    var firebaseConfig = {
+      apiKey: 'AIzaSyBjht0vea76V6ZLkCyqiFxeYRp4rvTaCYA',
+      authDomain: 'my-first-project-1110913.firebaseapp.com',
+      projectId: 'my-first-project-1110913',
+      storageBucket: 'my-first-project-1110913.appspot.com',
+      messagingSenderId: '975844882213',
+      appId: '1:975844882213:web:fe2ad0746c2de61e5f4ccc',
+      measurementId: 'G-C8JWYX7WYP',
+      databaseURL: 'https://DATABASE_NAME.firebaseio.com'
+    };
+    firebase.initializeApp( firebaseConfig );
+
+    uploadBtn.addEventListener( "change", event => {
+      msg.textContent = "";
+
+      // 取得檔案資訊
+      const file = event.target.files[0];
+      const path = 'demo/';
+
+      // 取得 storage 對應的位置
+      const storageReference = firebase.storage().ref( path + 'test - ' + file.name )
+
+      // .put() 方法把東西丟到該位置裡
+      const task = storageReference.put( file );
+
+      // .on()監聽並連動 progress 讀取條
+      task.on(
+        "state_changed",
+        function progress ( snapshot ) {
+          let uploadValue = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+          uploader.value = uploadValue;
+          progressPercent.textContent = uploadValue.toFixed( 1 ) + "%";
+        },
+        function error ( err ) {
+          msg.textContent = "上傳失敗";
+        },
+        function complete () {
+          msg.textContent = "上傳成功";
+        }
+      );
+    } );
+
+    // 拖曳上傳
+    const dropContainer = document.getElementById( "dropContainer" );
+    // 將這個範例存進 Storage drag-and-drop/ 資料夾
+    const folder = "drag-and-drop/"
+
+    dropContainer.addEventListener( "drop", event => {
+      event.preventDefault();
+      msg.textContent = "";
+
+      const file = event.dataTransfer.files[0];
+      const name = file.name
+      const fullPath = `${folder}${name}`;
+      const storageReference = firebase.storage().ref( fullPath );
+      const task = storageReference.put( file );
+
+      task.on(
+        "state_changed",
+        function progress ( snapshot ) { },
+        function error () {
+          msg.textContent = "上傳失敗";
+        },
+        function complete () {
+          msg.textContent = "上傳成功";
+        }
+      );
+    } );
+    dropContainer.addEventListener( "dragover", event => {
+      event.preventDefault();
+    } );
+
+    // 多檔拖曳
+    const dropContainer2 = document.getElementById( "dropContainer2" );
+    dropContainer2.addEventListener( "drop", event => {
+      event.preventDefault();
+      msg.textContent = "";
+
+      const files = event.dataTransfer.files;
+      for ( let i = 0; i < files.length; i++ ) {
+        const path = folder + files[i].name;
+        const storageReference = firebase.storage().ref( path );
+        const task = storageReference.put( files[i] );
+        moreProgress.textContent = i + '/' + files.length;
+
+        task.on(
+          "state_changed",
+          function progress ( snapshot ) { },
+          function error () {
+            msg.textContent = "上傳失敗";
+          },
+          function complete () {
+            msg.textContent = "上傳成功";
+          }
+        );
+      }
+    } );
+
+    dropContainer2.addEventListener( "dragover", event => {
+      event.preventDefault();
+    } );
+
+  </script>
+</body>
+
+</html>

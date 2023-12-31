@@ -1,0 +1,52 @@
+@import '../helpers/mix';
+@import '../helpers/function';
+@import '../helpers/variables';
+
+// 雖然有加上active 但若權重不足 可能導致失效 加上&增加權重 不使用 ~ 可能沒有支援(是代表你寫錯了)
+.aside {
+  border-radius: 0.75rem;
+  z-index: 10 ;
+  background: #fff;
+  input[type='radio']:checked + label {
+    color: $nbaBlue !important;
+    & .aside_span {
+      display: inline-block !important;
+    }
+  }
+
+  label {
+    color: $pickBlack;
+    font-size: 16px;
+    cursor: pointer;
+    & input:checked {
+      color: $nbaBlue !important;
+    }
+    &:hover {
+      color: $nbaBlue;
+    }
+
+    .aside_span {
+      display: none;
+      color: $nbaBlue;
+      font-weight: bold;
+      // transition: all;
+      // transition-duration: 300ms;
+      // clip-path: inset(0 100% 0 0 round 0 0 0 0);
+    }
+    &:checked .aside_span {
+      display: inline-block !important;
+    }
+    &:hover .aside_span {
+      display: inline-block;
+      // clip-path: inset(0 0% 0 0 round 0 0 0 0);
+    }
+  }
+}
+
+@include minipad() {
+  .aside {
+    h3 {
+      text-align: center;
+    }
+  }
+}

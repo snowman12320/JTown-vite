@@ -1,116 +1,186 @@
 <script>
-import addToCart from '../mixins/addToCart'
-import getFavoriteData from '../mixins/getFavoriteData'
+import cartStore from "@/stores/cartStore.js";
+import favoriteStore from "@/stores/favoriteStore";
+import productStore from "@/stores/productStore";
+import { mapActions, mapState } from "pinia";
+import loginStore from "@/stores/loginStore";
 
 export default {
-  mixins: [addToCart, getFavoriteData],
-  inject: ['emitter'],
   data() {
     return {
-      products: [], //* 原始資料
-      Filtered: [], //! 搜尋全域的資料
+      isLoading_small: false, //列表載入
+      statusBtn_car: {
+        loadingItem: "",
+      },
+      products: [], // 原始資料
+      Filtered: [], // 搜尋全部商品用
       page: 1,
       pagination: {},
-      products_list: 0,
-      isLoading: false,
-      id: '',
-      product: {},
-      cacheSearch: '',
-      cacheCategory: '',
-      filterCheck: '',
-      isFavorite: false,
-      selectSort: '0',
-      setClass: false
-    }
+      productsList_hight: 0,
+      selectSort: "0", //名稱價格排序 (不用與其他元件共用狀態，故保留)
+      setClass: false,
+      //! 不用去pinia讀取，getter回來會報錯不能修改值 > 但寫不進去store > 使用watch監聽
+      productSize_list: "",
+      productSize_item: "",
+      addToCart_item_id: null,
+    };
   },
   // props: { filtersData: { type: Array } }, //! 不能重複宣告
-  props: ['customClass'],
+  props: ["childClass"], // 傳入用一串class包起來的變數，來改變子元件樣式
   mounted() {
-    this.products_list = this.$refs.products_list.offsetHeight //! 在mounted定義會是零，但不定義會在其他頁報錯
-    window.addEventListener('scroll', this.handleScroll) //* 監聽滾動事件
-    this.emitter.on('customEvent_search', (data) => {
-      this.cacheSearch = data
-      // console.log(this.cacheSearch);
-    })
-    this.emitter.on('customEvent_category', (data) => {
-      this.cacheCategory = data
-      // console.log(this.cacheCategory);//*檢視emitter有無觸發
-      this.cacheSearch = ''
-    })
-    this.emitter.on('customEvent_Check', (data) => {
-      this.filterCheck = data
-    })
+    this.productsList_hight = this.$refs.productsList_hight.offsetHeight; //! 在mounted定義會是零，但不定義會在其他頁報錯
+    window.addEventListener("scroll", this.handleScroll);
   },
   created() {
-    this.cacheSearch = this.$route.params.search
-    this.getProducts()
-    this.getFiltered() //! 取得全域搜尋資料
+    this.getProducts();
+    this.getFiltered(); //! 取得全域搜尋資料
+  },
+  watch: {
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info);
+      },
+      deep: true,
+    },
+    notLogin(newVal) {
+      if (newVal) {
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          });
+      }
+    },
+    productSize_list() {
+      this.addToCart(this.addToCart_item_id, 1, false);
+    },
   },
   computed: {
-    filtersData() {
-      let filteredData = []
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.isLoading_big = true
+    ...mapState(cartStore, ["isLoading"]), //! statusBtn 和statusBtn_car 會衝到導致被覆蓋，所以改名
+    ...mapState(favoriteStore, [
+      "statusBtn",
+      "filteredProducts",
+      "favoriteIds",
+      "toast",
+      "notLogin",
+    ]),
+    ...mapState(productStore, ["cacheSearch", "cacheCategory", "filterCheck"]),
+    ...mapState(loginStore, ["isLogin"]),
+    filteredData() {
+      let filteredData = [];
+      if (
+        !this.$route.path.includes("products-content") &&
+        !this.$route.path.includes("products-item")
+      ) {
+        filteredData = this.products;
+      } else {
+        // 名稱搜尋或分類搜尋
+        filteredData = this.Filtered.filter(
+          (item) =>
+            (!this.cacheSearch || item.title.toLowerCase().includes(this.cacheSearch)) &&
+            (!this.cacheCategory ||
+              item.category
+                .toLowerCase()
+                .includes(this.cacheCategory.trim().toLowerCase()))
+        );
 
-      try {
-        if (
-          !this.$route.path.includes('products-content') &&
-          !this.$route.path.includes('products-item')
-        ) {
-          filteredData = this.products
-        } else {
-          filteredData = this.Filtered.filter(
-            (item) =>
-              (!this.cacheSearch ||
-                item.title.toLowerCase().includes(this.cacheSearch.trim().toLowerCase())) &&
-              (!this.cacheCategory ||
-                item.category.toLowerCase().includes(this.cacheCategory.trim().toLowerCase()))
-          )
-
-          if (filteredData.length === 0) {
-            filteredData = this.products
-          }
-          // !當無搜尋時就使用第一頁資料，在有搜尋時就使用全部資料，才不會一開始就渲染全部
-          if (!this.cacheCategory && !this.cacheSearch) {
-            filteredData = this.products
-          }
-
-          const filterFunc = {
-            2999: (item) => item.price <= 2999,
-            5000: (item) => item.price >= 5000,
-            default: () => true
-          }[this.filterCheck || 'default']
-
-          const sortFunc = {
-            Low: (a, b) => a.price - b.price,
-            Height: (a, b) => b.price - a.price,
-            AZ: (a, b) => a.title.localeCompare(b.title),
-            ZA: (a, b) => b.title.localeCompare(a.title),
-            default: () => 0
-          }[this.selectSort || 'default']
-
-          filteredData = filteredData.filter(filterFunc).sort(sortFunc)
+        if (filteredData.length === 0) {
+          filteredData = this.products;
         }
-      } finally {
-        //! 無法在 computed 屬性中使用了副作用 (想嘗試改變 isLoading_big 時機)
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.isLoading_big = false
+        // !當無搜尋時就使用第一頁資料，在有搜尋時就使用全部資料，才不會一開始就渲染全部
+        if (!this.cacheCategory && !this.cacheSearch) {
+          filteredData = this.products;
+        }
+
+        const filterFunc = {
+          999: (item) => item.price < 999,
+          2999: (item) => item.price >= 999 && item.price <= 2999,
+          3000: (item) => item.price >= 3000,
+          default: () => true,
+        }[this.filterCheck || "default"];
+
+        const sortFunc = {
+          Low: (a, b) => a.price - b.price,
+          High: (a, b) => b.price - a.price,
+          AZ: (a, b) => a.title.localeCompare(b.title),
+          ZA: (a, b) => b.title.localeCompare(a.title),
+          default: () => 0,
+        }[this.selectSort || "default"];
+
+        filteredData = filteredData.filter(filterFunc).sort(sortFunc);
       }
 
-      return filteredData
-    }
+      return filteredData;
+    },
   },
-
   methods: {
+    ...mapActions(cartStore, ["getCart"]),
+    ...mapActions(favoriteStore, ["getFavorite", "updateFavorite"]),
+    ...mapActions(productStore, ["getProduct_item"]),
+    addToCart(id, qty = 1, isBuy) {
+      if (!this.isLogin) {
+        // ! 在store不會用到this ，共用狀態才會放store
+        this.$swal
+          .fire({
+            title: "Login or Sign up first.",
+            icon: "warning",
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "Login",
+            confirmButtonAriaLabel: "Thumbs up, great!",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push("/login");
+            }
+          }); // this.$router.push('/login')
+      } else {
+        if (!this.productSize_list && !this.productSize_item) {
+          this.$swal.fire("Please", "Size must be selected.", "warning");
+        } else {
+          this.statusBtn_car.loadingItem = id;
+          const url = `${import.meta.env.VITE_APP_API}api/${
+            import.meta.env.VITE_APP_PATH
+          }/cart`;
+          const cart = {
+            product_id: id,
+            qty,
+          };
+          this.$http.post(url, { data: cart }).then(() => {
+            this.getCart();
+            this.statusBtn_car.loadingItem = "";
+            this.$toast("success", "add to cart.");
+            if (isBuy) {
+              this.$router.push("/cart-view/cart-list");
+              // 觸發該頁函式，讓下一頁資料更新
+              this.getCart();
+            }
+          });
+        }
+      }
+    },
     handleScroll() {
-      // this.products_list = this.$refs.products_list.offsetHeight; //! 這邊定義會在切換router時，取不到dom（生命週期沒有重整吧）
-      if (window.scrollY > this.products_list - 300) {
-        //!
-        this.pushProducts()
+      //! 這邊定義會在切換router時，取不到dom（可能生命週期沒有重整吧）
+      // this.productsList_hight = this.$refs.productsList_hight.offsetHeight;
+      if (window.scrollY > this.productsList_hight - 300) {
+        this.pushProducts();
       }
     },
     getFiltered() {
-      const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
+      const api = `${import.meta.env.VITE_APP_API}api/${
+        import.meta.env.VITE_APP_PATH
+      }/products/all`;
       this.$http.get(api).then((res) => {
         if (res.data.success) {
           this.Filtered = res.data.products
@@ -120,489 +190,297 @@ export default {
     getProducts(page = 1) {
       const api = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/products/?page=${page}`
-      this.isLoading = true
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
+      }/products/?page=${page}`;
       this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
         if (res.data.success) {
           this.products = res.data.products
           this.pagination = res.data.pagination
         }
       })
     },
-    //* 捲動更新
-    // 將新數據合併到舊數據時，可以使用 concat 方法代替 new Set，避免重複儲存，也不用push推新的陣列物件進去，這樣會有兩個陣列物件，會無法迴圈
+    //! 捲動更新
+    // !將新數據合併到舊數據時，可以使用 concat 方法代替 new Set，避免重複儲存，也不用push推新的陣列物件進去，這樣會有兩個陣列物件，會無法迴圈
     pushProducts() {
       //! 要用this.isLoading阻擋，避免讀取api間隔，持續捲動導致重複讀取資料
-      if (!this.isLoading && this.pagination.has_next) {
-        this.isLoading = true
-        // if (this.pagination.has_next) {
-        // console.log(this.pagination);
-        this.page++
+      if (!this.isLoading_small && this.pagination.has_next) {
+        this.isLoading_small = true;
+        this.page++;
         const api = `${import.meta.env.VITE_APP_API}api/${
           import.meta.env.VITE_APP_PATH
-        }/products/?page=${this.page}`
+        }/products/?page=${this.page}`;
         this.$http.get(api).then((res) => {
           if (res.data.success) {
-            this.pagination = res.data.pagination
-            // console.log(this.pagination);
-            this.products = this.products.concat(res.data.products)
-            // console.log(this.products);
+            this.pagination = res.data.pagination;
+            this.products = this.products.concat(res.data.products);
             //! 成功讀取分頁數後，才能關閉載入，進行下次資料儲存，否則會重複儲存
-            this.isLoading = false
+            this.isLoading_small = false;
           }
-        })
-        // }
+        });
       }
     },
-    getProduct(id) {
-      //! 只取一個商品
-      this.$router.push(`/products-view/products-item/${id}`)
-      this.isLoading = true
-      this.isLoading_big = true
-      this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-      const api = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/product/${id}`
-      this.$http.get(api).then((res) => {
-        this.isLoading = false
-        this.isLoading_big = false
-        this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-        if (res.data.success) {
-          this.product = res.data.product
-          this.emitter.emit('customEvent_getProduct', this.product)
-          // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-          const carouselItems = document.querySelectorAll('.carousel-item')
-          carouselItems.forEach(function (item) {
-            item.classList.remove('active')
-          })
-          carouselItems[0].classList.add('active')
-          window.scrollTo(0, 0)
-        }
-      })
-      // 確認收藏狀態
-      //! 要用this.id ，用product.id會錯 ，需分清楚差別
-      //! 在其他電腦，若先判斷會錯誤
-      if (JSON.parse(localStorage.getItem('favorite'))) {
-        const checkFavorite = Boolean(
-          JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
-        ) //* 搜尋目標
-        if (checkFavorite) {
-          this.isFavorite = true
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        } else {
-          this.isFavorite = false
-          this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-        }
-      }
-    }
-  }
-}
-
-//
-// import { ref, reactive, computed, watch, onMounted } from 'vue'
-// import { useRouter } from 'vue-router'
-// import addToCart from '@/mixins/addToCart'
-// import getFavoriteData from '@/mixins/getFavoriteData'
-// import axios from 'axios'
-
-// export default {
-//   // name: 'YourComponent',
-//   props: ['customClass'],
-//   emits: ['customEvent_Search', 'customEvent_Category', 'customEvent_Check'],
-
-//   setup() {
-//     const products = ref([])
-//     const Filtered = ref([])
-//     const page = ref(1)
-//     const pagination = ref({})
-//     const products_list = ref(0)
-//     const isLoading = ref(false)
-//     const id = ref('')
-//     const product = ref({})
-//     const cacheSearch = ref('')
-//     const cacheCategory = ref('')
-//     const filterCheck = ref('')
-//     const isFavorite = ref(false)
-//     const selectSort = ref('0')
-//     const setClass = ref(false)
-//     const emitter = inject('emitter')
-
-//     const filtersData = computed(() => {
-//       if (!route.path.includes('products-content') && !route.path.includes('products-item')) {
-//         filteredData = products.value
-//       } else {
-//         filteredData = Filtered.value.filter(
-//           (item) =>
-//             (!cacheSearch.value ||
-//               item.title.toLowerCase().includes(cacheSearch.value.trim().toLowerCase())) &&
-//             (!cacheCategory.value ||
-//               item.category.toLowerCase().includes(cacheCategory.value.trim().toLowerCase()))
-//         )
-
-//         if (filteredData.length === 0) {
-//           filteredData = products.value
-//         }
-
-//         if (!cacheCategory.value && !cacheSearch.value) {
-//           filteredData = products.value
-//         }
-
-//         const filterFunc = {
-//           2999: (item) => item.price <= 2999,
-//           5000: (item) => item.price >= 5000,
-//           default: () => true
-//         }[filterCheck.value || 'default']
-
-//         const sortFunc = {
-//           Low: (a, b) => a.price - b.price,
-//           Height: (a, b) => b.price - a.price,
-//           AZ: (a, b) => a.title.localeCompare(b.title),
-//           ZA: (a, b) => b.title.localeCompare(a.title),
-//           default: () => 0
-//         }[selectSort.value || 'default']
-
-//         filteredData = filteredData.filter(filterFunc).sort(sortFunc)
-//       }
-//     })
-
-//     const getProduct = async (id) => {
-//       isLoading.value = true
-//       isLoadingBig.value = true
-//       emitter.emit('customEvent_isLoading_big', isLoadingBig.value)
-
-//       try {
-//         const api = `${import.meta.env.VITE_APP_API}api/${
-//           import.meta.env.VITE_APP_PATH
-//         }/product/${id}`
-//         const res = await axios.get(api)
-
-//         isLoading.value = false
-//         isLoadingBig.value = false
-//         emitter.emit('customEvent_isLoading_big', isLoadingBig.value)
-
-//         if (res.data.success) {
-//           product.value = res.data.product
-//           emitter.emit('customEvent_getProduct', product.value)
-
-//           const carouselItems = document.querySelectorAll('.carousel-item')
-//           carouselItems.forEach((item) => {
-//             item.classList.remove('active')
-//           })
-//           carouselItems[0].classList.add('active')
-//           window.scrollTo(0, 0)
-//         }
-//       } catch (error) {
-//         console.error('Error fetching product:', error)
-//       }
-
-//       if (JSON.parse(localStorage.getItem('favorite'))) {
-//         const favoriteList = JSON.parse(localStorage.getItem('favorite'))
-//         const checkFavorite = favoriteList.includes(id)
-
-//         isFavorite.value = checkFavorite
-//         emitter.emit('customEvent_isFavorite', isFavorite.value)
-//       }
-//       onMounted(() => {
-//         // Call getProduct function with the desired id after component is mounted
-//         getProduct(yourDesiredProductId)
-//       })
-
-//       return {
-//         isLoading,
-//         isLoadingBig,
-//         isFavorite,
-//         product
-//       }
-//     }
-
-//     const getFiltered = (http) => async () => {
-//       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-//       try {
-//         const res = await http.get(api)
-//         if (res.data.success) {
-//           return res.data.products
-//         }
-//       } catch (error) {
-//         console.error(error)
-//       }
-//     }
-
-//     const handleScroll = () => {
-//       if (window.scrollY > products_list.value - 300) {
-//         //!
-//         pushProducts()
-//       }
-//     }
-
-//     const pushProducts = async () => {
-//       if (!isLoading.value && pagination.value.has_next) {
-//         isLoading.value = true
-//         page.value++
-//         const api = `${import.meta.env.VITE_APP_API}api/${
-//           import.meta.env.VITE_APP_PATH
-//         }/products/?page=${page.value}`
-//         try {
-//           const res = await axios.get(api)
-//           if (res.data.success) {
-//             pagination.value = res.data.pagination
-//             products.value = [...products.value, ...res.data.products]
-//             isLoading.value = false
-//           }
-//         } catch (error) {
-//           console.error(error)
-//           isLoading.value = false
-//         }
-//       }
-
-//       onMounted(() => {
-//         products_list.value = products_list.value.offsetHeight
-//         window.addEventListener('scroll', handleScroll)
-
-//         emitter.on('customEvent_search', (data) => {
-//           cacheSearch.value = data
-//         })
-
-//         emitter.on('customEvent_category', (data) => {
-//           cacheCategory.value = data
-//           cacheSearch.value = ''
-//         })
-
-//         emitter.on('customEvent_Check', (data) => {
-//           filterCheck.value = data
-//         })
-
-//         cacheSearch.value = this.$route.params.search
-
-//         getProducts()
-//         getFiltered()
-//       })
-
-//       return {
-//         products,
-//         Filtered,
-//         page,
-//         pagination,
-//         products_list,
-//         isLoading,
-//         id,
-//         product,
-//         cacheSearch,
-//         cacheCategory,
-//         filterCheck,
-//         isFavorite,
-//         selectSort,
-//         setClass,
-//         filtersData,
-//         getProducts,
-//         getFiltered,
-//         getProduct,
-//         handleScroll,
-//         pushProducts
-//       }
-//     }
-//   }
-// }
+    goToProduct(id) {
+      this.getProduct_item(id);
+    },
+  },
+};
 </script>
 
 <template>
-  <div class="">
-    <!-- 排序  -->
-    <div class="mb-3 d-flex justify-content-end align-items-center" :class="customClass">
-      <label for="" class="form-label mb-0">Sort by：</label>
+  <div class="product_list">
+    <div class="mb-3 d-flex justify-content-end align-items-center" :class="childClass">
+      <label for="Sort" class="form-label mb-0">Sort by：</label>
       <select
         v-model="selectSort"
-        class="form-select form-select-lg rounded-0 p-1 fs-6"
+        class="form-select form-select-lg rounded-3 py-2 fs-6"
         style="width: 250px"
-        name=""
-        id=""
+        id="Sort"
       >
         <option class="fs-6" value="0" selected>Relevance</option>
-        <option class="fs-6" value="AZ">Name - AZ</option>
-        <option class="fs-6" value="ZA">Name - ZA</option>
-        <option class="fs-6" value="Low">Price - Low to Height</option>
-        <option class="fs-6" value="Height">Price - Height to Low</option>
+        <option class="fs-6" value="AZ">Name - A to Z</option>
+        <option class="fs-6" value="ZA">Name - Z to A</option>
+        <option class="fs-6" value="Low">Price - Low to High</option>
+        <option class="fs-6" value="High">Price - High to Low</option>
       </select>
     </div>
     <hr class="py-3" />
-    <div class="row row-cols-2 row-cols-lg-5 g-4 mb-7" ref="products_list">
-      <div class="" v-for="(item, index) in filtersData" :key="item.id">
-        <div class="col overflow-hidden">
-          <div
-            class="card w-100 position-relation newproduct_img"
-            :class="{ 'overflow-hidden': setClass === index }"
-            data-num="1"
-          >
+    <div ref="productsList_hight">
+      <div
+        v-if="filteredData.length > 0"
+        class="row row-cols-2 row-cols-lg-5 g-2 g-md-4 mb-7"
+      >
+        <div v-for="item in filteredData" :key="item.id">
+          <div class="col overflow-hidden">
             <div
-              class="newproduct_cloth p-1"
-              ref="newproduct_cloth"
-              :class="{ newproduct_cloth_set: setClass === index }"
+              class="card w-100 position-relation newproduct_img"
+              :class="{ 'overflow-hidden': setClass === item.id }"
+              data-num="1"
             >
-              <h6 class="fw-light" style="font-size: 10px">{{ item.category }}</h6>
-              <h5 class="fs-5 text-center" @click="getProduct(item.id)">
-                {{ item.title }}
-              </h5>
-              <h6 class="text-white text-center">$ {{ $filters.currency(item.price) }}</h6>
-              <!--  -->
               <div
-                class="position-relative border border-white rounded-1 px-2 py-3 bg-transparent d-flex justify-content-around m-2"
+                class="newproduct_cloth p-1"
+                ref="newproduct_cloth"
+                :class="{ newproduct_cloth_set: setClass === item.id }"
               >
-                <i
-                  @click="updateFavo(item.id)"
-                  :class="{ 'text-danger': favoriteData.indexOf(item.id) !== -1 }"
-                  class="fa fa-heart fs-4"
-                ></i>
-                <!--  -->
-                <el-popover
-                  placement="top"
-                  title="SIZE："
-                  :width="200"
-                  trigger="hover"
-                  content=""
-                  @hide="setClass = false"
-                  @show="setClass = index"
-                >
-                  <div class="d-flex justify-content-center w-100 mx-auto gap-1">
-                    <div class="">
-                      <input
-                        value="S"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_S"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'S' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_S"
-                      >
-                        S
-                      </label>
-                    </div>
-                    <div class="">
-                      <input
-                        value="M"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_M"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'M' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_M"
-                      >
-                        M
-                      </label>
-                    </div>
-                    <div class="">
-                      <input
-                        value="L"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_L"
-                      />
-                      <label
-                        style="cursor: pointer"
-                        :class="{ 'bg-black text-white': productSize_list === 'L' }"
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_L"
-                      >
-                        L
-                      </label>
-                    </div>
-                    <div class="slanted-div">
-                      <input
-                        disabled
-                        value="XL"
-                        v-model="productSize_list"
-                        class="form-check-input d-none"
-                        type="radio"
-                        name="size"
-                        id="list_XL"
-                      />
-                      <label
-                        style="cursor: not-allowed"
-                        disabled
-                        class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
-                        for="list_XL"
-                      >
-                        xL
-                      </label>
-                    </div>
-                  </div>
-                  <template #reference>
-                    <i
-                      @click="addToCart(item.id, qty, (isBuy = false))"
-                      class="fa fa-cart-plus text-white fs-4"
-                    ></i>
-                  </template>
-                </el-popover>
-                <!--  -->
+                <div style="padding: 1em">
+                  <h6 class="fw-light" style="font-size: 14px">{{ item.category }}</h6>
+                  <h5
+                    class="fs-5 text-left multiline-ellipsis"
+                    @click="goToProduct(item.id)"
+                  >
+                    {{ item.title }}
+                  </h5>
+                  <h6 class="text-white text-left">
+                    $ {{ $filters.currency(item.price) }}
+                  </h6>
+                </div>
+
                 <div
-                  v-if="isLoading"
-                  class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
+                  class="position-relative border border-white rounded-3 px-2 py-3 d-flex justify-content-around m-2"
+                  style="backdrop-filter: blur(5px)"
                 >
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                  <i
+                    @click="updateFavorite(item.id)"
+                    :class="{
+                      'text-danger': isLogin && favoriteIds.indexOf(item.id) !== -1,
+                    }"
+                    class="fa fa-heart fs-4"
+                  />
+
+                  <el-popover
+                    placement="top"
+                    title="SIZE："
+                    :width="200"
+                    trigger="click"
+                    @hide="setClass = false"
+                    @show="setClass = item.id"
+                    popper-class="product_list_el-popover"
+                  >
+                    <div
+                      class="d-flex justify-content-center w-100 mx-auto gap-1"
+                      style="z-index: 2"
+                    >
+                      <div>
+                        <input
+                          value="S"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_S"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'S' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_S"
+                        >
+                          S
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          value="M"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_M"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'M' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_M"
+                        >
+                          M
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          value="L"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_L"
+                        />
+                        <label
+                          style="cursor: pointer"
+                          :class="{ 'bg-black text-white': productSize_list === 'L' }"
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_L"
+                        >
+                          L
+                        </label>
+                      </div>
+                      <div class="slanted-div">
+                        <input
+                          disabled
+                          value="XL"
+                          v-model="productSize_list"
+                          class="form-check-input d-none"
+                          type="radio"
+                          name="size"
+                          id="list_XL"
+                        />
+                        <label
+                          style="cursor: not-allowed"
+                          disabled
+                          class="form-check-label border border-secondary text-secondary fs-6 px-2 py-1"
+                          for="list_XL"
+                        >
+                          xL
+                        </label>
+                      </div>
+                    </div>
+                    <template #reference>
+                      <!-- @click="addToCart(item.id, qty, (isBuy = false))" 改成點擊加入購物車開啟選單 然後點擊尺寸就加入購物車 -->
+                      <i
+                        @click="addToCart_item_id = item.id"
+                        class="fa fa-cart-plus text-white fs-4"
+                      />
+                    </template>
+                  </el-popover>
+
+                  <div
+                    v-if="
+                      statusBtn.loadingItem === item.id ||
+                      statusBtn_car.loadingItem === item.id
+                    "
+                    class="text-center d-flex align-items-center justify-content-center position-absolute top-0 start-0 end-0 bottom-0"
+                  >
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <img
+                data-num="1"
+                height="312"
+                width="312"
+                class="card-img of-cover op-top"
+                :src="item.imageUrl"
+                :alt="item.title"
+              />
             </div>
-            <img
-              data-num="1"
-              height="312"
-              width="312"
-              class="card-img of-cover op-top"
-              :src="item.imageUrl"
-              :alt="item.title"
-            />
           </div>
         </div>
       </div>
+      <div v-else>
+        <p class="text-secondary text-center display-6">
+          Sorry, the product list is empty.
+        </p>
+      </div>
     </div>
-    <!--  -->
+
     <div class="text-center">
-      <div v-show="isLoading" class="spinner-grow text-warning" role="status">
+      <div v-show="isLoading_small" class="spinner-grow text-warning" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-.col h5 {
-  cursor: pointer;
-}
-
-.col i {
-  cursor: pointer;
-}
-
-.newproduct_cloth_set {
-  opacity: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-  transition: all;
+<style lang="scss">
+.product_list_el-popover {
   z-index: 2;
-  animation-duration: 500ms;
-  overflow: hidden !important;
-  border-radius: 3%;
+  border-radius: 0.75rem !important;
+}
 
-  & + img {
-    transform: scale(1.2);
-    border-radius: 3%;
+.product_list {
+  z-index: 1 !important;
+  min-height: 100vh;
+  .col h5 {
+    cursor: pointer;
   }
+
+  .col i {
+    cursor: pointer;
+  }
+
+  .newproduct_cloth_set {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    transition: all;
+    z-index: 2;
+    animation-duration: 1500ms;
+    overflow: hidden !important;
+    border-radius: 3%;
+
+    & + img {
+      transform: scale(1.2);
+      border-radius: 3%;
+    }
+  }
+
+  .fa-heart:hover {
+    color: #dc3545;
+  }
+
+  @media (max-width: 768px) {
+    .newproduct_cloth {
+      opacity: 1 !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      transition: all;
+      transition-duration: 500ms;
+      z-index: 2;
+    }
+  }
+}
+
+.multiline-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  width: 100%;
+}
+
+.form-select {
+  padding-left: 10px;
 }
 </style>

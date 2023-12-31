@@ -1,5 +1,27 @@
+<script>
+import modalMixin from "@/mixins/modalMixin";
+
+export default {
+  mixins: [modalMixin],
+  data() {
+    return {
+      modal: {},
+    };
+  },
+  methods: {
+    handleScroll() {
+      if (
+        Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
+        this.$refs.element.scrollHeight
+      ) {
+        this.$emit("my-scroll");
+      }
+    },
+  },
+};
+</script>
+
 <template>
-  <!-- Modal -->
   <div
     ref="modal"
     class="modal fade"
@@ -9,8 +31,8 @@
     aria-hidden="true"
   >
     <div
-      class="modal-dialog modal-dialog-scrollable mt-10 mx-auto"
-      style="height: 500px; max-width: 1000px"
+      class="modal-dialog modal-dialog-scrollable mx-auto"
+      style="max-height: 600px; max-width: 1000px"
     >
       <div class="modal-content">
         <div class="modal-header">
@@ -20,7 +42,7 @@
             class="btn-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-          ></button>
+          />
         </div>
         <div
           class="modal-body"
@@ -46,7 +68,7 @@
               基於相關法令的要求或如果我們認為有必要時，"JTown"得隨時修改或更新本使用條款，無須事先通知您。當本使用條款有任何變更，我們會將最新版本的本使用條款公布在我們的網站("JTown")，並且會標示最近一次更新的日期。如果您在本使用條款更新後繼續使用"JTown"的服務，即代表您已同意更新後的本使用條款。請您使用"JTown"的服務時，隨時參閱最新版本的本使用條款。
             </div>
             <div>2. "JTown"的服務</div>
-            <div class="">2.1</div>
+            <div>2.1</div>
             <div>
               "JTown"的服務是提供您可以透過"JTown"平台，以輕鬆、簡易的方式選購"JTown"或與我們合作的第三方供應商（「供應商」）所提供的旅遊行程、接送服務、票券及其他旅遊體驗服務。您瞭解也同意您所選購的特定服務僅供個人使用，不得作為商業用途。在法律允許的最大範圍內，您也同意我們有權不定期更改、暫停或終止任何服務，亦有權對個別服務加上規範、限制或修訂條款，或限制您使用部分或全部的服務，而無須事先通知您。
             </div>
@@ -59,7 +81,7 @@
               我們將盡可能努力維持"JTown"的服務與"JTown"平台的運作，但是我們不保證"JTown"的服務與"JTown"平台能隨時正常運作或不受外在因素影響。您同意我們有權拒絕您造訪"JTown"平台或使用"JTown"的服務的權利，您也同意我們有權變更、暫停、中斷或終止"JTown"的服務或網站或"JTown"平台。
             </div>
             <div>3. 平台內容</div>
-            <div class="">3.1</div>
+            <div>3.1</div>
             <div>
               本使用條款所提到的「平台內容」，是指由我們呈現或使用在"JTown"平台上的一切素材，包括但不限於文字、照片、圖像、影像、插圖、影片、音效、數據、程式碼及其他素材。您瞭解並同意所有的平台內容均屬於"JTown"或授權"JTown"使用之人的專屬財產，受到相關智慧財產權法的保護；"JTown"就任何的平台內容，有隨時變更、修改或移除的權利，而無須事前通知您。
             </div>
@@ -72,9 +94,9 @@
               您瞭解並同意在您使用或存取平台內容的過程中，我們可能無法知悉可能與您互動的其他第三方使用者為何人，或預測、控制他們的行為，因此我們無法保證其他第三方使用者在"JTown"平台提供的內容、資料或資訊是否真實且正確。
             </div>
             <div>4. 您提供的資料</div>
-            <div class="">4.1</div>
+            <div>4.1</div>
             <div>您同意並授權我們得依據"JTown"的《隱私權保護政策》使用您的個人資料。</div>
-            <div class="">4.2</div>
+            <div>4.2</div>
             <div>
               為蒐集您的意見使"JTown"的服務更完善，您同意透過簡訊、電子郵件或"JTown"平台接受旅客評論的邀請，您可以自行決定是否填寫旅客評論。當我們收到您的旅客評論後，有權利（但不是義務）將您的旅客評論上傳至"JTown"平台相關頁面，將您的服務滿意度及意見分享並公開。您應確保您所提供的旅客評論無誤導性，且不可含有不得體、毀謗、威脅、謾罵及其他令人反感的字眼，也不可含有您與其他第三人的個人資料，以及性質上非屬旅客評論的內容，或含有其他違反法律規範的內容。
             </div>
@@ -87,9 +109,11 @@
               您保證您提供的所有資料（包括但不限於文字、照片、圖像及影片等）未違反任何法律規範，未侵害任何第三人的權利，且"JTown"使用該等資料不會侵害任何第三人的權利；您明瞭您必須對您提供的所有資料獨自負責，"JTown"不對其中的任何錯誤或疏漏負任何責任
             </div>
             <div>4.5</div>
-            <div>您明示同意我們得依我們的判斷，隨時將您提供的任何資料從"JTown"平台移除。</div>
+            <div>
+              您明示同意我們得依我們的判斷，隨時將您提供的任何資料從"JTown"平台移除。
+            </div>
             <div>5. 您的承諾</div>
-            <div class="">5.1</div>
+            <div>5.1</div>
             <div>
               您應完全並僅能依照本使用條款使用"JTown"的服務或"JTown"平台；您應就您使用"JTown"的服務或"JTown"平台的所有行為，單獨負擔法律責任。
             </div>
@@ -138,7 +162,7 @@
               您不會從事任何詐欺、違反"JTown"平台資訊安全、破解的其他使用者的密碼、移轉或非法儲存資料或進行其他的非法活動。
             </div>
             <div>6. 訂單確認及退費政策</div>
-            <div class="">6.1</div>
+            <div>6.1</div>
             <div>
               透過"JTown"平台，您可以依特定的貨幣選購"JTown"或供應商所提供的旅遊行程、接送服務、票券及其他旅遊體驗相關服務，除部分訂單會於您下單後即時成立外，其他訂單須經"JTown"或供應商確認後始成立。您同意透過簡訊、電子郵件或手機App接收預訂成功的通知，而且您瞭解並同意"JTown"平台所述回覆訂購結果的時程僅供參考，您也同意我們向您確認預訂成功的時間，可能視實際情況而調整。
             </div>
@@ -147,7 +171,9 @@
               "JTown"保留隨時變更或調整"JTown"或供應商所提供的旅遊行程、接送服務、票券及其他旅遊體驗相關服務的價格及費用的權利，變更的內容可能透過簡訊、電子郵件、網站、手機App公布，若您於該等變更的通知發出後使用"JTown"的服務，即代表您同意並接受變更後的價格及費用。
             </div>
             <div>6.3</div>
-            <div>您同意"JTown"得依我們的判斷，拒絕或取消任何可能違反本使用條款的預訂或訂購。</div>
+            <div>
+              您同意"JTown"得依我們的判斷，拒絕或取消任何可能違反本使用條款的預訂或訂購。
+            </div>
             <div>6.4</div>
             <div>
               您同意您必須依照我們接受的付款方式，支付您的訂單；您瞭解並同意在您依照我們指示的付款流程完成付款前，我們並無義務處理或執行您的訂單。除本使用條款另有約定，您已支付的訂單金額均不可退款。
@@ -177,7 +203,7 @@
               您瞭解並同意如果您的電子憑證或訂單號碼遺失或遭竊，"JTown"或供應商沒有補發電子憑證或提供您兌換電子憑證所表彰服務內容的義務。此外，如果您試圖不法兌換憑證，例如，未達使用電子憑證所表彰服務內容的法定年齡，"JTown"或供應商得拒絕接受您兌換電子憑證，且無須退款。
             </div>
             <div>7. 責任限制</div>
-            <div class="">7.1</div>
+            <div>7.1</div>
             <div>
               您瞭解平台內容可能由供應商提供，並同意我們就平台內容不提供任何針對正確性的聲明或保證，您同意將來也不會要求我們就供應商提供的任何平台內容負責。
             </div>
@@ -194,7 +220,7 @@
               在法律允許的最大範圍內，您同意，如果您對我們的服務有任何不滿意，您對我們唯一的救濟措施即為停止使用我們的服務。如果在任何情況下，我們對您有任何賠償責任，賠償金額上限為在您最初提出主張的前十二個月內，您所支付給我們的總費用。
             </div>
             <div>8. 補償條款</div>
-            <div class="">8.1</div>
+            <div>8.1</div>
             <div>
               您必須就您個人或使用您"JTown"會員帳戶之人存取"JTown"平台或使用"JTown"的服務，而違反本使用條款或侵害他人智慧財產權或其他權利，所造成任何第三人提出索賠請求的情形，確保"JTown"及我們的董事、高階經理人、主管、員工及該等人員的代理人不受到任何損失，如有損害，您應給予補償，包括但不限於所有訴訟費、律師費、和解費及其他損失。
             </div>
@@ -203,7 +229,7 @@
               針對上述第三人提出索賠請求的情形，"JTown"得要求您對任何主張或法律行動進行辯護，以及進行任何和解協商。但是未取得我們的事前書面同意，您不得做出任何可能不利於我們權利的法律行動。
             </div>
             <div>9. 終止</div>
-            <div class="">9.1</div>
+            <div>9.1</div>
             <div>
               本使用條款將繼續適用於您與"JTown"之間，直至我們終止本使用條款為止。如果您違反本使用條款的任何規定，或依我們的判斷而認為有必要時，我們有權立即終止或暫停您使用"JTown"的服務、存取"JTown"平台或您的會員帳戶，而無須對您為任何事前通知。
             </div>
@@ -216,18 +242,18 @@
               您瞭解並同意，即使於本使用條款終止後，本使用條款的任何規定根據其性質，將可能持續有效，包括但不限於責任限制條款。
             </div>
             <div>10. 簽證及保險</div>
-            <div class="">10.1</div>
+            <div>10.1</div>
             <div>
               不論您的國籍與旅遊的目的地為何，您應自行瞭解目的地現行有效的入境規定。由於各國簽證及健檢的規定可能臨時變更，且無任何通知，我們建議您在出發旅遊前，再次確認相關現行規定。
             </div>
             <div>10.2 為了您自身的權益，我們建議您在出發旅遊前購買綜合旅遊保險。</div>
-            <div class="">11.</div>
+            <div>11.</div>
             <div>爭議解決</div>
             <div>
               您同意以"JTown"營業所在地所屬的最初級法院作為您使用"JTown"的服務所產生的爭議或糾紛的第一審管轄法院。
             </div>
             <div>12. 其他事項</div>
-            <div class="">12.1</div>
+            <div>12.1</div>
             <div>
               如果本使用條款的任一規定被認定為無效、非法或不可執行，其餘規定的有效性、合法性或可執行性仍完全有效。
             </div>
@@ -236,34 +262,24 @@
               我們得轉讓本使用條款或任何基於本使用條款產生的權利與義務，且得將本使用條款下的任何義務委由任何第三方處理。未經我們事前書面同意，您不得直接或間接轉讓本使用條款或任何基於本使用條款產生的權利與義務。
             </div>
             <div>13. 聯絡我們</div>
-            <div>如果您對我們的服務或本使用條款有任何疑問，請直接與"JTown"客服中心（客服Email:</div>
+            <div>
+              如果您對我們的服務或本使用條款有任何疑問，請直接與"JTown"客服中心（客服Email:
+            </div>
             <div>"JTown"@gmail.com）聯絡，我們將儘速為您處理。</div>
+          </div>
+          
+          <div @click="$emit('toggle:agreeTerm')">
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              class="btn btn-nbaRed d-block text-center mt-5 mx-auto"
+              aria-label="Close"
+            >
+              Agree Term
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '@/mixins/modalMixin'
-export default {
-  mixins: [modalMixin],
-  data() {
-    return {
-      modal: {}
-    }
-  },
-  methods: {
-    handleScroll() {
-      // console.log(this.$refs.element.scrollTop, this.$refs.element.clientHeight);
-      // console.log(this.$refs.element.scrollHeight);
-      if (
-        Math.ceil(this.$refs.element.scrollTop + this.$refs.element.clientHeight + 50) >
-        this.$refs.element.scrollHeight
-      ) {
-        this.$emit('my-scroll')
-      }
-    }
-  }
-}
-</script>

@@ -1,273 +1,83 @@
 <script>
-// import offcanvasMixin from '@/mixins/offcanvasMixin'
-// import DelModal from '@/components/DelModal.vue'
-// import axios from 'axios'
+import offcanvasMixin from "@/mixins/offcanvasMixin";
+import DelModal from "@/components/DelModal.vue";
 
-// export default {
-//   inject: ['emitter'],
-//   mixins: [offcanvasMixin], //* 混用獨立的功能
-//   components: {
-//     DelModal
-//   },
-//   data() {
-//     return {
-//       offcanvas: {},
-//       isLoading: false,
-//       products: [],
-//       filteredProducts: [],
-//       favoriteIds: [],
-//       tempFavorite: ''
-//     }
-//   },
-//   mounted() {
-//     this.emitter.on('customEvent_updateFavorite', () => {
-//       this.getFavorite()
-//       this.getFavoriteId()
-//     })
-//   },
-//   created() {
-//     this.getFavoriteId()
-//     this.getFavorite()
-//   },
-//   computed: {},
-//   methods: {
-//     getFavorite() {
-//       this.isLoading = true
-//       const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-//       axios.get(api).then((res) => {
-//         if (res.data.success) {
-//           this.isLoading = false
-//           this.products = res.data.products
-//           this.filteredProducts = this.products.filter((item) => this.favoriteIds.includes(item.id))
-//         }
-//       })
-//     },
-//     getFavoriteId() {
-//       //! 當新用戶本地沒有資料時會報錯，需事先新增
-//       if (!localStorage.getItem('favorite')) localStorage.setItem('favorite', JSON.stringify([]))
-//       this.favoriteIds = JSON.parse(localStorage.getItem('favorite'))
-//     },
-//     openDelModel(item) {
-//       this.tempFavorite = { ...item }
-//       const delCp = this.$refs.delModal
-//       delCp.showModal()
-//     },
-//     delFavorite() {
-//       const checkFavorite = Boolean(
-//         localStorage.getItem('favorite').indexOf(this.tempFavorite.id) !== -1
-//       ) //* 搜尋目標
-//       if (checkFavorite) {
-//         //* 存在就刪除
-//         const favoriteData = JSON.parse(localStorage.getItem('favorite'))
-//         const index = favoriteData.indexOf(this.tempFavorite.id)
-//         favoriteData.splice(index, 1)
-//         localStorage.setItem('favorite', JSON.stringify(favoriteData))
-//         this.getFavoriteId()
-//         this.getFavorite()
-//       }
-//       this.emitter.emit('customEvent_updateFavorite') //! 觸發商品內頁的收藏更新
-//       const delCp = this.$refs.delModal
-//       delCp.hideModal()
-//     },
-//     getProduct(id) {
-//       //! 只取一個商品
-//       this.$router.push(`/products-view/products-item/${id}`)
-//       this.isLoading = true
-//       this.isLoading_big = true
-//       this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-//       const api = `${import.meta.env.VITE_APP_API}api/${
-//         import.meta.env.VITE_APP_PATH
-//       }/product/${id}`
-//       axios.get(api).then((res) => {
-//         this.isLoading = false
-//         this.isLoading_big = false
-//         this.emitter.emit('customEvent_isLoading_big', this.isLoading_big)
-//         if (res.data.success) {
-//           this.product = res.data.product
-//           this.emitter.emit('customEvent_getProduct', this.product)
-//           // 取得所有的carousel-item元素，移除所有carousel-item元素的active類別
-//           const carouselItems = document.querySelectorAll('.carousel-item')
-//           carouselItems.forEach(function (item) {
-//             item.classList.remove('active')
-//           })
-//           carouselItems[0].classList.add('active')
-//           window.scrollTo(0, 0)
-//         }
-//       })
-//       // 確認收藏狀態
-//       //! 要用this.id ，用product.id會錯 ，需分清楚差別
-//       //! 在其他電腦，若先判斷會錯誤
-//       if (JSON.parse(localStorage.getItem('favorite'))) {
-//         const checkFavorite = Boolean(
-//           JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1
-//         ) //* 搜尋目標
-//         if (checkFavorite) {
-//           this.isFavorite = true
-//           this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-//         } else {
-//           this.isFavorite = false
-//           this.emitter.emit('customEvent_isFavorite', this.isFavorite)
-//         }
-//       }
-//     },
-//     delFavorites() {
-//       if (JSON.parse(localStorage.getItem('favorite')).length > 0) {
-//         this.$swal
-//           .fire({
-//             title: 'Do you want to delete the all Favorite?',
-//             showDenyButton: false,
-//             showCancelButton: true,
-//             confirmButtonText: 'O.K'
-//           })
-//           .then((result) => {
-//             /* Read more about isConfirmed, isDenied below */
-//             if (result.isConfirmed) {
-//               localStorage.setItem('favorite', JSON.stringify([]))
-//               this.delFavorite()
-//               setTimeout(() => {
-//                 this.$swal.fire('Done delete all!', '', 'success')
-//               }, 1000)
-//             }
-//           })
-//       } else {
-//         this.$swal.fire('Favorites was empty.', '', 'warning')
-//       }
-//     }
-//   }
-// }
-import { ref, inject, onMounted } from 'vue'
-import DelModal from '@/components/DelModal.vue'
-import axios from 'axios'
+import favoriteStore from "@/stores/favoriteStore.js";
+import productStore from "@/stores/productStore";
+import { mapActions, mapState } from "pinia";
 
-export default function useFavorite() {
-  const emitter = inject('emitter')
-  const offcanvas = ref({})
-  const isLoading = ref(false)
-  const products = ref([])
-  const filteredProducts = ref([])
-  const favoriteIds = ref([])
-  const tempFavorite = ref('')
-
-  const getFavorite = () => {
-    isLoading.value = true
-    const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/products/all`
-    axios.get(api).then((res) => {
-      if (res.data.success) {
-        isLoading.value = false
-        products.value = res.data.products
-        filteredProducts.value = products.value.filter((item) =>
-          favoriteIds.value.includes(item.id)
-        )
-      }
-    })
-  }
-
-  const getFavoriteId = () => {
-    if (!localStorage.getItem('favorite')) {
-      localStorage.setItem('favorite', JSON.stringify([]))
-    }
-    favoriteIds.value = JSON.parse(localStorage.getItem('favorite'))
-  }
-
-  const openDelModel = (item) => {
-    tempFavorite.value = { ...item }
-    const delCp = ref(null)
-    delCp.value.showModal()
-  }
-
-  const delFavorite = () => {
-    const checkFavorite = Boolean(
-      localStorage.getItem('favorite').indexOf(tempFavorite.value.id) !== -1
-    )
-    if (checkFavorite) {
-      const favoriteData = JSON.parse(localStorage.getItem('favorite'))
-      const index = favoriteData.indexOf(tempFavorite.value.id)
-      favoriteData.splice(index, 1)
-      localStorage.setItem('favorite', JSON.stringify(favoriteData))
-      getFavoriteId()
-      getFavorite()
-    }
-    emitter.emit('customEvent_updateFavorite')
-    const delCp = ref(null)
-    delCp.value.hideModal()
-  }
-
-  const getProduct = (id) => {
-    emitter.emit('customEvent_isLoading_big', true)
-    const api = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/product/${id}`
-    axios.get(api).then((res) => {
-      emitter.emit('customEvent_isLoading_big', false)
-      if (res.data.success) {
-        emitter.emit('customEvent_getProduct', res.data.product)
-        const carouselItems = document.querySelectorAll('.carousel-item')
-        carouselItems.forEach((item) => {
-          item.classList.remove('active')
-        })
-        carouselItems[0].classList.add('active')
-        window.scrollTo(0, 0)
-      }
-    })
-    if (JSON.parse(localStorage.getItem('favorite'))) {
-      const checkFavorite = Boolean(JSON.parse(localStorage.getItem('favorite')).indexOf(id) !== -1)
-      if (checkFavorite) {
-        emitter.emit('customEvent_isFavorite', true)
+export default {
+  mixins: [offcanvasMixin],
+  components: {
+    DelModal,
+  },
+  data() {
+    return {
+      offcanvas: {},
+      tempFavorite: "",
+    };
+  },
+  created() {
+    this.getFavorite();
+  },
+  watch: {
+    toast: {
+      handler() {
+        this.$toast(this.toast.res, this.toast.info);
+      },
+      deep: true,
+    },
+  },
+  computed: {
+    ...mapState(favoriteStore, ["filteredProducts", "favoriteIds", "isLoading", "toast"]),
+  },
+  methods: {
+    ...mapActions(favoriteStore, ["getFavorite", "getFavoriteId", "delFavorite_store"]),
+    ...mapActions(productStore, ["getProduct_item"]),
+    async handleGetProductAndHideModal(id) {
+      await this.getProduct_item(id);
+      this.hideOffcanvas();
+    },
+    delFavorite(id) {
+      this.delFavorite_store(id);
+      const delCp = this.$refs.delModal;
+      delCp.hideModal();
+    },
+    delFavorites() {
+      if (JSON.parse(localStorage.getItem("favorite")).length > 0) {
+        this.$swal
+          .fire({
+            title: "Do you want to delete the all Favorite?",
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: "O.K",
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.isLoading = true;
+              localStorage.setItem("favorite", JSON.stringify([]));
+              this.getFavorite();
+              setTimeout(() => {
+                this.$swal.fire("Done delete all!", "", "success");
+                this.isLoading = false;
+              }, 1000);
+            }
+          });
       } else {
-        emitter.emit('customEvent_isFavorite', false)
+        this.$swal.fire("Favorites was empty.", "", "warning");
       }
-    }
-  }
-
-  const delFavorites = () => {
-    if (JSON.parse(localStorage.getItem('favorite')).length > 0) {
-      swal
-        .fire({
-          title: 'Do you want to delete the all Favorite?',
-          showDenyButton: false,
-          showCancelButton: true,
-          confirmButtonText: 'O.K'
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            localStorage.setItem('favorite', JSON.stringify([]))
-            delFavorite()
-            setTimeout(() => {
-              swal.fire('Done delete all!', '', 'success')
-            }, 1000)
-          }
-        })
-    } else {
-      swal.fire('Favorites was empty.', '', 'warning')
-    }
-  }
-
-  onMounted(() => {
-    emitter.on('customEvent_updateFavorite', () => {
-      getFavorite()
-      getFavoriteId()
-    })
-    getFavoriteId()
-    getFavorite()
-  })
-
-  return {
-    offcanvas,
-    isLoading,
-    products,
-    filteredProducts,
-    favoriteIds,
-    tempFavorite,
-    getFavorite,
-    getFavoriteId,
-    openDelModel,
-    delFavorite,
-    getProduct,
-    delFavorites
-  }
-}
+    },
+    openDelModel(item) {
+      this.tempFavorite = { ...item };
+      const delCp = this.$refs.delModal;
+      delCp.showModal();
+    },
+  },
+};
 </script>
 
 <template>
-  <div class="">
+  <div>
     <div
       ref="offcanvas"
       class="offcanvas offcanvas-end"
@@ -275,20 +85,18 @@ export default function useFavorite() {
       id="offcanvasRight"
       aria-labelledby="offcanvasRightLabel"
     >
-      <Loading :active="isLoading"></Loading>
+      <LoadingMask :active="isLoading" />
       <div class="offcanvas-header d-flex justify-content-between align-items-center">
         <h5 id="offcanvasRightLabel" class="fs-3 text-center pt-3">
-          <i class="fa fa-check-circle text-nbaRed" aria-hidden="true"></i> MY COLLECT
-          <!--  -->
+          <i class="fa fa-check-circle text-nbaRed" aria-hidden="true" /> MY COLLECT
+
           <a
             @click.prevent="delFavorites"
-            name=""
-            id=""
             class="btn btn-outline-danger fs-5 px-2 ms-1"
             href="#"
             role="button"
           >
-            <i class="fa-sharp fa-solid fa-heart-circle-xmark"></i>ALL</a
+            <i class="fa-sharp fa-solid fa-heart-circle-xmark" />ALL</a
           >
         </h5>
         <button
@@ -296,28 +104,31 @@ export default function useFavorite() {
           class="btn-close text-reset fs-5"
           data-bs-dismiss="offcanvas"
           aria-label="Close"
-        ></button>
+        />
       </div>
       <div class="offcanvas-body">
         <div
           class="d-flex p-2 border border-2 border-light rounded-3 product_item my-2 gap-2"
-          @click="getProduct(item.id)"
-          v-for="(item, id) in filteredProducts"
-          :key="id"
+          v-for="item in filteredProducts"
+          :key="item.id"
         >
-          <div class="" style="width: 100px !important; height: 70px !important">
-            <img class="of-cover op-top w-100 h-100" :src="item.imageUrl" alt="" />
+          <div style="width: 100px !important; height: 70px !important">
+            <img
+              class="of-cover op-top w-100 h-100"
+              :src="item.imageUrl"
+              :alt="item.title"
+            />
           </div>
-          <div class="w-100 p-1">
+          <div class="w-100 p-1" @click="handleGetProductAndHideModal(item.id)">
             <h2 class="fs-6 text-center ellipsis">{{ item.title }}</h2>
             <p class="text-center pt-2 fs-5 mb-0">
               <small
                 class="text-secondary text-decoration-line-through fw-lighter"
-                style="font-size: 5px"
+                style="font-size: 12px"
                 >$ {{ $filters.currency(item.origin_price) }}</small
               >
               $ {{ $filters.currency(item.price) }}
-              <span class="" style="font-size: 5px">/{{ item.unit }}</span>
+              <span style="font-size: 12px">/{{ item.unit }}</span>
             </p>
           </div>
           <button
@@ -326,16 +137,21 @@ export default function useFavorite() {
             class="border-0 bg-transparent"
             style="height: 30px"
           >
-            <i class="bi bi-trash"></i>
+            <i class="bi bi-trash" />
           </button>
         </div>
-        <!--  -->
+
         <p class="d-flex justify-content-end fs-4 mt-3">
-          <span class="">TOTAL( {{ favoriteIds.length }} ) </span>
+          <span>TOTAL( {{ favoriteIds.length }} ) </span>
         </p>
       </div>
     </div>
-    <DelModal :item="tempFavorite" ref="delModal" @del-item="delFavorite" />
+    <DelModal
+      :item="tempFavorite"
+      ref="delModal"
+      data-ref="delModal"
+      @del-item="delFavorite(tempFavorite.id)"
+    />
   </div>
 </template>
 

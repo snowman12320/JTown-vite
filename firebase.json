@@ -1,0 +1,21 @@
+{
+  "hosting": {
+    "public": "public",
+    // firebase deploy --only hosting:jtown-vite
+    // "site": "jtown-vite",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "emulators": {
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

@@ -1,13 +1,61 @@
+<script>
+import modalMixin from "@/mixins/modalMixin";
+
+export default {
+  name: "orderModal",
+  emits: ["update-paid"],
+  mixins: [modalMixin],
+  data() {
+    return {
+      status: {},
+      modal: "",
+      tempOrder: {},
+    };
+  },
+  props: {
+    order: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+  },
+  watch: {
+    order() {
+      this.tempOrder = this.order;
+    },
+  },
+  methods: {
+    setPaid() {
+      this.tempOrder.is_paid = !this.tempOrder.is_paid;
+      this.$emit("update-paid", this.tempOrder);
+    },
+  },
+};
+</script>
+
 <template>
-  <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true" ref="modal">
+  <div
+    class="modal fade"
+    id="productModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+    ref="modal"
+  >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title" id="exampleModalLabel">
             <span>訂單細節</span>
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          />
         </div>
         <div class="modal-body">
           <div class="row">
@@ -44,7 +92,7 @@
                   </tr>
                   <tr>
                     <th>下單時間</th>
-                    <td> {{ $filters.dateAndTime(tempOrder.create_at) }}</td>
+                    <td>{{ $filters.dateAndTime(tempOrder.create_at) }}</td>
                   </tr>
                   <tr>
                     <th>付款時間</th>
@@ -52,13 +100,15 @@
                       <span v-if="tempOrder.paid_date">
                         {{ $filters.dateAndTime(tempOrder.paid_date) }}
                       </span>
-                      <span v-else></span>
+                      <span v-else />
                     </td>
                   </tr>
                   <tr>
                     <th>付款狀態</th>
                     <td>
-                      <strong v-if="tempOrder.is_paid" class="text-success">已付款</strong>
+                      <strong v-if="tempOrder.is_paid" class="text-success"
+                        >已付款</strong
+                      >
                       <span v-else class="text-muted">尚未付款</span>
                     </td>
                   </tr>
@@ -73,7 +123,7 @@
               <h3>選購商品</h3>
               <table class="table">
                 <thead>
-                  <tr></tr>
+                  <tr />
                 </thead>
                 <tbody>
                   <tr v-for="item in tempOrder.products" :key="item.id">
@@ -92,44 +142,11 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            取消
+            關閉
           </button>
-          <button type="button" class="btn btn-primary" @click="$emit('update-order', tempOrder)">
-            確認
-          </button>
+          <button type="button" class="btn btn-nbaBlue" @click="setPaid">更新付款</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script>
-import modalMixin from '@/mixins/modalMixin';
-export default {
-  name: 'orderModal',
-  emits: ['update-product'],
-  mixins: [modalMixin],
-  inject: ['emitter'],
-  data () {
-    return {
-      status: {},
-      modal: '',
-      tempOrder: {},
-      isPaid: false
-    };
-  },
-  props: {
-    order: {
-      type: Object,
-      default () {
-        return {};
-      }
-    }
-  },
-  watch: {
-    order () {
-      this.tempOrder = this.order;
-      this.isPaid = this.tempOrder.is_paid;
-    }
-  }
-};
-</script>

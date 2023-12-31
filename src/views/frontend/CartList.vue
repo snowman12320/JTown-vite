@@ -1,61 +1,52 @@
 <script>
-import CartModal from "@/components/CartModal.vue";
-import validatorMixin from "@/mixins/validatorMixin";
+import CartModal from '@/components/CartModal.vue';
+import validatorMixin from '@/mixins/validatorMixin';
 
-import cartStore from "@/stores/cartStore.js";
-import { mapActions, mapState } from "pinia";
+import cartStore from '@/stores/cartStore.js';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   mixins: [validatorMixin],
   components: {
-    CartModal,
+    CartModal
   },
   data() {
     return {
       feeDeliver: 120,
       product: {},
-      couponPercent: "",
-      couponCode: "default",
-      options: [
-        {
-          code: "gooaya",
-          title: "gooaya / 每件商品打9折",
-        },
-        {
-          code: "howhowhasfriend",
-          title: "howhow / 每件商品打8折",
-        },
-      ],
+      couponPercent: '',
+      couponCode: 'default',
+      options: [],
       form: {
         user: {
-          email: "",
-          name: "",
-          tel: "",
-          address: "",
-        },
+          email: '',
+          name: '',
+          tel: '',
+          address: ''
+        }
       },
-      message: "這是留言",
+      message: '這是留言',
       isBuyPerson: false,
       tempForm: {
         user: {
-          email: "snowman12320@gmail.com",
-          name: "陳威良",
-          tel: "0912346768",
-          address: "台灣省",
-        },
+          email: 'snowman12320@gmail.com',
+          name: '陳威良',
+          tel: '0912346768',
+          address: '台灣省'
+        }
       },
       isLookOver: false,
-      isTermChecked: false,
+      isTermChecked: false
     };
   },
   created() {
     if (!this.isLogin) {
-      this.tempForm.user.email = JSON.parse(localStorage.getItem("username"));
+      this.tempForm.user.email = JSON.parse(localStorage.getItem('username'));
       this.getCoupons();
     }
     //* 判斷有無折扣碼 然後自動addCouponCode()送出折扣碼 這樣才有折扣趴數資料
-    if (localStorage.getItem("local-couponCode")) {
-      this.couponCode = localStorage.getItem("local-couponCode");
+    if (localStorage.getItem('local-couponCode')) {
+      this.couponCode = localStorage.getItem('local-couponCode');
     }
     if (this.carts.length > 0) {
       this.addCouponCode(); //* 取得購物車後 先判斷有無折扣碼並送出折扣碼 再判斷有無折扣趴數
@@ -64,36 +55,37 @@ export default {
   },
   watch: {
     couponCode() {
-      if (!localStorage.getItem("local-couponCode")) {
-        localStorage.setItem("local-couponCode", this.couponCode);
+      if (!localStorage.getItem('local-couponCode')) {
+        localStorage.setItem('local-couponCode', this.couponCode);
       }
-      localStorage.setItem("local-couponCode", this.couponCode);
+      localStorage.setItem('local-couponCode', this.couponCode);
       this.addCouponCode();
-    },
+    }
   },
   computed: {
-    ...mapState(cartStore, ["isLoading", "carts", "sumFinalQty", "sumTotal"]),
+    ...mapState(cartStore, ['isLoading', 'carts', 'sumFinalQty', 'sumTotal'])
   },
   methods: {
-    ...mapActions(cartStore, ["getCart", "updateCart"]),
+    ...mapActions(cartStore, ['getCart', 'updateCart']),
     getCouponPercent() {
-      if (this.couponCode !== "default") {
-        if (this.$route.path.includes("cart-list")) {
+      if (this.couponCode !== 'default') {
+        if (this.$route.path.includes('cart-list')) {
           const api = `${import.meta.env.VITE_APP_API}api/${
             import.meta.env.VITE_APP_PATH
-          }/cart`;
+          }/admin/coupons`;
           this.$http.get(api).then((res) => {
-            this.couponPercent = res.data.data.carts[0].coupon.percent;
+            const coupon = res.data.coupons.filter((coupon) => coupon.code === this.couponCode);
+            this.couponPercent = coupon.percent;
           });
         }
       }
     },
     delCart(item) {
-      const url = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/cart/${item.id}`;
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/cart/${
+        item.id
+      }`;
       this.$http.delete(url).then(() => {
-        this.$toast("success", "delete " + `"${item.product.title}"`);
+        this.$toast('success', 'delete ' + `"${item.product.title}"`);
         this.updateCart(item);
       });
       if (this.carts.length === 0) {
@@ -106,7 +98,7 @@ export default {
     getCoupons() {
       const url = `${import.meta.env.VITE_APP_API}api/${
         import.meta.env.VITE_APP_PATH
-      }/admin/coupons`;
+      }/admin/coupons?page=1`;
       this.$http.get(url).then((res) => {
         if (res.data.success) {
           this.options = res.data.coupons.filter((coupon) => coupon.is_enabled === 1);
@@ -114,25 +106,24 @@ export default {
       });
     },
     addCouponCode() {
-      const url = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/coupon`;
+      // ! API 有問題，無法判斷折扣碼是否正確
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/coupon`;
       const coupon = {
-        code: this.couponCode,
+        code: this.couponCode
       };
       this.$http.post(url, { data: coupon }).then((res) => {
         if (res.data.success) {
           this.getCouponPercent();
           this.getCart();
-          this.$toast("success", "Add Coupon");
+          this.$toast('success', 'Add Coupon');
         } else {
-          localStorage.removeItem("local-couponCode", this.couponCode);
+          localStorage.removeItem('local-couponCode', this.couponCode);
           this.getCouponPercent();
           this.getCart();
-          this.$toast("success", "Cancel coupon");
-          this.couponCode = "default";
-          this.couponPercent = "";
-          localStorage.setItem("local-couponCode", this.couponCode);
+          this.$toast('success', 'Cancel coupon');
+          this.couponCode = 'default';
+          this.couponPercent = '';
+          localStorage.setItem('local-couponCode', this.couponCode);
         }
       });
     },
@@ -143,21 +134,19 @@ export default {
       } else {
         this.form = {
           user: {
-            email: "",
-            name: "",
-            tel: "",
-            address: "",
-          },
+            email: '',
+            name: '',
+            tel: '',
+            address: ''
+          }
         };
       }
     },
     createOrder() {
-      const url = `${import.meta.env.VITE_APP_API}api/${
-        import.meta.env.VITE_APP_PATH
-      }/order`;
+      const url = `${import.meta.env.VITE_APP_API}api/${import.meta.env.VITE_APP_PATH}/order`;
       const order = this.form;
       this.$http.post(url, { data: order }).then((res) => {
-        localStorage.removeItem("local-couponCode", this.couponCode);
+        localStorage.removeItem('local-couponCode', this.couponCode);
         this.getCart();
         this.$router.push(`checkout/${res.data.orderId}`);
       });
@@ -175,8 +164,8 @@ export default {
       CartCp.hideModal();
       this.isTermChecked = true;
       document.querySelector('[name="termCheck"]').checked = true;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -228,9 +217,7 @@ export default {
                   </span>
                   -$
                   {{
-                    couponPercent
-                      ? $filters.currency(sumTotal * ((100 - couponPercent) / 100))
-                      : 0
+                    couponPercent ? $filters.currency(sumTotal * ((100 - couponPercent) / 100)) : 0
                   }}
                 </p>
               </li>
@@ -243,9 +230,7 @@ export default {
                 <p>
                   $
                   <span class="text-qopink fs-1 fw-bold">{{
-                    $filters.currency(
-                      sumTotal + feeDeliver - sumTotal / (100 - couponPercent)
-                    )
+                    $filters.currency(sumTotal + feeDeliver - sumTotal / (100 - couponPercent))
                   }}</span>
                 </p>
               </li>
@@ -511,7 +496,7 @@ export default {
                         rules="email|required"
                         :class="{
                           'is-invalid': errors['email'],
-                          'is-valid': !errors['email'] && form.user.email,
+                          'is-valid': !errors['email'] && form.user.email
                         }"
                         v-model="form.user.email"
                       />
@@ -529,7 +514,7 @@ export default {
                         :rules="isName"
                         :class="{
                           'is-invalid': errors['姓名'],
-                          'is-valid': !errors['姓名'] && form.user.name,
+                          'is-valid': !errors['姓名'] && form.user.name
                         }"
                         v-model="form.user.name"
                       >
@@ -547,7 +532,7 @@ export default {
                         :rules="isPhone"
                         :class="{
                           'is-invalid': errors['手機'],
-                          'is-valid': !errors['手機'] && form.user.name,
+                          'is-valid': !errors['手機'] && form.user.name
                         }"
                         v-model="form.user.tel"
                       >
@@ -566,7 +551,7 @@ export default {
                         :rules="isAddress"
                         :class="{
                           'is-invalid': errors['地址'],
-                          'is-valid': !errors['地址'] && form.user.address,
+                          'is-valid': !errors['地址'] && form.user.address
                         }"
                         v-model="form.user.address"
                       >
@@ -600,7 +585,7 @@ export default {
                       :class="{
                         'is-invalid': errors['termCheck'],
                         'is-valid': !errors['termCheck'],
-                        'opacity-50': !isLookOver,
+                        'opacity-50': !isLookOver
                       }"
                     >
                     </FieldValidate>
@@ -636,7 +621,7 @@ export default {
                       class="form-check-input"
                       :class="{
                         'is-invalid': errors['buyCheck'],
-                        'is-valid': !errors['buyCheck'],
+                        'is-valid': !errors['buyCheck']
                       }"
                     >
                     </FieldValidate>
@@ -666,11 +651,7 @@ export default {
         </FormValidate>
       </div>
     </div>
-    <CartModal
-      ref="CartModal"
-      @my-scroll="handleMyScroll"
-      @toggle:agreeTerm="agreeTerm"
-    />
+    <CartModal ref="CartModal" @my-scroll="handleMyScroll" @toggle:agreeTerm="agreeTerm" />
   </div>
 </template>
 
@@ -679,7 +660,7 @@ export default {
   overflow-x: auto;
 }
 
-[type="radio"]:checked ~ div {
+[type='radio']:checked ~ div {
   display: block !important;
 }
 
